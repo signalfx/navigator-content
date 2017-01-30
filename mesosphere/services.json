@@ -1,0 +1,113 @@
+{
+  "id": "mesos services",
+  "unreleased": true,
+  "type": "architectural",
+  "displayName": "Services",
+  "alertQuery": "(_exists_:system_component_name OR _exists_:system_component) AND _exists_:mesos_cluster",
+  "mtsQuery": "sf_metric:gauge.mesos.service.health AND _exists_:system_component",
+  "category": "Mesosphere",
+  "categoryPriority": 100,
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "system_component_name",
+    "sf_key": [
+      "system_component_name"
+    ],
+    "isProperty": true,
+    "system_component_name": "*"
+  },
+  "tooltipKeyList": [
+    {
+      "property": "aws_tag_Name",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "host_collect_version",
+      "displayName": "collectd version"
+    },
+    {
+      "property": "host_kernel_name",
+      "displayName": "OS"
+    },
+    {
+      "property": "host_mem_total",
+      "displayName": "Memory",
+      "format": "Kilobytes"
+    },
+    {
+      "property": "host_logical_cpus",
+      "displayName": "vCPU"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "FRAMEWORK_IS_ACTIVE = data(\"gauge.framework.is_active\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_framework_id\", \"mesos_framework_name\", \"mesos_cluster\"])\nSERVICE_HEALTH = data(\"gauge.mesos.service.health\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"system_component\", \"system_component_name\", \"mesos_cluster\"])"
+    },
+    "groupingStructure": {
+      "key": "mesos_cluster",
+      "children": [
+        {
+          "key": "sf_streamLabel",
+          "drawBoundary": true,
+          "memberSettings": {
+            "Services": {
+              "bigger": true
+            },
+            "Frameworks": {
+              "bigger": true
+            }
+          },
+          "children": [
+            {
+              "key": "mesos_framework_name",
+              "onlyForMember": "Frameworks"
+            },
+            {
+              "key": "system_component_name",
+              "onlyForMember": "Services"
+            }
+          ]
+        }
+      ]
+    },
+    "metrics": [
+      {
+        "name": "Frameworks",
+        "varName": "FRAMEWORK_IS_ACTIVE",
+        "valueLabel": "Active",
+        "valueFormat": "Boolean",
+        "idTemplate": "{{mesos_framework_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 1,
+          "range": [
+            "#ea1849",
+            "#6bd37e"
+          ]
+        }
+      },
+      {
+        "name": "Services",
+        "varName": "SERVICE_HEALTH",
+        "idTemplate": "{{system_component}}, {{system_component_name}}",
+        "valueLabel": "Health",
+        "valueFormat": "Number",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    ]
+  }
+}

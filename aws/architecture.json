@@ -1,0 +1,173 @@
+{
+  "id": "aws architecture",
+  "unreleased": true,
+  "categoryPriority": 10,
+  "type": "architectural",
+  "displayName": "Architecture",
+  "alertQuery": "(_exists_:namespace)",
+  "mtsQuery": "sf_metric:CPUUtilization",
+  "category": "AWS",
+  "systemDashboardPrefix": "AWS",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "namespace",
+    "sf_key": [
+      "namespace"
+    ],
+    "isProperty": true,
+    "namespace": "*"
+  },
+  "tooltipKeyList": [
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "SQS = data(\"NumberOfMessagesSent\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/SQS\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"QueueName\"])\nRDS = data(\"DatabaseConnections\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])\nEC2 = data(\"CPUUtilization\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/EC2\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])\nSNS = data(\"NumberOfMessagesPublished\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"]).scale(60)\nCACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)\nCDN = data(\"Requests\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/CloudFront\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"DistributionId\"])\nAUTOSCALING = data(\"GroupTotalInstances\", filter=filter(\"namespace\", \"AWS/AutoScaling\") and filter(\"stat\", \"mean\") and filter(\"AutoScalingGroupName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"AutoScalingGroupName\"])\nELB = data(\"RequestCount\", filter=filter(\"namespace\", \"AWS/ELB\") and filter(\"stat\", \"sum\") and filter(\"AvailabilityZone\", \"*\") and filter(\"LoadBalancerName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"LoadBalancerName\"])"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true,
+      "memberSettings": {
+        "SQS Queues": {
+          "bigger": true
+        },
+        "RDS Databases": {
+          "bigger": true
+        }
+      }
+    },
+    "metrics": [
+      {
+        "name": "SQS Queues",
+        "varName": "SQS",
+        "valueLabel": "Messages sent per min",
+        "idTemplate": "sqs-{{QueueName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "SNS Topics",
+        "varName": "SNS",
+        "valueLabel": "Messages Published",
+        "idTemplate": "sns-{{TopicName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "AutoScaling Groups",
+        "varName": "AUTOSCALING",
+        "valueLabel": "Instances",
+        "idTemplate": "autoscaling-{{AutoScalingGroupName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "RDS Databases",
+        "varName": "RDS",
+        "valueLabel": "Connections",
+        "idTemplate": "rds-{{DBInstanceIdentifier}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "ELB Instances",
+        "varName": "ELB",
+        "valueLabel": "Requests/min",
+        "idTemplate": "elb-{{LoadBalancerName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "ElastiCache Clusters",
+        "varName": "CACHE",
+        "valueLabel": "Hit rate",
+        "idTemplate": "cache-{{CacheClusterId}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      {
+        "name": "CloudFront Distributions",
+        "varName": "CDN",
+        "valueLabel": "Requests / min",
+        "idTemplate": "cdn-{{DistributionId}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "EC2 Instances",
+        "varName": "EC2",
+        "valueLabel": "CPU Use",
+        "idTemplate": "ec2-{{InstanceId}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    ]
+  }
+}

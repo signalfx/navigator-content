@@ -1,0 +1,284 @@
+{
+  "id": "rds databases",
+  "unreleased": true,
+  "displayName": "RDS Databases",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:DBInstanceIdentifier",
+  "requiredProperties": [
+    "DBInstanceIdentifier"
+  ],
+  "idTemplate": "{{DBInstanceIdentifier}}",
+  "idName": "Database",
+  "mtsQuery": "sf_metric:DatabaseConnections AND sf_key:DBInstanceIdentifier AND _exists_:DBInstanceIdentifier",
+  "systemDashboardPrefix": "RDS",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "DBInstanceIdentifier",
+    "sf_key": [
+      "DBInstanceIdentifier"
+    ],
+    "isProperty": true,
+    "DBInstanceIdentifier": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "aws_engine",
+      "displayName": "Engine"
+    },
+    {
+      "property": "aws_db_instance_class",
+      "displayName": "Class"
+    },
+    {
+      "property": "aws_availability_zone",
+      "displayName": "Availability Zone"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "aws_engine",
+      "displayName": "Engine",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_db_instance_class",
+      "isSummaryProperty": true,
+      "displayName": "Class"
+    },
+    {
+      "property": "aws_availability_zone",
+      "displayName": "Availability Zone"
+    },
+    {
+      "property": "aws_second_availability_zone",
+      "displayName": "Second Availability Zone"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.rds.connections",
+      "displayName": "Connections",
+      "metricSelectors": [
+        "DatabaseConnections"
+      ],
+      "description": "Number of connections to the database",
+      "valueLabel": "Connections",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CONNECTIONS = data(\"DatabaseConnections\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "CONNECTIONS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.readiops",
+      "displayName": "Read IOPS",
+      "metricSelectors": [
+        "ReadIOPS"
+      ],
+      "description": "Number of connections to the database",
+      "valueLabel": "Connections",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "ReadIOPS = data(\"ReadIOPS\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "ReadIOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.writeiops",
+      "displayName": "Write IOPS",
+      "metricSelectors": [
+        "WriteIOPS"
+      ],
+      "description": "Number of connections to the database",
+      "valueLabel": "Connections",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "WriteIOPS = data(\"WriteIOPS\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "WriteIOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.readlatency",
+      "displayName": "Read Latency",
+      "metricSelectors": [
+        "ReadLatency"
+      ],
+      "description": "Read latency in milliseconds",
+      "valueLabel": "Latency (ms)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "ReadLatency = data(\"ReadLatency\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(1000).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "ReadLatency"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.writelatency",
+      "displayName": "Write Latency",
+      "metricSelectors": [
+        "WriteLatency"
+      ],
+      "description": "Write latency in milliseconds",
+      "valueLabel": "Latency (ms)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "WriteLatency = data(\"WriteLatency\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(1000).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "WriteLatency"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.readthroughput",
+      "displayName": "Read Throughput",
+      "metricSelectors": [
+        "ReadThroughput"
+      ],
+      "description": "Read throughput for the database",
+      "valueLabel": "Connections",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "ReadThroughput = data(\"ReadThroughput\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "ReadThroughput"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.writethroughput",
+      "displayName": "Write Throughput",
+      "metricSelectors": [
+        "WriteThroughput"
+      ],
+      "description": "Write Throughput for the database",
+      "valueLabel": "Connections",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "WriteThroughput = data(\"WriteThroughput\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "WriteThroughput"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

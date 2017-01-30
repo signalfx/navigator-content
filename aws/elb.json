@@ -1,0 +1,98 @@
+{
+  "id": "sns",
+  "unreleased": true,
+  "displayName": "ELB Load Balancers",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:LoadBalancerName",
+  "requiredProperties": [
+    "LoadBalancerName"
+  ],
+  "idTemplate": "{{LoadBalancerName}}",
+  "idName": "Load Balancer",
+  "mtsQuery": "sf_metric:RequestCount AND sf_key:LoadBalancerName AND _exists_:LoadBalancerName",
+  "systemDashboardPrefix": "ELB",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "LoadBalancerName",
+    "sf_key": [
+      "LoadBalancerName"
+    ],
+    "isProperty": true,
+    "LoadBalancerName": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.elb.requests",
+      "displayName": "Requests / Min",
+      "metricSelectors": [
+        "RequestCount"
+      ],
+      "description": "Requests per minute",
+      "valueLabel": "Requests",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "RequestCount = data(\"RequestCount\", filter=filter(\"namespace\", \"AWS/ELB\") and filter(\"stat\", \"sum\") and filter(\"LoadBalancerName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"LoadBalancerName\"]).scale(60)",
+        "varName": "RequestCount"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

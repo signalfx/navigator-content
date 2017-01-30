@@ -1,0 +1,120 @@
+{
+  "id": "marathon architecture",
+  "unreleased": true,
+  "type": "architectural",
+  "displayName": "Architecture",
+  "alertQuery": "(_exists_:mesos_agent OR _exists_:mesos_master)",
+  "mtsQuery": "sf_metric:gauge.marathon.app.tasks.unhealthy AND _exists_:mesos_task_name",
+  "category": "Marathon",
+  "categoryPriority": 10,
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "mesos_task_id",
+    "sf_key": [
+      "mesos_task_id"
+    ],
+    "isProperty": true,
+    "mesos_task_id": "*"
+  },
+  "tooltipKeyList": [
+    {
+      "property": "mesos_task_name",
+      "displayName": "Task Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "mesos_task_id",
+      "displayName": "Task ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "mesos_framework_id",
+      "displayName": "Framework",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "mesos_agent",
+      "displayName": "Agent"
+    },
+    {
+      "property": "mesos_master",
+      "displayName": "Master"
+    },
+    {
+      "property": "mesos_cluster",
+      "displayName": "Cluster"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "UNHEALTHY = data(\"gauge.marathon.app.tasks.unhealthy\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_task_name\",\"mesos_cluster\"])\nTOTAL = data(\"gauge.marathon.app.instances.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_task_name\",\"mesos_cluster\"])\nHEALTHY_TASKS = ((1 - UNHEALTHY / TOTAL) * 100)\nTIME_ELAPSED = data(\"gauge.marathon.task.start.time.elapsed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_task_id\", \"mesos_task_name\", \"mesos_framework_id\", \"mesos_cluster\"])"
+    },
+    "groupingStructure": {
+      "key": "mesos_cluster",
+      "children": [
+        {
+          "key": "sf_streamLabel",
+          "drawBoundary": true,
+          "memberSettings": {
+            "Applications": {
+              "bigger": true
+            }
+          },
+          "children": [
+            {
+              "key": "mesos_task_name",
+              "onlyForMember": "Applications"
+            }
+          ]
+        }
+      ]
+    },
+    "metrics": [
+      {
+        "name": "Applications",
+        "varName": "HEALTHY_TASKS",
+        "valueLabel": "Heathy Tasks",
+        "valueFormat": "Percentage",
+        "idTemplate": "applications-{{mesos_task_name}}-{{mesos_cluster}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100,
+          "range": [
+            "#ea1849",
+            "#eac24b",
+            "#e2ed6a",
+            "#acef7f",
+            "#6bd37e"
+          ]
+        }
+      },
+      {
+        "name": "Application Instances",
+        "varName": "TIME_ELAPSED",
+        "idTemplate": "{{mesos_task_id}}",
+        "valueLabel": "Uptime",
+        "valueFormat": "Seconds",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      }
+    ]
+  }
+}

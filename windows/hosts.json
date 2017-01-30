@@ -1,0 +1,239 @@
+{
+  "id": "windows hosts",
+  "displayName": "Hosts (Windows)",
+  "category": "Hosts",
+  "type": "elemental",
+  "alertQuery": "_exists_:host",
+  "requiredProperties": [
+    "host"
+  ],
+  "idTemplate": "{{host}}",
+  "idName": "Host",
+  "mtsQuery": "sf_metric:processor.pct_processor_time AND _exists_:host",
+  "systemDashboardPrefix": "windows",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "host",
+    "sf_key": [
+      "host"
+    ],
+    "isProperty": true,
+    "host": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Host",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "aws_tag_Name",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "windows.processor.pct_processor_time",
+      "displayName": "CPU Utilization",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "processor.pct_processor_time"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "instance",
+            "propertyValue": "_total",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"processor.pct_processor_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "windows.memory.utilization",
+      "displayName": "Memory Utilization",
+      "valueLabel": "Memory Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "signalfx.usedmemory",
+        "memory.available_mbytes"
+      ],
+      "description": "Color hosts based on percentage of available memory being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "MEMORY_USE_TOTAL = data(\"signalfx.usedmemory\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nMEMORY_USE_SYSTEM = data(\"memory.available_mbytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nMEMORY_USE = (MEMORY_USE_TOTAL / (MEMORY_USE_TOTAL + MEMORY_USE_SYSTEM) * 100)",
+        "varName": "MEMORY_USE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "windows.logicaldisk.pct_free_space",
+      "displayName": "Disk Utilization",
+      "valueLabel": "Disk Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "logicaldisk.pct_free_space"
+      ],
+      "description": "Color hosts based on percentage of available disk space being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "instance",
+            "propertyValue": "_total",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_UTILIZATION = data(\"logicaldisk.pct_free_space\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nDISK_USE = (100 - DISK_UTILIZATION)",
+        "varName": "DISK_USE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "windows.network_interface.bytes_total_sec",
+      "displayName": "Network Traffic",
+      "metricSelectors": [
+        "network_interface.bytes_total_sec"
+      ],
+      "description": "Color hosts by amount of network traffic in bytes per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "valueLabel": "Bytes/sec",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_TOTAL = data(\"network_interface.bytes_total_sec\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\"])",
+        "varName": "NETWORK_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "windows.paging_file.pct_usage",
+      "displayName": "Page File Utilization",
+      "metricSelectors": [
+        "paging_file.pct_usage"
+      ],
+      "valueLabel": "Page File",
+      "valueFormat": "Percentage",
+      "description": "Color hosts by page file utilization",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "instance",
+            "propertyValue": "_total",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "PAGING_FILE_UTIL = data(\"paging_file.pct_usage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "PAGING_FILE_UTIL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "___SF_ALERT_COLLECTD",
+      "valueLabel": "Most severe alert",
+      "valueFormat": "Alert Severity",
+      "displayName": "Most severe alert",
+      "metricSelectors": [],
+      "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
+      "isEventFeed": true,
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"processor.pct_processor_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}

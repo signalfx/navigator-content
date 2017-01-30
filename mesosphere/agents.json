@@ -1,0 +1,179 @@
+{
+  "id": "mesos agents",
+  "unreleased": true,
+  "displayName": "Agents",
+  "category": "Mesosphere",
+  "categoryPriority": 1000,
+  "type": "elemental",
+  "alertQuery": "_exists_:mesos_agent",
+  "requiredProperties": [
+    "mesos_agent"
+  ],
+  "idTemplate": "{{mesos_agent}}",
+  "idName": "Agent",
+  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_agent",
+  "systemDashboardPrefix": "Mesos",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "mesos_agent",
+    "sf_key": [
+      "mesos_agent"
+    ],
+    "isProperty": true,
+    "mesos_agent": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "Memory",
+        "properties": [
+          "host_mem_total"
+        ]
+      },
+      {
+        "header": "Processor",
+        "properties": [
+          "host_processor",
+          "host_cpu_cores",
+          "host_cpu_model",
+          "host_logical_cpus",
+          "host_physical_cpus"
+        ]
+      },
+      {
+        "header": "OS",
+        "properties": [
+          "host_kernel_name",
+          "host_kernel_release",
+          "host_kernel_version"
+        ]
+      },
+      {
+        "header": "Agent",
+        "properties": [
+          "host_collectd_version",
+          "host_metadata_version"
+        ]
+      }
+    ],
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      },
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Host",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "host_kernel_name",
+      "displayName": "OS"
+    },
+    {
+      "property": "host_mem_total",
+      "displayName": "Memory",
+      "format": "Kilobytes"
+    },
+    {
+      "property": "host_logical_cpus",
+      "displayName": "vCPU"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "mesos_agent",
+      "displayName": "Agent",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "mesos_cluster",
+      "displayName": "Cluster"
+    },
+    {
+      "property": "mesos_master",
+      "displayName": "Master"
+    },
+    {
+      "property": "host",
+      "displayName": "Host"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "mesos.cpu.utilization",
+      "displayName": "CPU Utilization",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "gauge.task.state"
+      ],
+      "description": "CPU Utilization for the agent: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "mesos_agent",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_agent\"]).publish(\"heatmap data\")",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "mesos.tasks.running",
+      "displayName": "Tasks Running",
+      "metricSelectors": [
+        "gauge.slave_tasks_running "
+      ],
+      "description": "Number of tasks running on the agent",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "mesos_agent",
+            "type": "property"
+          }
+        ],
+        "template": "TASKS_RUNNING = data(\"gauge.slave_tasks_running\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_agent\"])",
+        "varName": "TASKS_RUNNING"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    }
+  ]
+}

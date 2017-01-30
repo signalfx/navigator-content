@@ -1,0 +1,286 @@
+{
+  "id": "collectd hosts",
+  "displayName": "Hosts (collectd)",
+  "category": "Hosts",
+  "type": "elemental",
+  "alertQuery": "_exists_:host",
+  "requiredProperties": [
+    "host"
+  ],
+  "idTemplate": "{{host}}",
+  "idName": "Host",
+  "mtsQuery": "sf_metric:cpu.utilization AND _exists_:host",
+  "systemDashboardPrefix": "collectd",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "host",
+    "sf_key": [
+      "host"
+    ],
+    "isProperty": true,
+    "host": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "Memory",
+        "properties": [
+          "host_mem_total"
+        ]
+      },
+      {
+        "header": "Processor",
+        "properties": [
+          "host_processor",
+          "host_cpu_cores",
+          "host_cpu_model",
+          "host_logical_cpus",
+          "host_physical_cpus"
+        ]
+      },
+      {
+        "header": "OS",
+        "properties": [
+          "host_kernel_name",
+          "host_kernel_release",
+          "host_kernel_version"
+        ]
+      },
+      {
+        "header": "Agent",
+        "properties": [
+          "host_collectd_version",
+          "host_metadata_version"
+        ]
+      }
+    ],
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      },
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Host",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "host_kernel_name",
+      "displayName": "OS"
+    },
+    {
+      "property": "host_mem_total",
+      "displayName": "Memory",
+      "format": "Kilobytes"
+    },
+    {
+      "property": "host_logical_cpus",
+      "displayName": "vCPU"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "aws_tag_Name",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "host_collect_version",
+      "displayName": "collectd version"
+    },
+    {
+      "property": "host_kernel_name",
+      "displayName": "OS"
+    },
+    {
+      "property": "host_mem_total",
+      "displayName": "Memory",
+      "format": "Kilobytes"
+    },
+    {
+      "property": "host_logical_cpus",
+      "displayName": "vCPU"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "collectd.cpu.utilization",
+      "displayName": "cpu.utilization",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "cpu.utilization"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.memory.utilization",
+      "displayName": "memory.utilization",
+      "valueLabel": "Memory Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "memory.utilization"
+      ],
+      "description": "Color hosts based on percentage of available memory being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "MEMORY_UTILIZATION = data(\"memory.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "MEMORY_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.disk.summary_utilization",
+      "displayName": "disk.summary_utilization",
+      "valueLabel": "Disk Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "disk.summary_utilization"
+      ],
+      "description": "Color hosts based on percentage of available disk space being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_UTILIZATION = data(\"disk.summary_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "DISK_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.network.total",
+      "displayName": "network.total",
+      "metricSelectors": [
+        "network.total"
+      ],
+      "description": "Color hosts by relative amount of network traffic in bits per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_TOTAL = data(\"network.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "NETWORK_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "collectd.disk_ops.total",
+      "displayName": "disk_ops.total",
+      "metricSelectors": [
+        "disk_ops.total"
+      ],
+      "description": "Color hosts by the relative number of disk operations per second: lowest 20% of disk operations (green) to highest 20% of disk operations (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_OPS_TOTAL = data(\"disk_ops.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "DISK_OPS_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "___SF_ALERT_COLLECTD",
+      "valueLabel": "Most severe alert",
+      "valueFormat": "Alert Severity",
+      "displayName": "Most severe alert",
+      "metricSelectors": [],
+      "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
+      "isEventFeed": true,
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}

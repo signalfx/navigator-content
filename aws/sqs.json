@@ -1,0 +1,136 @@
+{
+  "id": "sqs queues",
+  "unreleased": true,
+  "displayName": "SQS Queues",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:QueueName",
+  "requiredProperties": [
+    "QueueName"
+  ],
+  "idTemplate": "{{QueueName}}",
+  "idName": "Queue",
+  "mtsQuery": "sf_metric:NumberOfMessagesSent AND sf_key:QueueName AND _exists_:QueueName",
+  "systemDashboardPrefix": "SQS",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "QueueName",
+    "sf_key": [
+      "QueueName"
+    ],
+    "isProperty": true,
+    "QueueName": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "aws_engine",
+      "displayName": "Engine"
+    },
+    {
+      "property": "aws_db_instance_class",
+      "displayName": "Class"
+    },
+    {
+      "property": "aws_availability_zone",
+      "displayName": "Availability Zone"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.sqs.msgsent",
+      "displayName": "Sent Messages",
+      "metricSelectors": [
+        "NumberOfMessagesSent"
+      ],
+      "description": "Number of message sent",
+      "valueLabel": "Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NumberOfMessagesSent = data(\"NumberOfMessagesSent\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"sum\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).mean(by=[\"QueueName\"])",
+        "varName": "NumberOfMessagesSent"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.msgrecv",
+      "displayName": "Received Messages",
+      "metricSelectors": [
+        "NumberOfMessagesReceived"
+      ],
+      "description": "Number of message Received",
+      "valueLabel": "Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NumberOfMessagesReceived = data(\"NumberOfMessagesReceived\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"sum\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).mean(by=[\"QueueName\"])",
+        "varName": "NumberOfMessagesReceived"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

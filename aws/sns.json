@@ -1,0 +1,98 @@
+{
+  "id": "sns",
+  "unreleased": true,
+  "displayName": "SNS Topics",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:TopicName",
+  "requiredProperties": [
+    "TopicName"
+  ],
+  "idTemplate": "{{TopicName}}",
+  "idName": "Topic",
+  "mtsQuery": "sf_metric:NumberOfMessagesPublished AND sf_key:TopicName AND _exists_:TopicName",
+  "systemDashboardPrefix": "SNS",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "TopicName",
+    "sf_key": [
+      "TopicName"
+    ],
+    "isProperty": true,
+    "TopicName": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.sns.messagespublished",
+      "displayName": "Messages / Min",
+      "metricSelectors": [
+        "NumberOfMessagesPublished"
+      ],
+      "description": "Messages Published",
+      "valueLabel": "Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NumberOfMessagesPublished = data(\"NumberOfMessagesPublished\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"]).scale(60)",
+        "varName": "NumberOfMessagesPublished"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "id": "marathon application instances",
+  "unreleased": true,
+  "displayName": "Application Instances",
+  "category": "Marathon",
+  "categoryPriority": 1000,
+  "type": "elemental",
+  "alertQuery": "_exists_:mesos_task_id",
+  "requiredProperties": [
+    "mesos_task_id"
+  ],
+  "idTemplate": "{{mesos_task_id}}",
+  "idName": "Application Instance",
+  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_task_id",
+  "systemDashboardPrefix": "marathon",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "mesos_task_id",
+    "sf_key": [
+      "mesos_task_id"
+    ],
+    "isProperty": true,
+    "mesos_task_id": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "Memory",
+        "properties": [
+          "host_mem_total"
+        ]
+      },
+      {
+        "header": "Processor",
+        "properties": [
+          "host_processor",
+          "host_cpu_cores",
+          "host_cpu_model",
+          "host_logical_cpus",
+          "host_physical_cpus"
+        ]
+      },
+      {
+        "header": "OS",
+        "properties": [
+          "host_kernel_name",
+          "host_kernel_release",
+          "host_kernel_version"
+        ]
+      },
+      {
+        "header": "Agent",
+        "properties": [
+          "host_collectd_version",
+          "host_metadata_version"
+        ]
+      }
+    ],
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      },
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Task Name (Task ID)",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "mesos_agent",
+      "displayName": "Agent"
+    },
+    {
+      "property": "mesos_cluster",
+      "displayName": "Cluster"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "mesos_task_id",
+      "displayName": "Task ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "mesos_task_name",
+      "displayName": "Task Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "mesos_framework_id",
+      "displayName": "Framework",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "mesos_agent",
+      "displayName": "Agent"
+    },
+    {
+      "property": "mesos_master",
+      "displayName": "Master"
+    },
+    {
+      "property": "mesos_cluster",
+      "displayName": "Cluster"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "marathon.gauge.marathon.task.start.time.elapsed",
+      "valueLabel": "Uptime",
+      "valueFormat": "Seconds",
+      "displayName": "Task Time Elapsed",
+      "metricSelectors": [
+        "gauge.marathon.task.start.time.elapsed"
+      ],
+      "description": "Time since task start (s)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "mesos_task_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "mesos_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "TIME_ELAPSED = data(\"gauge.marathon.task.start.time.elapsed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_task_id\", \"mesos_task_name\", \"mesos_framework_id\", \"mesos_cluster\"])",
+        "varName": "TIME_ELAPSED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

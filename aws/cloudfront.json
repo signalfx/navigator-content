@@ -1,0 +1,142 @@
+{
+  "id": "cloudfront",
+  "unreleased": true,
+  "displayName": "CloudFront Distributions",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:DistributionId",
+  "requiredProperties": [
+    "DistributionId"
+  ],
+  "idTemplate": "{{DistributionId}}",
+  "idName": "Distribution",
+  "mtsQuery": "sf_metric:DatabaseConnections AND sf_key:DistributionId AND _exists_:DistributionId",
+  "systemDashboardPrefix": "CloudFront",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "DistributionId",
+    "sf_key": [
+      "DistributionId"
+    ],
+    "isProperty": true,
+    "DistributionId": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "aws_engine",
+      "displayName": "Engine",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_db_instance_class",
+      "isSummaryProperty": true,
+      "displayName": "Class"
+    },
+    {
+      "property": "aws_availability_zone",
+      "displayName": "Availability Zone"
+    },
+    {
+      "property": "aws_second_availability_zone",
+      "displayName": "Second Availability Zone"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.cloudfront.requests",
+      "displayName": "Requests",
+      "metricSelectors": [
+        "Requests"
+      ],
+      "description": "Number of requests to CloudFront",
+      "valueLabel": "Requests",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "Requests = data(\"Requests\", filter=filter(\"namespace\", \"AWS/CloudFront\") and filter(\"stat\", \"sum\") and filter(\"DistributionId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"DistributionId\"])",
+        "varName": "Requests"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.readiops",
+      "displayName": "Bytes Downloaded",
+      "metricSelectors": [
+        "BytesDownloaded"
+      ],
+      "description": "Bytes downloaded",
+      "valueLabel": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "BytesDownloaded = data(\"BytesDownloaded\", filter=filter(\"namespace\", \"AWS/CloudFront\") and filter(\"stat\", \"sum\") and filter(\"DistributionId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"DistributionId\"])",
+        "varName": "BytesDownloaded"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

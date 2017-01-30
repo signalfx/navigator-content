@@ -1,0 +1,93 @@
+{
+  "id": "elasticashe",
+  "unreleased": true,
+  "displayName": "ElastiCache Clusters",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:CacheClusterId",
+  "requiredProperties": [
+    "CacheClusterId"
+  ],
+  "idTemplate": "{{CacheClusterId}}",
+  "idName": "Cluster",
+  "mtsQuery": "sf_metric:CacheHits AND sf_key:CacheClusterId AND _exists_:CacheClusterId",
+  "systemDashboardPrefix": "ELB",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "CacheClusterId",
+    "sf_key": [
+      "CacheClusterId"
+    ],
+    "isProperty": true,
+    "CacheClusterId": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.elasticache.hitrate",
+      "displayName": "Hit Rate",
+      "metricSelectors": [
+        "CacheHits"
+      ],
+      "description": "Hit rate",
+      "valueLabel": "Rate",
+      "valueType": "Percent",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
+        "varName": "CACHE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}

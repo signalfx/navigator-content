@@ -1,0 +1,98 @@
+{
+  "id": "autoscaling",
+  "unreleased": true,
+  "displayName": "AutoScaling Groups",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:AutoScalingGroupName",
+  "requiredProperties": [
+    "AutoScalingGroupName"
+  ],
+  "idTemplate": "{{AutoScalingGroupName}}",
+  "idName": "Group",
+  "mtsQuery": "sf_metric:GroupTotalInstances AND sf_key:AutoScalingGroupName AND _exists_:AutoScalingGroupName",
+  "systemDashboardPrefix": "AutoScaling",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "AutoScalingGroupName",
+    "sf_key": [
+      "AutoScalingGroupName"
+    ],
+    "isProperty": true,
+    "AutoScalingGroupName": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.autoscaling.instances",
+      "displayName": "Instances",
+      "metricSelectors": [
+        "GroupTotalInstances"
+      ],
+      "description": "Number of instances",
+      "valueLabel": "Instances",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "GroupTotalInstances = data(\"GroupTotalInstances\", filter=filter(\"namespace\", \"AWS/AutoScaling\") and filter(\"stat\", \"mean\") and filter(\"AutoScalingGroupName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"AutoScalingGroupName\"])",
+        "varName": "GroupTotalInstances"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

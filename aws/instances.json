@@ -1,0 +1,345 @@
+{
+  "id": "AWS instances",
+  "displayName": "EC2 Instances",
+  "category": "AWS",
+  "categoryPriority": 50,
+  "type": "elemental",
+  "alertQuery": "_exists_:InstanceId",
+  "requiredProperties": [
+    "InstanceId"
+  ],
+  "proxyProperties": [
+    "aws_instance_id"
+  ],
+  "idTemplate": "{{InstanceId}}",
+  "idName": "Instance",
+  "mtsQuery": "sf_metric:CPUUtilization AND sf_key:InstanceId AND _exists_:InstanceId",
+  "systemDashboardPrefix": "EC2",
+  "aggregateDiscoveryObject": {
+    "sf_type": "Topic",
+    "sf_topic": "InstanceId",
+    "sf_key": [
+      "InstanceId"
+    ],
+    "isProperty": true,
+    "InstanceId": "*"
+  },
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "aws_tag_Name",
+      "displayName": "Name"
+    },
+    {
+      "property": "aws_availability_zone",
+      "displayName": "Availability Zone"
+    },
+    {
+      "property": "aws_instance_type",
+      "displayName": "Instance Type"
+    },
+    {
+      "property": "aws_state",
+      "displayName": "State",
+      "format": "aws_state"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "aws_tag_Name",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "host_collect_version",
+      "displayName": "collectd version"
+    },
+    {
+      "property": "host_kernel_name",
+      "displayName": "OS"
+    },
+    {
+      "property": "host_mem_total",
+      "displayName": "Memory",
+      "format": "Kilobytes"
+    },
+    {
+      "property": "host_logical_cpus",
+      "displayName": "vCPU"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.CPUUtilization",
+      "displayName": "CPUUtilization",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"CPUUtilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.NetworkIn",
+      "displayName": "NetworkIn",
+      "metricSelectors": [
+        "NetworkIn"
+      ],
+      "description": "Color hosts based on network bytes in per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_IN_A = data(\"NetworkIn\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nNETWORK_IN = (NETWORK_IN_A * 60)",
+        "varName": "NETWORK_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "aws.NetworkOut",
+      "displayName": "NetworkOut",
+      "metricSelectors": [
+        "NetworkOut"
+      ],
+      "description": "Color hosts based on network bytes out per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_OUT_A = data(\"NetworkOut\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nNETWORK_OUT = (NETWORK_OUT_A * 60)",
+        "varName": "NETWORK_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "aws.DiskWriteBytes",
+      "displayName": "DiskWriteBytes",
+      "metricSelectors": [
+        "DiskWriteBytes"
+      ],
+      "description": "Color hosts based on bytes written to disk per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_WRITE_BYTES_A = data(\"DiskWriteBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_WRITE_BYTES = (DISK_WRITE_BYTES_A * 60)",
+        "varName": "DISK_WRITE_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "aws.DiskReadBytes",
+      "displayName": "DiskReadBytes",
+      "metricSelectors": [
+        "DiskReadBytes"
+      ],
+      "description": "Color hosts based on bytes read from disk per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_READ_BYTES_A = data(\"DiskReadBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_READ_BYTES = (DISK_READ_BYTES_A * 60)",
+        "varName": "DISK_READ_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "aws.DiskWriteOps",
+      "displayName": "DiskWriteOps",
+      "metricSelectors": [
+        "DiskWriteOps"
+      ],
+      "description": "Color hosts based on disk write operations per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_WRITE_OPS_A = data(\"DiskWriteOps\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_WRITE_OPS = (DISK_WRITE_OPS_A * 60)",
+        "varName": "DISK_WRITE_OPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "aws.DiskReadOps",
+      "displayName": "DiskReadOps",
+      "metricSelectors": [
+        "DiskReadOps"
+      ],
+      "description": "Color hosts based on disk read operations per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_READ_OPS_A = data(\"DiskReadOps\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_READ_OPS = (DISK_READ_OPS_A * 60)",
+        "varName": "DISK_READ_OPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "___SF_ALERT_AWS_METRIC___",
+      "valueLabel": "Most severe alert",
+      "valueFormat": "Alert Severity",
+      "displayName": "Most severe alert",
+      "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
+      "isEventFeed": true,
+      "metricSelectors": [],
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"CPUUtilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}
