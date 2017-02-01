@@ -135,7 +135,7 @@
       "metricSelectors": [
         "cpu.utilization"
       ],
-      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "description": "Color hosts based on percentage of CPU utilized: under 20% (green) to over 80% (red)",
       "job": {
         "resolution": 60000,
         "filters": [
