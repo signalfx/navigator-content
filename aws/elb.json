@@ -13,15 +13,7 @@
   "idName": "Load Balancer",
   "mtsQuery": "sf_metric:RequestCount AND sf_key:LoadBalancerName AND _exists_:LoadBalancerName",
   "systemDashboardPrefix": "ELB",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "LoadBalancerName",
-    "sf_key": [
-      "LoadBalancerName"
-    ],
-    "isProperty": true,
-    "LoadBalancerName": "*"
-  },
+  "discoveryQuery": ["sf_key:LoadBalancerName"],
   "propertyColumns": [
     [
       {
@@ -74,7 +66,7 @@
       "metricSelectors": [
         "RequestCount"
       ],
-      "description": "Requests per minute.",
+      "description": "Requests per minute",
       "valueLabel": "Requests",
       "job": {
         "resolution": 300000,

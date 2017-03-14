@@ -8,15 +8,7 @@
   "category": "Mesosphere",
   "categoryPriority": 10,
   "systemDashboardPrefix": "Mesos Overview",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "mesos_agent",
-    "sf_key": [
-      "mesos_agent"
-    ],
-    "isProperty": true,
-    "mesos_agent": "*"
-  },
+  "discoveryQuery": ["sf_key:mesos_agent"],
   "tooltipKeyList": [
     {
       "property": "mesos_agent",

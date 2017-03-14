@@ -13,15 +13,7 @@
   "idName": "Application Instance",
   "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_task_id",
   "systemDashboardPrefix": "marathon",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "mesos_task_id",
-    "sf_key": [
-      "mesos_task_id"
-    ],
-    "isProperty": true,
-    "mesos_task_id": "*"
-  },
+  "discoveryQuery": ["sf_key:mesos_task_id"],
   "propertyColumns": [
     [
       {

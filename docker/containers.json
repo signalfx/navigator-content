@@ -12,17 +12,7 @@
   "idName": "Container (Host)",
   "mtsQuery": "sf_metric:cpu.usage.total AND plugin:docker",
   "systemDashboardPrefix": "Docker",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "plugin",
-    "sf_key": [
-      "plugin",
-      "plugin_instance"
-    ],
-    "isProperty": true,
-    "plugin": "docker",
-    "plugin_instance": "*"
-  },
+  "discoveryQuery": ["_exists_:plugin","plugin:docker","sf_key:plugin_instance"],
   "propertyColumns": [
     [
       {

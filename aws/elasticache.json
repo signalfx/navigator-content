@@ -13,15 +13,7 @@
   "idName": "Cluster",
   "mtsQuery": "sf_metric:CacheHits AND sf_key:CacheClusterId AND _exists_:CacheClusterId",
   "systemDashboardPrefix": "ELB",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "CacheClusterId",
-    "sf_key": [
-      "CacheClusterId"
-    ],
-    "isProperty": true,
-    "CacheClusterId": "*"
-  },
+  "discoveryQuery": ["sf_key:CacheClusterId"],
   "propertyColumns": [
     [
       {

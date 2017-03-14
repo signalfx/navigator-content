@@ -13,15 +13,7 @@
   "idName": "Database",
   "mtsQuery": "sf_metric:DatabaseConnections AND sf_key:DBInstanceIdentifier AND _exists_:DBInstanceIdentifier",
   "systemDashboardPrefix": "RDS",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "DBInstanceIdentifier",
-    "sf_key": [
-      "DBInstanceIdentifier"
-    ],
-    "isProperty": true,
-    "DBInstanceIdentifier": "*"
-  },
+  "discoveryQuery": ["sf_key:DBInstanceIdentifier"],
   "propertyColumns": [
     [
       {

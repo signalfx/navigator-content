@@ -13,15 +13,7 @@
   "idName": "Topic",
   "mtsQuery": "sf_metric:NumberOfMessagesPublished AND sf_key:TopicName AND _exists_:TopicName",
   "systemDashboardPrefix": "SNS",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "TopicName",
-    "sf_key": [
-      "TopicName"
-    ],
-    "isProperty": true,
-    "TopicName": "*"
-  },
+  "discoveryQuery": ["sf_key:TopicName"],
   "propertyColumns": [
     [
       {

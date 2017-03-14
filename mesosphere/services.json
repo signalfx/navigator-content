@@ -7,15 +7,7 @@
   "mtsQuery": "sf_metric:gauge.mesos.service.health AND _exists_:system_component",
   "category": "Mesosphere",
   "categoryPriority": 100,
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "system_component_name",
-    "sf_key": [
-      "system_component_name"
-    ],
-    "isProperty": true,
-    "system_component_name": "*"
-  },
+  "discoveryQuery": ["sf_key:system_component_name"],
   "tooltipKeyList": [
     {
       "property": "aws_tag_Name",

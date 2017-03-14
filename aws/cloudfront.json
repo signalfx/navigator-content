@@ -13,15 +13,7 @@
   "idName": "Distribution",
   "mtsQuery": "sf_metric:DatabaseConnections AND sf_key:DistributionId AND _exists_:DistributionId",
   "systemDashboardPrefix": "CloudFront",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "DistributionId",
-    "sf_key": [
-      "DistributionId"
-    ],
-    "isProperty": true,
-    "DistributionId": "*"
-  },
+  "discoveryQuery": ["sf_key:DistributionId"],
   "propertyColumns": [
     [
       {

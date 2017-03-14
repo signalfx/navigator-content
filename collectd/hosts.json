@@ -11,15 +11,7 @@
   "idName": "Host",
   "mtsQuery": "sf_metric:cpu.utilization AND _exists_:host",
   "systemDashboardPrefix": "collectd",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "host",
-    "sf_key": [
-      "host"
-    ],
-    "isProperty": true,
-    "host": "*"
-  },
+  "discoveryQuery": ["sf_key:host"],
   "propertyColumns": [
     [
       {

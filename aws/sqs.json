@@ -13,15 +13,7 @@
   "idName": "Queue",
   "mtsQuery": "sf_metric:NumberOfMessagesSent AND sf_key:QueueName AND _exists_:QueueName",
   "systemDashboardPrefix": "SQS",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "QueueName",
-    "sf_key": [
-      "QueueName"
-    ],
-    "isProperty": true,
-    "QueueName": "*"
-  },
+  "discoveryQuery": ["sf_key:QueueName"],
   "propertyColumns": [
     [
       {
