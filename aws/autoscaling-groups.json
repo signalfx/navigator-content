@@ -13,15 +13,7 @@
   "idName": "Group",
   "mtsQuery": "sf_metric:GroupTotalInstances AND sf_key:AutoScalingGroupName AND _exists_:AutoScalingGroupName",
   "systemDashboardPrefix": "AutoScaling",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "AutoScalingGroupName",
-    "sf_key": [
-      "AutoScalingGroupName"
-    ],
-    "isProperty": true,
-    "AutoScalingGroupName": "*"
-  },
+  "discoveryQuery": ["sf_key:AutoScalingGroupName"],
   "propertyColumns": [
     [
       {

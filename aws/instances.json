@@ -15,15 +15,7 @@
   "idName": "Instance",
   "mtsQuery": "sf_metric:CPUUtilization AND sf_key:InstanceId AND _exists_:InstanceId",
   "systemDashboardPrefix": "EC2",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "InstanceId",
-    "sf_key": [
-      "InstanceId"
-    ],
-    "isProperty": true,
-    "InstanceId": "*"
-  },
+  "discoveryQuery": ["sf_key:InstanceId"],
   "propertyColumns": [
     [
       {

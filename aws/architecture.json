@@ -8,15 +8,7 @@
   "mtsQuery": "sf_metric:CPUUtilization",
   "category": "AWS",
   "systemDashboardPrefix": "AWS",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "namespace",
-    "sf_key": [
-      "namespace"
-    ],
-    "isProperty": true,
-    "namespace": "*"
-  },
+  "discoveryQuery":["sf_key:namespace"],
   "tooltipKeyList": [
     {
       "property": "value",

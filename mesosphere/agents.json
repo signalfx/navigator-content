@@ -13,15 +13,7 @@
   "idName": "Agent",
   "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_agent",
   "systemDashboardPrefix": "Mesos",
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "mesos_agent",
-    "sf_key": [
-      "mesos_agent"
-    ],
-    "isProperty": true,
-    "mesos_agent": "*"
-  },
+  "discoveryQuery": ["sf_key:mesos_agent"],
   "propertyColumns": [
     [
       {

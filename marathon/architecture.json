@@ -7,15 +7,7 @@
   "mtsQuery": "sf_metric:gauge.marathon.app.tasks.unhealthy AND _exists_:mesos_task_name",
   "category": "Marathon",
   "categoryPriority": 10,
-  "aggregateDiscoveryObject": {
-    "sf_type": "Topic",
-    "sf_topic": "mesos_task_id",
-    "sf_key": [
-      "mesos_task_id"
-    ],
-    "isProperty": true,
-    "mesos_task_id": "*"
-  },
+  "discoveryQuery": ["sf_key:mesos_task_id"],
   "tooltipKeyList": [
     {
       "property": "mesos_task_name",
