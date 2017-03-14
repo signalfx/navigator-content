@@ -74,7 +74,7 @@
       "metricSelectors": [
         "RequestCount"
       ],
-      "description": "Requests per minute",
+      "description": "Requests per minute.",
       "valueLabel": "Requests",
       "job": {
         "resolution": 300000,
