@@ -121,6 +121,7 @@
   "metrics": [
     {
       "id": "collectd.cpu.utilization",
+      "type": "metric",
       "displayName": "cpu.utilization",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -148,6 +149,7 @@
     },
     {
       "id": "collectd.memory.utilization",
+      "type": "metric",
       "displayName": "memory.utilization",
       "valueLabel": "Memory Use",
       "valueFormat": "Percentage",
@@ -175,6 +177,7 @@
     },
     {
       "id": "collectd.disk.summary_utilization",
+      "type": "metric",
       "displayName": "disk.summary_utilization",
       "valueLabel": "Disk Use",
       "valueFormat": "Percentage",
@@ -202,6 +205,7 @@
     },
     {
       "id": "collectd.network.total",
+      "type": "metric",
       "displayName": "network.total",
       "metricSelectors": [
         "network.total"
@@ -226,6 +230,7 @@
     },
     {
       "id": "collectd.disk_ops.total",
+      "type": "metric",
       "displayName": "disk_ops.total",
       "metricSelectors": [
         "disk_ops.total"
@@ -250,12 +255,12 @@
     },
     {
       "id": "___SF_ALERT_COLLECTD",
+      "type": "event",
       "valueLabel": "Most severe alert",
       "valueFormat": "Alert Severity",
       "displayName": "Most severe alert",
       "metricSelectors": [],
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
-      "isEventFeed": true,
       "job": {
         "resolution": 60000,
         "filters": [

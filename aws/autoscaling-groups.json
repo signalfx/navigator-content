@@ -62,6 +62,7 @@
   "metrics": [
     {
       "id": "aws.autoscaling.instances",
+      "type": "metric",
       "displayName": "Instances",
       "metricSelectors": [
         "GroupTotalInstances"

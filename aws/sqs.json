@@ -74,6 +74,7 @@
   "metrics": [
     {
       "id": "aws.sqs.msgsent",
+      "type": "metric",
       "displayName": "Sent Messages",
       "metricSelectors": [
         "NumberOfMessagesSent"
@@ -100,6 +101,7 @@
     },
     {
       "id": "aws.sqs.msgrecv",
+      "type": "metric",
       "displayName": "Received Messages",
       "metricSelectors": [
         "NumberOfMessagesReceived"
