@@ -80,6 +80,7 @@
   "metrics": [
     {
       "id": "aws.cloudfront.requests",
+      "type": "metric",
       "displayName": "Requests",
       "metricSelectors": [
         "Requests"
@@ -106,6 +107,7 @@
     },
     {
       "id": "aws.rds.readiops",
+      "type": "metric",
       "displayName": "Bytes Downloaded",
       "metricSelectors": [
         "BytesDownloaded"

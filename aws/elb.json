@@ -62,6 +62,7 @@
   "metrics": [
     {
       "id": "aws.elb.requests",
+      "type": "metric",
       "displayName": "Requests / Min",
       "metricSelectors": [
         "RequestCount"

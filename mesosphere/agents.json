@@ -118,6 +118,7 @@
   "metrics": [
     {
       "id": "mesos.cpu.utilization",
+      "type": "metric",
       "displayName": "CPU Utilization",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -145,6 +146,7 @@
     },
     {
       "id": "mesos.tasks.running",
+      "type": "metric",
       "displayName": "Tasks Running",
       "metricSelectors": [
         "gauge.slave_tasks_running "

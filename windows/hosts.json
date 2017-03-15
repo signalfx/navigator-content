@@ -54,6 +54,7 @@
   "metrics": [
     {
       "id": "windows.processor.pct_processor_time",
+      "type": "metric",
       "displayName": "CPU Utilization",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -86,6 +87,7 @@
     },
     {
       "id": "windows.memory.utilization",
+      "type": "metric",
       "displayName": "Memory Utilization",
       "valueLabel": "Memory Use",
       "valueFormat": "Percentage",
@@ -114,6 +116,7 @@
     },
     {
       "id": "windows.logicaldisk.pct_free_space",
+      "type": "metric",
       "displayName": "Disk Utilization",
       "valueLabel": "Disk Use",
       "valueFormat": "Percentage",
@@ -146,6 +149,7 @@
     },
     {
       "id": "windows.network_interface.bytes_total_sec",
+      "type": "metric",
       "displayName": "Network Traffic",
       "metricSelectors": [
         "network_interface.bytes_total_sec"
@@ -172,6 +176,7 @@
     },
     {
       "id": "windows.paging_file.pct_usage",
+      "type": "metric",
       "displayName": "Page File Utilization",
       "metricSelectors": [
         "paging_file.pct_usage"
@@ -203,12 +208,12 @@
     },
     {
       "id": "___SF_ALERT_COLLECTD",
+      "type": "event",
       "valueLabel": "Most severe alert",
       "valueFormat": "Alert Severity",
       "displayName": "Most severe alert",
       "metricSelectors": [],
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
-      "isEventFeed": true,
       "job": {
         "resolution": 60000,
         "filters": [

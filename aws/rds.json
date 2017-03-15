@@ -92,6 +92,7 @@
   "metrics": [
     {
       "id": "aws.rds.connections",
+      "type": "metric",
       "displayName": "Connections",
       "metricSelectors": [
         "DatabaseConnections"
@@ -118,6 +119,7 @@
     },
     {
       "id": "aws.rds.readiops",
+      "type": "metric",
       "displayName": "Read IOPS",
       "metricSelectors": [
         "ReadIOPS"
@@ -144,6 +146,7 @@
     },
     {
       "id": "aws.rds.writeiops",
+      "type": "metric",
       "displayName": "Write IOPS",
       "metricSelectors": [
         "WriteIOPS"
@@ -170,6 +173,7 @@
     },
     {
       "id": "aws.rds.readlatency",
+      "type": "metric",
       "displayName": "Read Latency",
       "metricSelectors": [
         "ReadLatency"
@@ -196,6 +200,7 @@
     },
     {
       "id": "aws.rds.writelatency",
+      "type": "metric",
       "displayName": "Write Latency",
       "metricSelectors": [
         "WriteLatency"
@@ -222,6 +227,7 @@
     },
     {
       "id": "aws.rds.readthroughput",
+      "type": "metric",
       "displayName": "Read Throughput",
       "metricSelectors": [
         "ReadThroughput"
@@ -248,6 +254,7 @@
     },
     {
       "id": "aws.rds.writethroughput",
+      "type": "metric",
       "displayName": "Write Throughput",
       "metricSelectors": [
         "WriteThroughput"

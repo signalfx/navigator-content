@@ -123,6 +123,7 @@
   "metrics": [
     {
       "id": "marathon.gauge.marathon.task.start.time.elapsed",
+      "type": "metric",
       "valueLabel": "Uptime",
       "valueFormat": "Seconds",
       "displayName": "Task Time Elapsed",

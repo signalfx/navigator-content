@@ -98,6 +98,7 @@
   "metrics": [
     {
       "id": "aws.CPUUtilization",
+      "type": "metric",
       "displayName": "CPUUtilization",
       "metricSelectors": [
         "CPUUtilization"
@@ -130,6 +131,7 @@
     },
     {
       "id": "aws.NetworkIn",
+      "type": "metric",
       "displayName": "NetworkIn",
       "metricSelectors": [
         "NetworkIn"
@@ -159,6 +161,7 @@
     },
     {
       "id": "aws.NetworkOut",
+      "type": "metric",
       "displayName": "NetworkOut",
       "metricSelectors": [
         "NetworkOut"
@@ -188,6 +191,7 @@
     },
     {
       "id": "aws.DiskWriteBytes",
+      "type": "metric",
       "displayName": "DiskWriteBytes",
       "metricSelectors": [
         "DiskWriteBytes"
@@ -217,6 +221,7 @@
     },
     {
       "id": "aws.DiskReadBytes",
+      "type": "metric",
       "displayName": "DiskReadBytes",
       "metricSelectors": [
         "DiskReadBytes"
@@ -246,6 +251,7 @@
     },
     {
       "id": "aws.DiskWriteOps",
+      "type": "metric",
       "displayName": "DiskWriteOps",
       "metricSelectors": [
         "DiskWriteOps"
@@ -275,6 +281,7 @@
     },
     {
       "id": "aws.DiskReadOps",
+      "type": "metric",
       "displayName": "DiskReadOps",
       "metricSelectors": [
         "DiskReadOps"
@@ -304,11 +311,11 @@
     },
     {
       "id": "___SF_ALERT_AWS_METRIC___",
+      "type": "event",
       "valueLabel": "Most severe alert",
       "valueFormat": "Alert Severity",
       "displayName": "Most severe alert",
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
-      "isEventFeed": true,
       "metricSelectors": [],
       "job": {
         "resolution": 300000,

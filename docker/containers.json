@@ -116,6 +116,7 @@
   "metrics": [
     {
       "id": "cpu.usage.total",
+      "type": "metric",
       "displayName": "CPU Utilization",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -149,6 +150,7 @@
     },
     {
       "id": "memory.usage.total",
+      "type": "metric",
       "displayName": "Memory Utilization",
       "valueLabel": "Memory Use",
       "valueFormat": "Percentage",
@@ -182,6 +184,7 @@
     },
     {
       "id": "network.usage.rx_bytes",
+      "type": "metric",
       "displayName": "Network In (bits/second)",
       "metricSelectors": [
         "network.usage.rx_bytes"
@@ -211,6 +214,7 @@
     },
     {
       "id": "network.usage.tx_bytes",
+      "type": "metric",
       "metricSelectors": [
         "network.usage.tx_bytes"
       ],
@@ -240,12 +244,12 @@
     },
     {
       "id": "___SF_ALERT_DOCKER_METRIC___",
+      "type": "event",
       "displayName": "Most severe alert",
       "valueLabel": "Most severe alert",
       "valueFormat": "Alert Severity",
       "metricSelectors": [],
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
-      "isEventFeed": true,
       "alertAggregation": [
         "host",
         "plugin_instance"
