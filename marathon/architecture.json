@@ -55,11 +55,12 @@
         {
           "key": "sf_streamLabel",
           "drawBoundary": true,
-          "memberSettings": {
-            "Applications": {
+          "memberSettings": [
+            {
+              "name": "Applications",
               "bigger": true
             }
-          },
+          ],
           "children": [
             {
               "key": "mesos_task_name",

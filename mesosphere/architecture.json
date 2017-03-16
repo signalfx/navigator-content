@@ -42,14 +42,16 @@
         {
           "key": "sf_streamLabel",
           "drawBoundary": true,
-          "memberSettings": {
-            "Active Masters": {
+          "memberSettings": [
+            {
+              "name": "Active Masters",
               "bigger": true
             },
-            "Standby Masters": {
+            {
+              "name": "Standby Masters",
               "bigger": true
             }
-          }
+          ]
         }
       ]
     },
