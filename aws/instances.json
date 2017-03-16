@@ -313,7 +313,7 @@
       "id": "___SF_ALERT_AWS_METRIC___",
       "type": "event",
       "valueLabel": "Most severe alert",
-      "valueFormat": "Alert Severity",
+      "valueFormat": "AlertSeverity",
       "displayName": "Most severe alert",
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
       "metricSelectors": [],

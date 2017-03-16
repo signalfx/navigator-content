@@ -247,7 +247,7 @@
       "type": "event",
       "displayName": "Most severe alert",
       "valueLabel": "Most severe alert",
-      "valueFormat": "Alert Severity",
+      "valueFormat": "AlertSeverity",
       "metricSelectors": [],
       "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
       "alertAggregation": [
