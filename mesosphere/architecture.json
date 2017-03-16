@@ -107,10 +107,7 @@
             "#8856a7",
             "#810f7c"
           ]
-        },
-        "siblingModes": [
-          "mesos agents"
-        ]
+        }
       }
     ]
   }
