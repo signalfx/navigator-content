@@ -255,10 +255,10 @@
         "plugin_instance"
       ],
       "alertFilters": [
-        [
-          "plugin",
-          "docker"
-        ]
+        {
+          "property": "plugin",
+          "propertyValue": "docker"
+        }
       ],
       "job": {
         "resolution": 300000,
