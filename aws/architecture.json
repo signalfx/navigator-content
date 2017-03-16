@@ -26,14 +26,16 @@
     "groupingStructure": {
       "key": "sf_streamLabel",
       "drawBoundary": true,
-      "memberSettings": {
-        "SQS Queues": {
+      "memberSettings": [
+        {
+          "name": "SQS Queues",
           "bigger": true
         },
-        "RDS Databases": {
+        {
+          "name": "RDS Databases",
           "bigger": true
         }
-      }
+      ]
     },
     "metrics": [
       {

@@ -50,14 +50,16 @@
         {
           "key": "sf_streamLabel",
           "drawBoundary": true,
-          "memberSettings": {
-            "Services": {
+          "memberSettings": [
+            {
+              "name": "Services",
               "bigger": true
             },
-            "Frameworks": {
+            {
+              "name": "Frameworks",
               "bigger": true
             }
-          },
+          ],
           "children": [
             {
               "key": "mesos_framework_name",
