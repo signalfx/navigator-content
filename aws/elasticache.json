@@ -69,7 +69,7 @@
       ],
       "description": "Hit rate",
       "valueLabel": "Rate",
-      "valueFormat": "Percent",
+      "valueFormat": "Percentage",
       "job": {
         "resolution": 300000,
         "filters": [],
