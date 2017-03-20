@@ -1,5 +1,5 @@
 {
-  "id": "sns",
+  "id": "elb",
   "unreleased": true,
   "displayName": "ELB Load Balancers",
   "category": "AWS",
