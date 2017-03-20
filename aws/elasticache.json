@@ -1,5 +1,5 @@
 {
-  "id": "elasticashe",
+  "id": "elasticache",
   "unreleased": true,
   "displayName": "ElastiCache Clusters",
   "category": "AWS",
