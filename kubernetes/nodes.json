@@ -1,0 +1,275 @@
+{
+  "id": "kubernetes nodes",
+  "unreleased": true,
+  "displayName": "Kubernetes Nodes",
+  "category": "Kubernetes",
+  "categoryPriority": 20,
+  "type": "elemental",
+  "alertQuery": "_exists_:kubernetes_cluster",
+  "requiredProperties": [
+    "host"
+  ],
+  "idTemplate": "{{host}}",
+  "idName": "Node",
+  "mtsQuery": "_exists_:kubernetes_cluster",
+  "systemDashboardPrefix": "K8s Node",
+  "discoveryQuery": [
+    "sf_key:kubernetes_cluster"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "kubernetes_cluster",
+      "displayName": "Cluster"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "kubernetes_cluster",
+      "displayName": "Cluster",
+      "isSummaryProperty": true
+    }
+  ],
+  "metrics": [
+    {
+      "id": "collectd.cpu.utilization",
+      "type": "metric",
+      "displayName": "CPU utilization",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "cpu.utilization"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.memory.utilization",
+      "type": "metric",
+      "displayName": "Memory utilization",
+      "valueLabel": "Memory Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "memory.utilization"
+      ],
+      "description": "Color hosts based on percentage of available memory being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "MEMORY_UTILIZATION = data(\"memory.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "MEMORY_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.disk.summary_utilization",
+      "type": "metric",
+      "displayName": "Disk utilization",
+      "valueLabel": "Disk Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "disk.summary_utilization"
+      ],
+      "description": "Color hosts based on percentage of available disk space being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_UTILIZATION = data(\"disk.summary_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "DISK_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "collectd.network.total",
+      "type": "metric",
+      "displayName": "Network total",
+      "metricSelectors": [
+        "network.total"
+      ],
+      "description": "Color hosts by relative amount of network traffic in bits per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_TOTAL = data(\"network.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "NETWORK_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "network.errors",
+      "type": "metric",
+      "displayName": "Pod network errors",
+      "metricSelectors": [
+        "pod_network_transmit_errors_total",
+        "pod_network_receive_errors_total"
+      ],
+      "description": "Total number of network errors from pods on this node",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "ERR_TX = data(\"pod_network_transmit_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\"])\nERR_RX = data(\"pod_network_receive_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\"])\nERR_TOTAL = ERR_TX + ERR_RX",
+        "varName": "ERR_TOTAL"
+      },
+      "coloring": {
+        "method": "threshold",
+        "minValue": 0,
+        "limits": [
+          {
+            "lowerLimit": 1,
+            "color": "#ea1849"
+          },
+          {
+            "color": "#05ce00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "___SF_ALERT_COLLECTD",
+      "type": "event",
+      "valueLabel": "Most severe alert",
+      "valueFormat": "AlertSeverity",
+      "displayName": "Most severe alert",
+      "metricSelectors": [],
+      "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}
