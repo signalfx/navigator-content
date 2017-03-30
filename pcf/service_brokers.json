@@ -1,0 +1,171 @@
+{
+  "id": "cf service brokers",
+  "unreleased": true,
+  "displayName": "Service Brokers",
+  "category": "Pivotal Cloud Foundry",
+  "categoryPriority": 60,
+  "type": "architectural",
+  "alertQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",
+  "requiredProperties": [
+    "host"
+  ],
+  "mtsQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",
+  "systemDashboardPrefix": "Cloud Foundry",
+  "discoveryQuery": [
+    "sf_key:job"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      },
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job",
+      "isSummaryProperty": true
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job",
+      "isSummaryProperty": true
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 300000,
+      "filters": [],
+      "template": "CONSUL_SERVER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"consul_server\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nETCD_SERVER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"etcd_server\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nETCD_TLS_SERVER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"etcd_tls_server\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nNATS = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"nats\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true
+    },
+    "metrics": [
+      {
+        "id": "cf.nats.healthy",
+        "name": "NATS",
+        "idTemplate": "{{host}}",
+        "varName": "NATS",
+        "valueLabel": "System Health",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.etcd.healthy",
+        "name": "etcds",
+        "idTemplate": "{{host}}",
+        "varName": "ETCD_SERVER",
+        "valueLabel": "System Health",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.etcd_tls.healthy",
+        "name": "etcds (TLS)",
+        "idTemplate": "{{host}}",
+        "varName": "ETCD_TLS_SERVER",
+        "valueLabel": "System Health",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.consul.healthy",
+        "name": "Consul",
+        "idTemplate": "{{host}}",
+        "varName": "CONSUL_SERVER",
+        "valueLabel": "System Health",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

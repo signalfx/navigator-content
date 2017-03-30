@@ -1,0 +1,377 @@
+{
+  "id": "cf instances",
+  "unreleased": true,
+  "displayName": "Instances",
+  "category": "Pivotal Cloud Foundry",
+  "categoryPriority": 10,
+  "type": "elemental",
+  "alertQuery": "metric_source:cloudfoundry",
+  "requiredProperties": [
+    "host"
+  ],
+  "idTemplate": "{{host}}",
+  "idName": "Host",
+  "mtsQuery": "metric_source:cloudfoundry",
+  "systemDashboardPrefix": "Cloud Foundry",
+  "discoveryQuery": [
+    "sf_key:job"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      },
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job",
+      "isSummaryProperty": true
+    }
+  ],
+  "metrics": [
+    {
+      "id": "cf.system.cpu.total",
+      "type": "metric",
+      "displayName": "Total CPU Load",
+      "metricSelectors": [
+        "system.cpu.sys",
+        "system.cpu.user"
+      ],
+      "description": "Color hosts by CPU cores consumed by System and User.",
+      "valueLabel": "Total CPU Load",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SYSTEM_CPU_LOAD = data(\"system.cpu.sys\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nUSER_CPU_LOAD = data(\"system.cpu.user\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nTOTAL_CPU_LOAD = SYSTEM_CPU_LOAD + USER_CPU_LOAD",
+        "varName": "TOTAL_CPU_LOAD"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "cf.system.cpu.sys",
+      "type": "metric",
+      "displayName": "System CPU Load",
+      "metricSelectors": [
+        "system.cpu.sys"
+      ],
+      "description": "Color hosts by CPU cores consumed by the kernel.",
+      "valueLabel": "System CPU Load",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SYSTEM_CPU_LOAD = data(\"system.cpu.sys\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "SYSTEM_CPU_LOAD"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "cf.system.cpu.user",
+      "type": "metric",
+      "displayName": "User CPU Load",
+      "metricSelectors": [
+        "system.cpu.user"
+      ],
+      "description": "Color hosts by CPU cores consumed by userspace applications.",
+      "valueLabel": "User CPU Load",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "USER_CPU_LOAD = data(\"system.cpu.user\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "USER_CPU_LOAD"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "cf.system.cpu.wait",
+      "type": "metric",
+      "displayName": "Wait CPU Load",
+      "metricSelectors": [
+        "system.cpu.wait"
+      ],
+      "description": "Color hosts by CPU cores spent waiting for I/O.",
+      "valueLabel": "Wait CPU Load",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "USER_CPU_LOAD = data(\"system.cpu.wait\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "WAIT_CPU_LOAD"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "cf.system.disk.ephemeral.percent",
+      "type": "metric",
+      "displayName": "Ephemeral Disk Utilization",
+      "metricSelectors": [
+        "system.disk.ephemeral.percent"
+      ],
+      "description": "Color hosts by percentage of ephemeral disk used: under 20% (green) to over 80% (red).",
+      "valueLabel": "Ephemeral Disk Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SYSTEM_DISK_EPHEMERAL = data(\"system.disk.ephemeral.percent\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "SYSTEM_DISK_EPHEMERAL"
+      },
+      "coloring": {
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cf.system.disk.system.percent",
+      "type": "metric",
+      "displayName": "System Disk Utilization",
+      "metricSelectors": [
+        "system.disk.system.percent"
+      ],
+      "description": "Color hosts by percentage of available system disk used: under 20% (green) to over 80% (red).",
+      "valueLabel": "System Disk Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SYSTEM_DISK = data(\"system.disk.system.percent\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "SYSTEM_DISK"
+      },
+      "coloring": {
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cf.system.mem.percent",
+      "type": "metric",
+      "displayName": "Memory Utilization",
+      "metricSelectors": [
+        "system.mem.percent"
+      ],
+      "description": "Color hosts by percentage of available memory used: under 20% (green) to over 80% (red).",
+      "valueLabel": "Memory Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MEMORY_UTILIZATION = data(\"system.mem.percent\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "MEMORY_UTILIZATION"
+      },
+      "coloring": {
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cf.system.swap.percent",
+      "type": "metric",
+      "displayName": "Swap Utilization",
+      "metricSelectors": [
+        "system.swap.percent"
+      ],
+      "description": "Color hosts by percentage of available swap space used: under 20% (green) to over 80% (red).",
+      "valueLabel": "Swap Memory Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SWAP_UTILIZATION = data(\"system.swap.percent\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "SWAP_UTILIZATION"
+      },
+      "coloring": {
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cf.system.healthy",
+      "type": "metric",
+      "displayName": "System Health",
+      "metricSelectors": [
+        "system.healthy"
+      ],
+      "description": "Color hosts by overall summary of the system\"s health: 1 for healthy (green) or 0 for unhealthy (red).",
+      "valueLabel": "System Health",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SYSTEM_HEALTHY = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "SYSTEM_HEALTHY"
+      },
+      "coloring": {
+        "method": "threshold",
+        "minValue": 0,
+        "maxValue": 1,
+        "limits": [
+          {
+            "lowerLimit": 1,
+            "color": "#05ce00"
+          },
+          {
+            "lowerLimit": 0,
+            "color": "#ea1849"
+          }
+        ]
+      }
+    }
+  ]
+}
