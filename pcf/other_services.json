@@ -1,0 +1,148 @@
+{
+  "id": "cf other services",
+  "unreleased": true,
+  "displayName": "Other Services",
+  "category": "Pivotal Cloud Foundry",
+  "categoryPriority": 70,
+  "type": "architectural",
+  "alertQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",
+  "requiredProperties": [
+    "host"
+  ],
+  "mtsQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",
+  "systemDashboardPrefix": "Cloud Foundry",
+  "discoveryQuery": [
+    "sf_key:job"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      },
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job",
+      "isSummaryProperty": true
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 300000,
+      "filters": [],
+      "template": "UAA = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"uaa\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nCLOCK_GLOBAL = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"clock_global\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nROUTER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"router\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true
+    },
+    "metrics": [
+      {
+        "id": "cf.uaa.healthy",
+        "name": "UAAs",
+        "varName": "UAA",
+        "valueLabel": "System Health",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.clock_global.healthy",
+        "name": "Clock Globals",
+        "varName": "CLOCK_GLOBAL",
+        "valueLabel": "System Health",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.router.healthy",
+        "name": "Routers",
+        "varName": "ROUTER",
+        "valueLabel": "System Health",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

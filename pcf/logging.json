@@ -1,0 +1,126 @@
+{
+  "id": "cf logging",
+  "unreleased": true,
+  "displayName": "Logging",
+  "category": "Pivotal Cloud Foundry",
+  "categoryPriority": 40,
+  "type": "architectural",
+  "alertQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
+  "requiredProperties": [
+    "host"
+  ],
+  "mtsQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
+  "systemDashboardPrefix": "Cloud Foundry",
+  "discoveryQuery": [
+    "sf_key:job"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      },
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "job",
+      "displayName": "Job",
+      "isSummaryProperty": true
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 300000,
+      "filters": [],
+      "template": "DOPPLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"doppler\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])LOGGREGATOR_TRAFFICCONTROLLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"loggregator_trafficcontroller\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true
+    },
+    "metrics": [
+      {
+        "id": "cf.doppler.healthy",
+        "name": "Dopplers",
+        "varName": "DOPPLER",
+        "valueLabel": "System Health",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf.loggregator_trafficcontroller.healthy",
+        "name": "Traffic Controllers",
+        "varName": "LOGGREGATOR_TRAFFICCONTROLLER",
+        "valueLabel": "System Health",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "threshold",
+          "minValue": 0,
+          "maxValue": 1,
+          "limits": [
+            {
+              "lowerLimit": 1,
+              "color": "#05ce00"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
