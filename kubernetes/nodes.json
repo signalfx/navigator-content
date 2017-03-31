@@ -1,6 +1,6 @@
 {
   "id": "kubernetes nodes",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Kubernetes Nodes",
   "category": "Kubernetes",
   "categoryPriority": 20,
