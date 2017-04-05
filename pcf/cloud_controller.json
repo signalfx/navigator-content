@@ -1,6 +1,5 @@
 {
   "id": "cf cloud controller",
-  "unreleased": true,
   "displayName": "Cloud Controller",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 20,

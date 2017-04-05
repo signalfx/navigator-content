@@ -1,6 +1,5 @@
 {
   "id": "cf instances",
-  "unreleased": true,
   "displayName": "Instances",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 10,

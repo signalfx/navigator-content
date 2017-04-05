@@ -1,6 +1,5 @@
 {
   "id": "cf service brokers",
-  "unreleased": true,
   "displayName": "Service Brokers",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 60,

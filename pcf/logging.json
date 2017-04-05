@@ -1,6 +1,5 @@
 {
   "id": "cf logging",
-  "unreleased": true,
   "displayName": "Logging",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 40,
