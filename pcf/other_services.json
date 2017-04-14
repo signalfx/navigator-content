@@ -6,47 +6,10 @@
   "categoryPriority": 70,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",
-  "requiredProperties": [
-    "host"
-  ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",
   "systemDashboardPrefix": "Cloud Foundry",
   "discoveryQuery": [
     "sf_key:job"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "job",
-      "displayName": "Job"
-    }
   ],
   "tooltipKeyList": [
     {
@@ -78,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "cf.uaa.healthy",
         "name": "UAAs",
         "varName": "UAA",
         "valueLabel": "System Health",
@@ -100,7 +62,6 @@
         }
       },
       {
-        "id": "cf.clock_global.healthy",
         "name": "Clock Globals",
         "varName": "CLOCK_GLOBAL",
         "valueLabel": "System Health",
@@ -122,7 +83,6 @@
         }
       },
       {
-        "id": "cf.router.healthy",
         "name": "Routers",
         "varName": "ROUTER",
         "valueLabel": "System Health",

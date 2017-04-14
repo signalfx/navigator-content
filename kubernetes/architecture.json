@@ -3,9 +3,6 @@
   "unreleased": true,
   "type": "architectural",
   "displayName": "Architecture",
-  "requiredProperties": [
-    "host"
-  ],
   "alertQuery": "_exists_:kubernetes_cluster",
   "mtsQuery": "sf_metric:cpu.utilization AND _exists_:kubernetes_cluster",
   "category": "Kubernetes",
@@ -13,40 +10,6 @@
   "systemDashboardPrefix": "K8s Cluster",
   "discoveryQuery": [
     "_exists_:kubernetes_cluster"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "kubernetes_cluster",
-      "displayName": "Cluster"
-    }
   ],
   "tooltipKeyList": [
     {
@@ -78,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "kubernetes.node.cpu",
         "name": "CPU",
         "varName": "NODES",
         "valueLabel": "CPU Use",

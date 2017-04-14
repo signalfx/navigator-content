@@ -6,48 +6,10 @@
   "categoryPriority": 60,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",
-  "requiredProperties": [
-    "host"
-  ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",
   "systemDashboardPrefix": "Cloud Foundry",
   "discoveryQuery": [
     "sf_key:job"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "job",
-      "displayName": "Job",
-      "isSummaryProperty": true
-    }
   ],
   "tooltipKeyList": [
     {
@@ -79,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "cf.nats.healthy",
         "name": "NATS",
         "idTemplate": "{{host}}",
         "varName": "NATS",
@@ -101,7 +62,6 @@
         }
       },
       {
-        "id": "cf.etcd.healthy",
         "name": "etcds",
         "idTemplate": "{{host}}",
         "varName": "ETCD_SERVER",
@@ -123,7 +83,6 @@
         }
       },
       {
-        "id": "cf.etcd_tls.healthy",
         "name": "etcds (TLS)",
         "idTemplate": "{{host}}",
         "varName": "ETCD_TLS_SERVER",
@@ -145,7 +104,6 @@
         }
       },
       {
-        "id": "cf.consul.healthy",
         "name": "Consul",
         "idTemplate": "{{host}}",
         "varName": "CONSUL_SERVER",
