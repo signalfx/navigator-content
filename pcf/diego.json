@@ -6,47 +6,10 @@
   "categoryPriority": 30,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(diego_cell diego_brain diego_database)",
-  "requiredProperties": [
-    "host"
-  ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(diego_cell diego_brain diego_database)",
   "systemDashboardPrefix": "Cloud Foundry",
   "discoveryQuery": [
     "sf_key:job"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "job",
-      "displayName": "Job"
-    }
   ],
   "tooltipKeyList": [
     {
@@ -78,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "cf.diego_cell.healthy",
         "name": "Cells",
         "varName": "DIEGO_CELL",
         "valueLabel": "Cell Unhealthy",
@@ -100,7 +62,6 @@
         }
       },
       {
-        "id": "cf.diego_brain.healthy",
         "name": "Brains",
         "varName": "DIEGO_BRAIN",
         "valueLabel": "System Health",
@@ -122,7 +83,6 @@
         }
       },
       {
-        "id": "cf.diego_database.healthy",
         "name": "Databases",
         "varName": "DIEGO_DATABASE",
         "valueLabel": "System Health",

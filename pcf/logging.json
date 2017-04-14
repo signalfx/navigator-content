@@ -6,47 +6,10 @@
   "categoryPriority": 40,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
-  "requiredProperties": [
-    "host"
-  ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
   "systemDashboardPrefix": "Cloud Foundry",
   "discoveryQuery": [
     "sf_key:job"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "job",
-      "displayName": "Job"
-    }
   ],
   "tooltipKeyList": [
     {
@@ -78,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "cf.doppler.healthy",
         "name": "Dopplers",
         "varName": "DOPPLER",
         "valueLabel": "System Health",
@@ -100,7 +62,6 @@
         }
       },
       {
-        "id": "cf.loggregator_trafficcontroller.healthy",
         "name": "Traffic Controllers",
         "varName": "LOGGREGATOR_TRAFFICCONTROLLER",
         "valueLabel": "System Health",

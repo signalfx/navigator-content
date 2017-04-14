@@ -9,9 +9,6 @@
   "requiredProperties": [
     "kubernetes_pod_name"
   ],
-  "filterProperties": [
-    "host"
-  ],
   "idTemplate": "{{kubernetes_pod_name}}",
   "idName": "Pod",
   "mtsQuery": "_exists_:kubernetes_pod_name",
@@ -156,6 +153,7 @@
     },
     {
       "id": "container_cpu_utilization",
+      "type": "metric",
       "displayName": "CPU used by containers",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -177,6 +175,7 @@
     },
     {
       "id": "container_memory_usage_bytes",
+      "type": "metric",
       "displayName": "Memory used by containers ",
       "valueLabel": "Memory Use",
       "valueFormat": "Percentage",
@@ -199,6 +198,7 @@
     },
     {
       "id": "disk.used",
+      "type": "metric",
       "displayName": "Disk used by containers",
       "valueLabel": "Disk Use",
       "valueFormat": "Bytes",

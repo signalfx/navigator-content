@@ -6,47 +6,10 @@
   "categoryPriority": 20,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(cloud_controller cloud_controller_worker)",
-  "requiredProperties": [
-    "host"
-  ],
   "mtsQuery": "metric_source:cloudfoundry",
   "systemDashboardPrefix": "Cloud Foundry",
   "discoveryQuery": [
     "sf_key:job"
-  ],
-  "propertyColumns": [
-    [
-      {
-        "header": "Tags",
-        "properties": [
-          "sf_tags"
-        ]
-      },
-      {
-        "header": "Other",
-        "properties": []
-      },
-      {
-        "header": "AWS",
-        "properties": []
-      }
-    ]
-  ],
-  "listColumns": [
-    {
-      "property": "id",
-      "displayName": "Instance",
-      "format": "id"
-    },
-    {
-      "property": "value",
-      "displayName": "Value",
-      "format": "Number"
-    },
-    {
-      "property": "job",
-      "displayName": "Job"
-    }
   ],
   "tooltipKeyList": [
     {
@@ -78,7 +41,6 @@
     },
     "metrics": [
       {
-        "id": "cf.controller.healthy",
         "name": "Controllers",
         "varName": "CLOUD_CONTROLLER",
         "valueLabel": "System Health",
@@ -100,7 +62,6 @@
         }
       },
       {
-        "id": "cf.worker.healthy",
         "name": "Workers",
         "varName": "CLOUD_CONTROLLER_WORKER",
         "valueLabel": "System Health",
