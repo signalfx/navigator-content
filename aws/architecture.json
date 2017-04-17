@@ -9,6 +9,26 @@
   "category": "AWS",
   "systemDashboardPrefix": "AWS",
   "discoveryQuery":["sf_key:namespace"],
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
   "tooltipKeyList": [
     {
       "property": "value",

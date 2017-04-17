@@ -78,7 +78,6 @@
     },
     "metrics": [
       {
-        "id": "kubernetes.node.cpu",
         "name": "CPU",
         "varName": "NODES",
         "valueLabel": "CPU Use",

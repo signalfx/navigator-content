@@ -78,7 +78,6 @@
     },
     "metrics": [
       {
-        "id": "cf.uaa.healthy",
         "name": "UAAs",
         "varName": "UAA",
         "valueLabel": "System Health",
@@ -100,7 +99,6 @@
         }
       },
       {
-        "id": "cf.clock_global.healthy",
         "name": "Clock Globals",
         "varName": "CLOCK_GLOBAL",
         "valueLabel": "System Health",
@@ -122,7 +120,6 @@
         }
       },
       {
-        "id": "cf.router.healthy",
         "name": "Routers",
         "varName": "ROUTER",
         "valueLabel": "System Health",
