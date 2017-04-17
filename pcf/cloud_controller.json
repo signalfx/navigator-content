@@ -78,7 +78,6 @@
     },
     "metrics": [
       {
-        "id": "cf.controller.healthy",
         "name": "Controllers",
         "varName": "CLOUD_CONTROLLER",
         "valueLabel": "System Health",
@@ -100,7 +99,6 @@
         }
       },
       {
-        "id": "cf.worker.healthy",
         "name": "Workers",
         "varName": "CLOUD_CONTROLLER_WORKER",
         "valueLabel": "System Health",

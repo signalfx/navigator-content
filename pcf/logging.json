@@ -78,7 +78,6 @@
     },
     "metrics": [
       {
-        "id": "cf.doppler.healthy",
         "name": "Dopplers",
         "varName": "DOPPLER",
         "valueLabel": "System Health",
@@ -100,7 +99,6 @@
         }
       },
       {
-        "id": "cf.loggregator_trafficcontroller.healthy",
         "name": "Traffic Controllers",
         "varName": "LOGGREGATOR_TRAFFICCONTROLLER",
         "valueLabel": "System Health",

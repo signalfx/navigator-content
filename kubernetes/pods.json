@@ -156,6 +156,7 @@
     },
     {
       "id": "container_cpu_utilization",
+      "type": "metric",
       "displayName": "CPU used by containers",
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
@@ -177,6 +178,7 @@
     },
     {
       "id": "container_memory_usage_bytes",
+      "type": "metric",
       "displayName": "Memory used by containers ",
       "valueLabel": "Memory Use",
       "valueFormat": "Percentage",
@@ -199,6 +201,7 @@
     },
     {
       "id": "disk.used",
+      "type": "metric",
       "displayName": "Disk used by containers",
       "valueLabel": "Disk Use",
       "valueFormat": "Bytes",
