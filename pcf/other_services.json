@@ -1,6 +1,5 @@
 {
   "id": "cf other services",
-  "unreleased": true,
   "displayName": "Other Services",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 70,
