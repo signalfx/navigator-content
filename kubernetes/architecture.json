@@ -3,9 +3,6 @@
   "unreleased": false,
   "type": "architectural",
   "displayName": "Architecture",
-  "requiredProperties": [
-    "host"
-  ],
   "alertQuery": "_exists_:kubernetes_cluster",
   "mtsQuery": "sf_metric:cpu.utilization AND _exists_:kubernetes_cluster",
   "category": "Kubernetes",
@@ -70,16 +67,43 @@
     "job": {
       "resolution": 60000,
       "filters": [],
-      "template": "NODES = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])\n"
+      "template": "NODES = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and filter(\"kubernetes_role\", \"worker\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])\nMASTERS = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and filter(\"kubernetes_role\", \"master\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])"
     },
     "groupingStructure": {
       "key": "kubernetes_cluster",
-      "drawBoundary": true
+      "drawBoundary": true,
+      "children": [
+        {
+          "key": "sf_streamLabel",
+          "memberSettings": [
+            {
+              "name": "Masters",
+              "bigger": true
+            },
+            {
+              "name": "Nodes",
+              "bigger": true
+            }
+          ]
+        }
+      ]
     },
     "metrics": [
       {
-        "name": "CPU",
+        "name": "Nodes",
         "varName": "NODES",
+        "valueLabel": "CPU Use",
+        "valueFormat": "Percentage",
+        "idTemplate": "{{host}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      {
+        "name": "Masters",
+        "varName": "MASTERS",
         "valueLabel": "CPU Use",
         "valueFormat": "Percentage",
         "idTemplate": "{{host}}",
