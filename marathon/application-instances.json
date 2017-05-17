@@ -9,10 +9,13 @@
   "requiredProperties": [
     "mesos_task_id"
   ],
+  "filterProperties": [
+    "mesos_task_name"
+  ],
   "idTemplate": "{{mesos_task_id}}",
   "idName": "Application Instance",
-  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_task_id",
-  "systemDashboardPrefix": "marathon",
+  "mtsQuery": "_exists_:mesos_task_id",
+  "systemDashboardPrefix": "Marathon Instance",
   "discoveryQuery": ["sf_key:mesos_task_id"],
   "propertyColumns": [
     [
@@ -145,7 +148,7 @@
             "type": "property"
           }
         ],
-        "template": "TIME_ELAPSED = data(\"gauge.marathon.task.start.time.elapsed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_task_id\", \"mesos_task_name\", \"mesos_framework_id\", \"mesos_cluster\"])",
+        "template": "TIME_ELAPSED = data(\"gauge.marathon.task.start.time.elapsed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_task_id\", \"mesos_framework_id\", \"mesos_cluster\"])",
         "varName": "TIME_ELAPSED"
       },
       "coloring": {

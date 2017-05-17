@@ -3,12 +3,28 @@
   "unreleased": true,
   "type": "architectural",
   "displayName": "Architecture",
-  "alertQuery": "(_exists_:mesos_agent OR _exists_:mesos_master)",
-  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_agent",
+  "alertQuery": "(_exists_:mesos_cluster)",
+  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_cluster",
   "category": "Mesosphere",
   "categoryPriority": 10,
-  "systemDashboardPrefix": "Mesos Overview",
-  "discoveryQuery": ["sf_key:mesos_agent"],
+  "systemDashboardPrefix": "Mesos",
+  "discoveryQuery": ["sf_key:mesos_cluster"],
+  "propertyColumns": [
+    [
+        { 
+          "header": "Tags", 
+          "properties": ["sf_tags"] 
+        },
+        { 
+          "header": "Other", 
+          "properties": [] 
+        },
+        { 
+          "header": "AWS", 
+          "properties": [] 
+        }
+    ]
+  ],
   "tooltipKeyList": [
     {
       "property": "mesos_agent",
@@ -23,32 +39,35 @@
     },
     {
       "property": "mesos_master",
-      "displayName": "Master"
+      "displayName": "Master",
+      "isSummaryProperty": true
     },
     {
       "property": "mesos_cluster",
-      "displayName": "Cluster"
+      "displayName": "Cluster",
+      "isSummaryProperty": true
     }
   ],
   "map": {
     "job": {
       "resolution": 60000,
       "filters": [],
-      "template": "ACTIVE_MASTERS = data(\"gauge.master_uptime_secs\", filter=filter(\"plugin_type\", \"master\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_master\"])\nTOTAL_CPU_UTIL = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_master\"])\nMASTER_ELECTED = data(\"gauge.master_elected\", filter=filter(\"plugin_type\", \"master\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_master\"]).below(0, inclusive=True)\nSTANDBY_MASTERS = (TOTAL_CPU_UTIL + MASTER_ELECTED)\nTASKS_RUNNING = data(\"gauge.slave_tasks_running\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"mesos_agent\"])"
+      "template": "MASTER_CPU_UTIL = data(\"cpu.utilization\", filter=filter(\"mesos_role\", \"master\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\", \"mesos_cluster\", \"mesos_master\"])\nAGENT_CPU_UTIL = data(\"cpu.utilization\", filter=filter(\"mesos_role\", \"worker\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\", \"mesos_cluster\", \"mesos_agent\"])"
     },
     "groupingStructure": {
       "key": "mesos_cluster",
+      "drawBoundary": true,
       "children": [
         {
           "key": "sf_streamLabel",
           "drawBoundary": true,
           "memberSettings": [
             {
-              "name": "Active Masters",
+              "name": "Agents",
               "bigger": true
             },
             {
-              "name": "Standby Masters",
+              "name": "Masters",
               "bigger": true
             }
           ]
@@ -57,34 +76,11 @@
     },
     "metrics": [
       {
-        "name": "Active Masters",
-        "varName": "ACTIVE_MASTERS",
-        "valueLabel": "Uptime",
-        "valueFormat": "Seconds",
-        "idTemplate": "master-{{mesos_master}}",
-        "coloring": {
-          "method": "threshold",
-          "limits": [
-            {
-              "lowerLimit": 120,
-              "color": "#6bd37e"
-            },
-            {
-              "lowerLimit": 60,
-              "color": "#e2ed6a"
-            },
-            {
-              "color": "#ea1849"
-            }
-          ]
-        }
-      },
-      {
-        "name": "Standby Masters",
-        "varName": "STANDBY_MASTERS",
-        "valueLabel": "CPU %",
+        "name": "Masters",
+        "varName": "MASTER_CPU_UTIL",
+        "valueLabel": "CPU Utilization",
         "valueFormat": "Percentage",
-        "idTemplate": "standby-master-{{mesos_master}}",
+        "idTemplate": "{{host}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -93,20 +89,14 @@
       },
       {
         "name": "Agents",
-        "varName": "TASKS_RUNNING",
-        "valueLabel": "Tasks",
-        "valueFormat": "Number",
-        "idTemplate": "agent-{{mesos_agent}}",
+        "varName": "AGENT_CPU_UTIL",
+        "valueLabel": "CPU Utilization",
+        "valueFormat": "Percentage",
+        "idTemplate": "{{host}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
-          "range": [
-            "#bfd3e6",
-            "#9ebcda",
-            "#8c96c6",
-            "#8856a7",
-            "#810f7c"
-          ]
+          "maxValue": 100
         }
       }
     ]
