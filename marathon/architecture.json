@@ -3,11 +3,12 @@
   "unreleased": true,
   "type": "architectural",
   "displayName": "Architecture",
-  "alertQuery": "(_exists_:mesos_agent OR _exists_:mesos_master)",
+  "alertQuery": "(_exists_:mesos_cluster)",
   "mtsQuery": "sf_metric:gauge.marathon.app.tasks.unhealthy AND _exists_:mesos_task_name",
   "category": "Marathon",
   "categoryPriority": 10,
-  "discoveryQuery": ["sf_key:mesos_task_id"],
+  "systemDashboardPrefix": "Marathon Application",
+  "discoveryQuery": ["sf_key:mesos_task_name"],
   "tooltipKeyList": [
     {
       "property": "mesos_task_name",
@@ -76,7 +77,7 @@
         "varName": "HEALTHY_TASKS",
         "valueLabel": "Heathy Tasks",
         "valueFormat": "Percentage",
-        "idTemplate": "applications-{{mesos_task_name}}-{{mesos_cluster}}",
+        "idTemplate": "{{mesos_task_name}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -87,24 +88,6 @@
             "#e2ed6a",
             "#acef7f",
             "#6bd37e"
-          ]
-        }
-      },
-      {
-        "name": "Application Instances",
-        "varName": "TIME_ELAPSED",
-        "idTemplate": "{{mesos_task_id}}",
-        "valueLabel": "Uptime",
-        "valueFormat": "Seconds",
-        "coloring": {
-          "method": "quantile",
-          "minValue": 0,
-          "range": [
-            "#bfd3e6",
-            "#9ebcda",
-            "#8c96c6",
-            "#8856a7",
-            "#810f7c"
           ]
         }
       }

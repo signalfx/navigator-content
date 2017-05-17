@@ -1,7 +1,7 @@
 {
   "id": "mesos agents",
   "unreleased": true,
-  "displayName": "Agents",
+  "displayName": "Mesos Agents",
   "category": "Mesosphere",
   "categoryPriority": 1000,
   "type": "elemental",
@@ -9,11 +9,14 @@
   "requiredProperties": [
     "mesos_agent"
   ],
+  "filterProperties": [],
   "idTemplate": "{{mesos_agent}}",
   "idName": "Agent",
-  "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_agent",
-  "systemDashboardPrefix": "Mesos",
-  "discoveryQuery": ["sf_key:mesos_agent"],
+  "mtsQuery": "_exists_:mesos_cluster AND _exists_:mesos_agent",
+  "systemDashboardPrefix": "Mesos Agent",
+  "discoveryQuery": [
+    "sf_key:mesos_agent"
+  ],
   "propertyColumns": [
     [
       {
@@ -131,11 +134,16 @@
         "filters": [
           {
             "property": "_exists_",
-            "propertyValue": "mesos_agent",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "mesos_role",
+            "propertyValue": "worker",
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"mesos_agent\"]).publish(\"heatmap data\")",
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\", \"mesos_cluster\", \"mesos_agent\"]).publish(\"heatmap data\")",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
@@ -156,8 +164,8 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "_exists_",
-            "propertyValue": "mesos_agent",
+            "property": "mesos_role",
+            "propertyValue": "worker",
             "type": "property"
           }
         ],
@@ -166,7 +174,8 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "maxValue": 100
       }
     }
   ]
