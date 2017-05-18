@@ -4,6 +4,7 @@
   "category": "Containers",
   "type": "elemental",
   "alertQuery": "_exists_:plugin_instance AND plugin:docker",
+  "filterProperties": ["kubernetes_pod_name"],
   "requiredProperties": [
     "plugin_instance",
     "host"
