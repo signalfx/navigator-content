@@ -1,6 +1,6 @@
 {
   "id": "cf instances",
-  "displayName": "Instances",
+  "displayName": "Architecture",
   "category": "Pivotal Cloud Foundry",
   "categoryPriority": 10,
   "type": "elemental",
