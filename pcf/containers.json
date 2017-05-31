@@ -1,0 +1,157 @@
+{
+  "id": "cf containers",
+  "displayName": "Garden Containers",
+  "category": "Pivotal Cloud Foundry",
+  "categoryPriority": 11,
+  "type": "elemental",
+  "alertQuery": "metric_source:cloudfoundry",
+  "filterProperties": [],
+  "requiredProperties": [
+    "host",
+    "app_name",
+    "app_instance_index",
+    "app_id"
+  ],
+  "idTemplate": "{{app_name}} #{{app_instance_index}}",
+  "idName": "App Instance",
+  "mtsQuery": "metric_source:cloudfoundry",
+  "systemDashboardPrefix": "Garden Container",
+  "discoveryQuery": [ "sf_key:app_name" ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": [
+        ]
+      },
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "App Instance",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "App Instance",
+      "displayName": "App Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "app_space",
+      "displayName": "Space",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "app_org",
+      "displayName": "Org",
+      "isSummaryProperty": true
+    }
+  ],
+  "metrics": [
+    {
+      "id": "cf.container.cpu_percentage",
+      "type": "metric",
+      "displayName": "Total CPU Load",
+      "metricSelectors": [
+        "container.cpu_percentage"
+      ],
+      "description": "Color containers by CPU percentage consumed by the container application.",
+      "valueLabel": "Total CPU Load",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "metric_source",
+            "propertyValue": "cloudfoundry",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_LOAD = data(\"container.cpu_percentage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"app_name\", \"app_instance_index\"])",
+        "varName": "CPU_LOAD"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "cf.container.memory.percent",
+      "type": "metric",
+      "displayName": "RAM Utilization",
+      "metricSelectors": [
+        "container.memory_bytes",
+        "container.memory_bytes_quota"
+      ],
+      "description": "Color hosts by percentage of RAM memory used: under 20% (green) to over 80% (red).",
+      "valueLabel": "RAM Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "metric_source",
+            "propertyValue": "cloudfoundry",
+            "type": "property"
+          }
+        ],
+        "template": "MEMORY_USED = data(\"container.memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"app_name\", \"app_instance_index\"])\nMEMORY_QUOTA = data(\"container.memory_bytes_quota\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"app_name\", \"app_instance_index\"])\nMEMORY_PERCENT = MEMORY_USED / MEMORY_QUOTA",
+        "varName": "MEMORY_PERCENT"
+      },
+      "coloring": {
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
+      }
+    }
+  ]
+}
