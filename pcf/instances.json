@@ -76,7 +76,7 @@
         "system.cpu.sys",
         "system.cpu.user"
       ],
-      "description": "Color hosts by CPU cores consumed by System and User.",
+      "description": "Color hosts by CPU utilization by System and User.",
       "valueLabel": "Total CPU Load",
       "job": {
         "resolution": 300000,
@@ -97,7 +97,7 @@
       "metricSelectors": [
         "system.cpu.sys"
       ],
-      "description": "Color hosts by CPU cores consumed by the kernel.",
+      "description": "Color hosts by CPU utilization of the kernel.",
       "valueLabel": "System CPU Load",
       "job": {
         "resolution": 300000,
@@ -118,7 +118,7 @@
       "metricSelectors": [
         "system.cpu.user"
       ],
-      "description": "Color hosts by CPU cores consumed by userspace applications.",
+      "description": "Color hosts by CPU utilization of userspace applications.",
       "valueLabel": "User CPU Load",
       "job": {
         "resolution": 300000,
@@ -139,7 +139,7 @@
       "metricSelectors": [
         "system.cpu.wait"
       ],
-      "description": "Color hosts by CPU cores spent waiting for I/O.",
+      "description": "Color hosts by portion of CPU time waiting for I/O.",
       "valueLabel": "Wait CPU Load",
       "job": {
         "resolution": 300000,
