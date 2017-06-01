@@ -87,13 +87,7 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
-        "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
-        ]
+        "maxValue": 100
       }
     },
     {
@@ -114,13 +108,7 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
-        "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
-        ]
+        "maxValue": 100
       }
     },
     {
@@ -141,13 +129,7 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
-        "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
-        ]
+        "maxValue": 100
       }
     },
     {
@@ -168,13 +150,7 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
-        "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
-        ]
+        "maxValue": 100
       }
     },
     {
