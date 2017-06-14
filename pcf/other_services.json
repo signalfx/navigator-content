@@ -1,7 +1,7 @@
 {
   "id": "cf other services",
   "displayName": "Other Services",
-  "category": "Pivotal Cloud Foundry",
+  "category": "Cloud Foundry",
   "categoryPriority": 70,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",

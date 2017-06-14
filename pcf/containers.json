@@ -1,7 +1,7 @@
 {
   "id": "cf containers",
   "displayName": "Garden Containers",
-  "category": "Pivotal Cloud Foundry",
+  "category": "Cloud Foundry",
   "categoryPriority": 11,
   "type": "elemental",
   "alertQuery": "metric_source:cloudfoundry",
