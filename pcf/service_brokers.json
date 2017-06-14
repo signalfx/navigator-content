@@ -1,7 +1,7 @@
 {
   "id": "cf service brokers",
   "displayName": "Service Brokers",
-  "category": "Pivotal Cloud Foundry",
+  "category": "Cloud Foundry",
   "categoryPriority": 60,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",

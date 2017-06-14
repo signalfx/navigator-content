@@ -1,7 +1,7 @@
 {
   "id": "cf cloud controller",
   "displayName": "Cloud Controller",
-  "category": "Pivotal Cloud Foundry",
+  "category": "Cloud Foundry",
   "categoryPriority": 20,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(cloud_controller cloud_controller_worker)",

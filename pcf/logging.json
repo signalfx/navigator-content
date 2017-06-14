@@ -1,7 +1,7 @@
 {
   "id": "cf logging",
   "displayName": "Logging",
-  "category": "Pivotal Cloud Foundry",
+  "category": "Cloud Foundry",
   "categoryPriority": 40,
   "type": "architectural",
   "alertQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
