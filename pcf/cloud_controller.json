@@ -9,9 +9,9 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry",
-  "systemDashboardPrefix": "Cloud Foundry",
+  "systemDashboardPrefix": "Cloud Controller",
   "discoveryQuery": [
-    "sf_key:job"
+    "job:(cloud_controller cloud_controller_worker)"
   ],
   "propertyColumns": [
     [

@@ -9,9 +9,9 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(diego_cell diego_brain diego_database)",
-  "systemDashboardPrefix": "Cloud Foundry",
+  "systemDashboardPrefix": "Diego",
   "discoveryQuery": [
-    "sf_key:job"
+    "job:(diego_cell diego_brain diego_database)"
   ],
   "propertyColumns": [
     [
