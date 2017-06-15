@@ -9,7 +9,7 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(consul_server etcd_server etcd_tls_server nats)",
-  "systemDashboardPrefix": "Cloud Foundry",
+  "systemDashboardPrefix": "CF",
   "discoveryQuery": [
     "sf_key:job"
   ],

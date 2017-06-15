@@ -9,9 +9,9 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
-  "systemDashboardPrefix": "Cloud Foundry",
+  "systemDashboardPrefix": "Doppler",
   "discoveryQuery": [
-    "sf_key:job"
+    "job:(loggregator_trafficcontroller doppler)"
   ],
   "propertyColumns": [
     [
@@ -69,7 +69,7 @@
     "job": {
       "resolution": 300000,
       "filters": [],
-      "template": "DOPPLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"doppler\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])LOGGREGATOR_TRAFFICCONTROLLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"loggregator_trafficcontroller\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])"
+      "template": "DOPPLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"doppler\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nLOGGREGATOR_TRAFFICCONTROLLER = data(\"system.healthy\", filter=filter(\"metric_source\", \"cloudfoundry\") and filter(\"job\", \"loggregator_trafficcontroller\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
