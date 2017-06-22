@@ -32,7 +32,7 @@
   "listColumns": [
     {
       "property": "id",
-      "displayName": "Instance",
+      "displayName": "Host",
       "format": "id"
     },
     {
@@ -48,7 +48,7 @@
   "tooltipKeyList": [
     {
       "property": "id",
-      "displayName": "Instance",
+      "displayName": "Host",
       "isSummaryProperty": true
     },
     {

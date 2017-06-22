@@ -39,7 +39,7 @@
   "listColumns": [
     {
       "property": "id",
-      "displayName": "ID",
+      "displayName": "Host",
       "format": "id"
     },
     {
@@ -55,7 +55,7 @@
   "tooltipKeyList": [
     {
       "property": "id",
-      "displayName": "ID",
+      "displayName": "Host",
       "isSummaryProperty": true
     },
     {
