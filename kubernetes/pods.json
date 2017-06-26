@@ -15,7 +15,7 @@
   "idTemplate": "{{kubernetes_pod_name}}",
   "idName": "Pod",
   "mtsQuery": "_exists_:kubernetes_pod_name AND _exists_:kubernetes_cluster",
-  "systemDashboardPrefix": "K8s Pod",
+  "singleHostSystemDashboardName": "K8s Pod",
   "discoveryQuery": [
     "_exists_:kubernetes_pod_name"
   ],

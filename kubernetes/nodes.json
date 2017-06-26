@@ -12,7 +12,7 @@
   "idTemplate": "{{host}}",
   "idName": "Node",
   "mtsQuery": "_exists_:kubernetes_cluster",
-  "systemDashboardPrefix": "K8s Node",
+  "singleHostSystemDashboardName": "K8s Node",
   "discoveryQuery": [
     "sf_key:kubernetes_cluster"
   ],
