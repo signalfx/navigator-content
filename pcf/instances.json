@@ -81,7 +81,7 @@
       "job": {
         "resolution": 300000,
         "filters": [],
-        "template": "SYSTEM_CPU_LOAD = data(\"system.cpu.sys\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nUSER_CPU_LOAD = data(\"system.cpu.user\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nTOTAL_CPU_LOAD = SYSTEM_CPU_LOAD + USER_CPU_LOAD",
+        "template": "SYSTEM_CPU_LOAD_TOTAL = data(\"system.cpu.sys\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nUSER_CPU_LOAD_TOTAL = data(\"system.cpu.user\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nTOTAL_CPU_LOAD = SYSTEM_CPU_LOAD_TOTAL + USER_CPU_LOAD_TOTAL",
         "varName": "TOTAL_CPU_LOAD"
       },
       "coloring": {
@@ -144,7 +144,7 @@
       "job": {
         "resolution": 300000,
         "filters": [],
-        "template": "USER_CPU_LOAD = data(\"system.cpu.wait\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "WAIT_CPU_LOAD = data(\"system.cpu.wait\", filter=filter(\"metric_source\", \"cloudfoundry\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
         "varName": "WAIT_CPU_LOAD"
       },
       "coloring": {
