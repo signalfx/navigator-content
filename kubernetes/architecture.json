@@ -7,7 +7,8 @@
   "mtsQuery": "sf_metric:cpu.utilization AND _exists_:kubernetes_cluster",
   "category": "Kubernetes",
   "categoryPriority": 10,
-  "systemDashboardPrefix": "K8s Cluster",
+  "systemDashboardName": "K8s Clusters",
+  "singleHostSystemDashboardName": "K8s Node",
   "discoveryQuery": [
     "_exists_:kubernetes_cluster"
   ],
@@ -32,7 +33,7 @@
   "listColumns": [
     {
       "property": "id",
-      "displayName": "Instance",
+      "displayName": "Host",
       "format": "id"
     },
     {
@@ -48,7 +49,7 @@
   "tooltipKeyList": [
     {
       "property": "id",
-      "displayName": "Instance",
+      "displayName": "Host",
       "isSummaryProperty": true
     },
     {
