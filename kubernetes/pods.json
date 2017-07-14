@@ -52,7 +52,7 @@
     },
     {
       "property": "host",
-      "displayName": "Node"
+      "displayName": "Host"
     },
     {
       "property": "kubernetes_cluster",
@@ -73,7 +73,7 @@
     },
     {
       "property": "host",
-      "displayName": "Node",
+      "displayName": "Host",
       "isSummaryProperty": true
     },
     {
@@ -83,77 +83,6 @@
     }
   ],
   "metrics": [
-    {
-      "id": "kubernetes.network.total",
-      "type": "metric",
-      "displayName": "Network total",
-      "metricSelectors": [
-        "pod_network_receive_bytes_total",
-        "pod_network_transmit_bytes_total"
-      ],
-      "description": "Color pods by relative amount of network traffic in bytes per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
-      "job": {
-        "resolution": 60000,
-        "filters": [
-          {
-            "property": "_exists_",
-            "propertyValue": "kubernetes_cluster",
-            "type": "property"
-          },
-          {
-            "property": "_exists_",
-            "propertyValue": "kubernetes_pod_name",
-            "type": "property"
-          }
-        ],
-        "template": "NETWORK_TX = data(\"pod_network_receive_bytes_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])\nNETWORK_RX = data(\"pod_network_transmit_bytes_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])\nNETWORK_TOTAL = NETWORK_TX + NETWORK_RX",
-        "varName": "NETWORK_TOTAL"
-      },
-      "coloring": {
-        "method": "quantile",
-        "minValue": 0
-      }
-    },
-    {
-      "id": "kubernetes.network.errors",
-      "type": "metric",
-      "displayName": "Network errors",
-      "metricSelectors": [
-        "pod_network_receive_bytes_total",
-        "pod_network_transmit_bytes_total"
-      ],
-      "description": "Total number of network errors from this pod. ",
-      "job": {
-        "resolution": 60000,
-        "filters": [
-          {
-            "property": "_exists_",
-            "propertyValue": "kubernetes_cluster",
-            "type": "property"
-          },
-          {
-            "property": "_exists_",
-            "propertyValue": "kubernetes_pod_name",
-            "type": "property"
-          }
-        ],
-        "template": "ERR_TX = data(\"pod_network_transmit_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])\nERR_RX = data(\"pod_network_receive_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])\nERR_TOTAL = ERR_TX + ERR_RX",
-        "varName": "ERR_TOTAL"
-      },
-      "coloring": {
-        "method": "threshold",
-        "minValue": 0,
-        "limits": [
-          {
-            "lowerLimit": 1,
-            "color": "#ea1849"
-          },
-          {
-            "color": "#05ce00"
-          }
-        ]
-      }
-    },
     {
       "id": "container_cpu_utilization",
       "type": "metric",
@@ -166,8 +95,54 @@
       "description": "Percentage of CPU on this node used by this pod’s containers, from under 20% (green) to over 80% (red).",
       "job": {
         "resolution": 60000,
-        "filters": [],
-        "template": "CPU = data(\"container_cpu_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])",
+        "filters": [
+          {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_pod_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_namespace",
+            "type": "property"
+          }
+        ],
+        "template": "CPU = data(\"container_cpu_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"rate\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"kubernetes_namespace\", \"kubernetes_pod_name\", \"host\"])",
         "varName": "CPU"
       },
       "coloring": {
@@ -189,8 +164,45 @@
       "description": "Percentage of memory on this node used by this pod’s containers, from under 20% (green) to over 80% (red).",
       "job": {
         "resolution": 60000,
-        "filters": [],
-        "template": "CONTAINERS_MEM = data(\"container_memory_usage_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])\nNODE_TOTAL = data(\"machine_memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\"])\nUTILIZATION = CONTAINERS_MEM / NODE_TOTAL * 100",
+        "filters": [
+          {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          },
+
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          }
+        ],
+        "template": "CONTAINERS_MEM = data(\"container_memory_usage_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"kubernetes_pod_name\", \"kubernetes_namespace\", \"host\"])\nNODE_TOTAL = data(\"machine_memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\"])\nUTILIZATION = (CONTAINERS_MEM / NODE_TOTAL) * 100",
         "varName": "UTILIZATION"
       },
       "coloring": {
@@ -211,12 +223,199 @@
       "description": "Amount of disk, in bytes, used by containers in this pod.",
       "job": {
         "resolution": 60000,
-        "filters": [],
-        "template": "DISK_CONTAINER_USED = data(\"container_fs_usage_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])",
+        "filters": [
+          {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_pod_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_namespace",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_CONTAINER_USED = data(\"container_fs_usage_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])",
         "varName": "DISK_CONTAINER_USED"
       },
       "coloring": {
         "method": "quantile"
+      }
+    },
+    {
+      "id": "kubernetes.network.total",
+      "type": "metric",
+      "displayName": "Network total",
+      "metricSelectors": [
+        "pod_network_receive_bytes_total",
+        "pod_network_transmit_bytes_total"
+      ],
+      "description": "Color pods by relative amount of network traffic in bytes per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_pod_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_namespace",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_TX = data(\"pod_network_receive_bytes_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])\nNETWORK_RX = data(\"pod_network_transmit_bytes_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])\nNETWORK_TOTAL = NETWORK_TX + NETWORK_RX",
+        "varName": "NETWORK_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "kubernetes.network.errors",
+      "type": "metric",
+      "displayName": "Network errors",
+      "metricSelectors": [
+        "pod_network_receive_bytes_total",
+        "pod_network_transmit_bytes_total"
+      ],
+      "description": "Total number of network errors from this pod. ",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_cluster",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_pod_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_namespace",
+            "type": "property"
+          }
+        ],
+        "template": "ERR_TX = data(\"pod_network_transmit_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])\nERR_RX = data(\"pod_network_receive_errors_total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])\nERR_TOTAL = ERR_TX + ERR_RX",
+        "varName": "ERR_TOTAL"
+      },
+      "coloring": {
+        "method": "threshold",
+        "minValue": 0,
+        "limits": [
+          {
+            "lowerLimit": 1,
+            "color": "#ea1849"
+          },
+          {
+            "color": "#05ce00"
+          }
+        ]
       }
     },
     {
@@ -231,6 +430,31 @@
         "resolution": 60000,
         "filters": [
           {
+            "property": "_missing_",
+            "propertyValue": "name",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "image",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "cluster",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_pod_namespace",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "kubernetes_container_name",
+            "type": "property"
+          },
+          {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
             "type": "property"
@@ -239,9 +463,19 @@
             "property": "_exists_",
             "propertyValue": "kubernetes_pod_name",
             "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "kubernetes_namespace",
+            "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"container_cpu_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\"])",
+        "template": "CPU_UTILIZATION = data(\"container_cpu_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"rate\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\", \"kubernetes_pod_name\", \"kubernetes_namespace\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
