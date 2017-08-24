@@ -9,7 +9,7 @@
   ],
   "idTemplate": "{{host}}",
   "idName": "Host",
-  "mtsQuery": "sf_metric:cpu.utilization AND _exists_:host",
+  "mtsQuery": "sf_metric:cpu.utilization AND _exists_:host AND _missing_:agent",
   "systemDashboardPrefix": "collectd",
   "discoveryQuery": ["sf_key:host"],
   "propertyColumns": [
@@ -136,6 +136,11 @@
             "property": "_exists_",
             "propertyValue": "host",
             "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
+            "type": "property"
           }
         ],
         "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
@@ -163,6 +168,11 @@
           {
             "property": "_exists_",
             "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
             "type": "property"
           }
         ],
@@ -192,6 +202,11 @@
             "property": "_exists_",
             "propertyValue": "host",
             "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
+            "type": "property"
           }
         ],
         "template": "DISK_UTILIZATION = data(\"disk.summary_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
@@ -218,6 +233,11 @@
             "property": "_exists_",
             "propertyValue": "host",
             "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
+            "type": "property"
           }
         ],
         "template": "NETWORK_TOTAL = data(\"network.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
@@ -243,6 +263,11 @@
             "property": "_exists_",
             "propertyValue": "host",
             "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
+            "type": "property"
           }
         ],
         "template": "DISK_OPS_TOTAL = data(\"disk_ops.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
@@ -267,6 +292,11 @@
           {
             "property": "_exists_",
             "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "_missing_",
+            "propertyValue": "agent",
             "type": "property"
           }
         ],
