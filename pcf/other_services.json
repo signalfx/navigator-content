@@ -9,7 +9,7 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(uaa clock_global router)",
-  "systemDashboardPrefix": "Cloud Foundry",
+  "singleHostSystemDashboardName": "CF Host",
   "discoveryQuery": [
     "sf_key:job"
   ],

@@ -9,7 +9,7 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry",
-  "systemDashboardPrefix": "Cloud Controller",
+  "singleHostSystemDashboardName": "CF Host",
   "discoveryQuery": [
     "job:(cloud_controller cloud_controller_worker)"
   ],
