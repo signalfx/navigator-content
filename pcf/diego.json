@@ -9,7 +9,7 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(diego_cell diego_brain diego_database)",
-  "systemDashboardPrefix": "Diego",
+  "singleHostSystemDashboardName": "CF Host",
   "discoveryQuery": [
     "job:(diego_cell diego_brain diego_database)"
   ],

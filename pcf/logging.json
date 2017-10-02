@@ -9,7 +9,7 @@
     "host"
   ],
   "mtsQuery": "metric_source:cloudfoundry AND job:(loggregator_trafficcontroller doppler)",
-  "systemDashboardPrefix": "Doppler",
+  "singleHostSystemDashboardName": "CF Host",
   "discoveryQuery": [
     "job:(loggregator_trafficcontroller doppler)"
   ],
