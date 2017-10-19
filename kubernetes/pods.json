@@ -98,16 +98,6 @@
         "filters": [
           {
             "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
             "propertyValue": "cluster",
             "type": "property"
           },
@@ -167,16 +157,6 @@
         "filters": [
           {
             "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
             "propertyValue": "cluster",
             "type": "property"
           },
@@ -224,16 +204,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
           {
             "property": "_missing_",
             "propertyValue": "cluster",
@@ -291,16 +261,6 @@
         "filters": [
           {
             "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
             "propertyValue": "cluster",
             "type": "property"
           },
@@ -355,16 +315,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
           {
             "property": "_missing_",
             "propertyValue": "cluster",
@@ -429,16 +379,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "name",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "image",
-            "type": "property"
-          },
           {
             "property": "_missing_",
             "propertyValue": "cluster",
