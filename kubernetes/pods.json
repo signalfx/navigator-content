@@ -12,7 +12,7 @@
   "filterProperties": [
     "host"
   ],
-  "idTemplate": "{{kubernetes_pod_name}}",
+  "idTemplate": "{{kubernetes_pod_name}} ({{kubernetes_pod_uid}})",
   "idName": "Pod",
   "mtsQuery": "_exists_:kubernetes_pod_name AND _exists_:kubernetes_cluster",
   "singleHostSystemDashboardName": "K8s Pod",

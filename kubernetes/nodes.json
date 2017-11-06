@@ -9,7 +9,7 @@
   "requiredProperties": [
     "host"
   ],
-  "idTemplate": "{{host}}",
+  "idTemplate": "{{host}} ({{kubernetes_cluster}})",
   "idName": "Node",
   "mtsQuery": "_exists_:kubernetes_cluster",
   "singleHostSystemDashboardName": "K8s Node",
