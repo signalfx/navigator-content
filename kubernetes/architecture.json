@@ -95,7 +95,7 @@
         "varName": "NODES",
         "valueLabel": "CPU Use",
         "valueFormat": "Percentage",
-        "idTemplate": "{{host}}",
+        "idTemplate": "{{host}} ({{kubernetes_cluster}})",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -107,7 +107,7 @@
         "varName": "MASTERS",
         "valueLabel": "CPU Use",
         "valueFormat": "Percentage",
-        "idTemplate": "{{host}}",
+        "idTemplate": "{{host}} ({{kubernetes_cluster}})",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
