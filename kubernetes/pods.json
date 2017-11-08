@@ -97,21 +97,6 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
-          {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
             "type": "property"
@@ -156,21 +141,6 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
-          {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
             "type": "property"
@@ -204,21 +174,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
           {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
@@ -260,21 +215,6 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
-          {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
             "type": "property"
@@ -315,21 +255,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
           {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
@@ -379,21 +304,6 @@
       "job": {
         "resolution": 60000,
         "filters": [
-          {
-            "property": "_missing_",
-            "propertyValue": "cluster",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_pod_namespace",
-            "type": "property"
-          },
-          {
-            "property": "_missing_",
-            "propertyValue": "kubernetes_container_name",
-            "type": "property"
-          },
           {
             "property": "_exists_",
             "propertyValue": "kubernetes_cluster",
