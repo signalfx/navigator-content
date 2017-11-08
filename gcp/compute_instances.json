@@ -1,0 +1,251 @@
+{
+  "id": "gcp compute",
+  "unreleased": true,
+  "displayName": "Compute Engine",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 10,
+  "type": "elemental",
+  "alertQuery": "_exists_:instance_id",
+  "idTemplate": "{{gcp_id}}",
+  "idName": "Instance",
+  "mtsQuery": "sf_metric:instance/cpu/utilization AND _exists_:gcp_id",
+  "systemDashboardPrefix": "Compute Engine Instances",
+  "singleHostSystemDashboardName": "Compute Engine Instance",
+  "discoveryQuery": ["service:compute"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ],
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Instance ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "instance_name",
+      "displayName": "Instance Name",
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID",
+    },
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "instance_name",
+      "displayName": "Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+  ],
+  "metrics": [
+    {
+      "id": "gcp.instance/cpu/utilization",
+      "type": "metric",
+      "displayName": "CPU Utilization",
+      "metricSelectors": [
+        "instance/cpu/utilization"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+        ],
+        "template": "CPU_UTILIZATION = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_id\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "gcp.instance/network/received_bytes_count",
+      "type": "metric",
+      "displayName": "Network Received Bytes",
+      "metricSelectors": [
+        "instance/network/received_bytes_count"
+      ],
+      "description": "Color hosts based on network bytes in per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+        ],
+        "template": "NETWORK_IN = data(\"instance/network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "NETWORK_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "gcp.instance/network/sent_bytes_count",
+      "type": "metric",
+      "displayName": "Network Sent Bytes",
+      "metricSelectors": [
+        "instance/network/sent_bytes_count"
+      ],
+      "description": "Color hosts based on network bytes in per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+        ],
+        "template": "NETWORK_OUT = data(\"instance/network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "NETWORK_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "gcp.instance/disk/write_bytes_count",
+      "type": "metric",
+      "displayName": "Disk Write Bytes",
+      "metricSelectors": [
+        "instance/disk/write_bytes_count"
+      ],
+      "description": "Color hosts based on bytes written to disk per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_name",
+            "type": "property"
+          },
+        ],
+        "template": "DISK_WRITE_BYTES = data(\"instance/disk/write_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "DISK_WRITE_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "gcp.instance/disk/read_bytes_count",
+      "type": "metric",
+      "displayName": "Disk Read Bytes",
+      "metricSelectors": [
+        "instance/disk/read_bytes_count"
+      ],
+      "description": "Color hosts based on bytes read from disk per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+        ],
+        "template": "DISK_READ_BYTES = data(\"instance/disk/read_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "DISK_READ_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "gcp.instance/disk/write_ops_count",
+      "type": "metric",
+      "displayName": "Disk Write Ops",
+      "metricSelectors": [
+        "instance/disk/write_ops_count"
+      ],
+      "description": "Color hosts based on disk write operations per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+        ],
+        "template": "DISK_WRITE_OPS = data(\"instance/disk/write_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "DISK_WRITE_OPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "gcp.instance/disk/read_ops_count",
+      "type": "metric",
+      "displayName": "Disk Read Ops",
+      "metricSelectors": [
+        "instance/disk/read_ops_count"
+      ],
+      "description": "Color hosts based on disk read operations per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "instance_id",
+            "type": "property"
+          },
+        ],
+        "template": "DISK_READ_OPS = data(\"instance/disk/read_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "varName": "DISK_READ_OPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+  ]
+}
