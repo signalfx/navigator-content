@@ -18,7 +18,7 @@
         "header": "Other",
         "properties": []
       }
-    ],
+    ]
   ],
   "listColumns": [
     {
@@ -33,12 +33,12 @@
     },
     {
       "property": "instance_name",
-      "displayName": "Instance Name",
+      "displayName": "Instance Name"
     },
     {
       "property": "project_id",
-      "displayName": "Project ID",
-    },
+      "displayName": "Project ID"
+    }
   ],
   "tooltipKeyList": [
     {
@@ -56,7 +56,7 @@
       "displayName": "Value",
       "isSummaryProperty": true,
       "format": "Number"
-    },
+    }
   ],
   "metrics": [
     {
@@ -81,7 +81,7 @@
             "property": "_exists_",
             "propertyValue": "gcp_id",
             "type": "property"
-          },
+          }
         ],
         "template": "CPU_UTILIZATION = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_id\"])",
         "varName": "CPU_UTILIZATION"
@@ -107,7 +107,7 @@
             "property": "_exists_",
             "propertyValue": "instance_id",
             "type": "property"
-          },
+          }
         ],
         "template": "NETWORK_IN = data(\"instance/network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "NETWORK_IN"
@@ -132,7 +132,7 @@
             "property": "_exists_",
             "propertyValue": "instance_id",
             "type": "property"
-          },
+          }
         ],
         "template": "NETWORK_OUT = data(\"instance/network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "NETWORK_OUT"
@@ -162,7 +162,7 @@
             "property": "_exists_",
             "propertyValue": "instance_name",
             "type": "property"
-          },
+          }
         ],
         "template": "DISK_WRITE_BYTES = data(\"instance/disk/write_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "DISK_WRITE_BYTES"
@@ -187,7 +187,7 @@
             "property": "_exists_",
             "propertyValue": "instance_id",
             "type": "property"
-          },
+          }
         ],
         "template": "DISK_READ_BYTES = data(\"instance/disk/read_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "DISK_READ_BYTES"
@@ -212,7 +212,7 @@
             "property": "_exists_",
             "propertyValue": "instance_id",
             "type": "property"
-          },
+          }
         ],
         "template": "DISK_WRITE_OPS = data(\"instance/disk/write_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "DISK_WRITE_OPS"
@@ -237,7 +237,7 @@
             "property": "_exists_",
             "propertyValue": "instance_id",
             "type": "property"
-          },
+          }
         ],
         "template": "DISK_READ_OPS = data(\"instance/disk/read_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
         "varName": "DISK_READ_OPS"
@@ -246,6 +246,6 @@
         "method": "quantile",
         "minValue": 0
       }
-    },
+    }
   ]
 }
