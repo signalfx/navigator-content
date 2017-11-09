@@ -1,6 +1,5 @@
 {
   "id": "gcp compute",
-  "unreleased": true,
   "displayName": "Compute Engine",
   "category": "Google Cloud Platform",
   "categoryPriority": 10,
