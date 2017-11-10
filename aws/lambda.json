@@ -1,13 +1,14 @@
 {
   "id": "lambda",
   "displayName": "Lambda Functions",
-  "category": "Serverless",
+  "category": "AWS",
+  "categoryPriority": 100,
   "type": "list",
   "idTemplate": "{{aws_function_name}} | {{aws_function_version}} | {{aws_region}} | {{aws_account_id}}",
   "idName": "Function",
   "mtsQuery": "(sf_metric:Invocations OR sf_metric:function.invocations OR sf_metric:Throttles) AND _exists_:aws_function_name",
   "alertQuery": "_exists_:aws_function_name",
-  "systemDashboardPrefix": "Lambda",
+  "systemDashboardPrefix": "Lambda (AWS)",
   "discoveryQuery": ["sf_key:FunctionName", "namespace:AWS/Lambda", "sf_key:lambda_arn", "metric_source:lambda_wrapper"],
   "alwaysGroupBy": "aws_function_name",
   "idProperties": [
@@ -156,7 +157,7 @@
             "type": "property"
           }
         ],
-        "template": "cw_duration_sum = data(\"Duration\", filter=filter(\"stat\", \"mean\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\ncw_duration_count = data(\"Duration\", filter=filter(\"stat\", \"count\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\").sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\nduration_from_cw = cw_duration_sum / cw_duration_count\nduration_from_wrapper = data(\"function.duration\", filter=filter(\"lambda_arn\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\nDURATION = union(duration_from_cw, duration_from_wrapper)",
+        "template": "cw_duration_sum = data(\"Duration\", filter=filter(\"stat\", \"sum\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\ncw_duration_count = data(\"Duration\", filter=filter(\"stat\", \"count\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\").sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\nduration_from_cw = cw_duration_sum / cw_duration_count\nduration_from_wrapper = data(\"function.duration\", filter=filter(\"lambda_arn\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\nDURATION = union(duration_from_cw, duration_from_wrapper)",
         "varName": "DURATION"
       }
     },
