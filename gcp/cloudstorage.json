@@ -1,0 +1,169 @@
+{
+  "id": "gcp storage",
+  "unreleased": true,
+  "displayName": "Cloud Storage",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 10,
+  "type": "elemental",
+  "alertQuery": "_exists_:gcp_id",
+  "idTemplate": "{{bucket_name}}",
+  "idName": "Cloud Storage",
+  "mtsQuery": "sf_metric:network/received_bytes_count AND _exists_:gcp_id",
+  "systemDashboardPrefix": "Cloud Storage Overview",
+  "singleHostSystemDashboardName": "Cloud Storage Bucket",
+  "discoveryQuery": ["service:storage"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "bucket_name",
+      "displayName": "Bucket"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "bucket_name",
+      "displayName": "Bucket",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "gcp.network/received_bytes_count",
+      "type": "metric",
+      "displayName": "Network Received Bytes",
+      "metricSelectors": [
+        "network/received_bytes_count"
+      ],
+      "description": "Color hosts based on network bytes in per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "project_id",
+            "type": "property"
+          }
+        ],
+        "template": "STORAGE_NETWORK_IN = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "varName": "STORAGE_NETWORK_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.network/sent_bytes_count",
+      "type": "metric",
+      "displayName": "Network Sent Bytes",
+      "metricSelectors": [
+        "network/sent_bytes_count"
+      ],
+      "description": "Color hosts based on network bytes in per second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "project_id",
+            "type": "property"
+          }
+        ],
+        "template": "STORAGE_NETWORK_OUT = data(\"network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "varName": "STORAGE_NETWORK_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.api/request_count",
+      "type": "metric",
+      "displayName": "Requests",
+      "metricSelectors": [
+        "api/request_count"
+      ],
+      "description": "Color hosts based on requests aper second",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "project_id",
+            "type": "property"
+          }
+        ],
+        "template": "STORAGE_REQUESTS = data(\"api/request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "varName": "STORAGE_REQUESTS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}
