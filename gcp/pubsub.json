@@ -1,0 +1,69 @@
+{
+  "id": "gcp pubsub",
+  "unreleased": true,
+  "type": "architectural",
+  "displayName": "Pub/Sub",
+  "mtsQuery": "sf_metric:subscription/num_undelivered_messages OR sf_metric:topic/send_request_count",
+  "category": "Google Cloud Platform",
+  "systemDashboardPrefix": "Pub/Sub Overview",
+  "discoveryQuery":["service:pubsub"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID",
+      "isSummaryProperty": true
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 300000,
+      "filters": [],
+      "template": "SUBSCRIPTION = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\"])\nTOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"topic_id\"])\n"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true
+    },
+    "metrics": [
+      {
+        "name": "Subscriptions",
+        "varName": "SUBSCRIPTION",
+        "valueLabel": "Backlog Size",
+        "idTemplate": "{{subscription_id}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0
+        }
+      },
+      {
+        "name": "Topics",
+        "varName": "TOPIC",
+        "valueLabel": "Sent Requests",
+        "idTemplate": "{{topic_id}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0
+        }
+      }
+    ]
+  }
+}
