@@ -1,0 +1,110 @@
+{
+  "id": "gcp cloudfunctions",
+  "unreleased": true,
+  "displayName": "Cloud Functions",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 10,
+  "type": "list",
+  "idTemplate": "{{function_name}}",
+  "alertQuery": "_exists_:function_name",
+  "idName": "Function",
+  "mtsQuery": "(sf_metric:function/execution_count OR sf_metric:function/execution_times OR sf_metric:function/user_memory_bytes) AND _exists_:function_name",
+  "systemDashboardPrefix": "Cloud Functions Overview",
+  "discoveryQuery": ["service:cloudfunctions"],
+  "idProperties": [
+    {
+      "id": "function_name",
+      "displayName": "Function"
+    }
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "function_name",
+      "displayName": "Function"
+    },
+    {
+      "metric": "function/execution_count",
+      "displayName": "Executions/min",
+      "format": "Number",
+      "aggregate": "sum"
+    },
+    {
+      "metric": "function/execution_times",
+      "displayName": "Avg. Execution Time (ms)",
+      "format": "Number",
+      "aggregate": "mean"
+    },
+    {
+      "metric": "function/user_memory_bytes",
+      "displayName": "Avg. Memory Used",
+      "format": "Number",
+      "aggregate": "mean"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "function/execution_count",
+      "type": "metric",
+      "displayName": "function/execution_count",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "function_name",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          }
+        ],
+        "template": "EXECUTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"function_name\"])",
+        "varName": "EXECUTIONS"
+      }
+    },
+    {
+      "id": "function/execution_times",
+      "type": "metric",
+      "displayName": "function/execution_times",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          }
+        ],
+        "template": "EXEC_TIMES = data(\"function/execution_times\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).scale(0.000001)",
+        "varName": "EXEC_TIMES"
+      }
+    },
+    {
+      "id": "function/user_memory_bytes",
+      "type": "metric",
+      "displayName": "function/user_memory_bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          }
+        ],
+        "template": "MEM_USED = data(\"function/user_memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)",
+        "varName": "MEM_USED"
+      }
+    }
+  ]
+}
