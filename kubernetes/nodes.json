@@ -95,7 +95,7 @@
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
@@ -128,7 +128,7 @@
             "type": "property"
           }
         ],
-        "template": "MEMORY_UTILIZATION = data(\"memory.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "MEMORY_UTILIZATION = data(\"memory.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\"])",
         "varName": "MEMORY_UTILIZATION"
       },
       "coloring": {
@@ -161,7 +161,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_UTILIZATION = data(\"disk.summary_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "DISK_UTILIZATION = data(\"disk.summary_utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\"])",
         "varName": "DISK_UTILIZATION"
       },
       "coloring": {
@@ -192,7 +192,7 @@
             "type": "property"
           }
         ],
-        "template": "NETWORK_TOTAL = data(\"network.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "NETWORK_TOTAL = data(\"network.total\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\"])",
         "varName": "NETWORK_TOTAL"
       },
       "coloring": {
@@ -262,7 +262,7 @@
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "template": "CPU_UTILIZATION = data(\"cpu.utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"kubernetes_cluster\", \"host\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
