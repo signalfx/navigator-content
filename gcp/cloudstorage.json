@@ -42,11 +42,6 @@
       "isSummaryProperty": true
     },
     {
-      "property": "project_id",
-      "displayName": "Project",
-      "isSummaryProperty": true
-    },
-    {
       "property": "value",
       "displayName": "Value",
       "isSummaryProperty": true,
@@ -61,9 +56,9 @@
       "metricSelectors": [
         "network/received_bytes_count"
       ],
-      "description": "Color hosts based on network bytes in per second",
+      "description": "Color hosts based on network bytes in per minute",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "_exists_",
@@ -76,7 +71,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_NETWORK_IN = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "template": "STORAGE_NETWORK_IN = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_NETWORK_IN"
       },
       "coloring": {
@@ -98,9 +93,9 @@
       "metricSelectors": [
         "network/sent_bytes_count"
       ],
-      "description": "Color hosts based on network bytes in per second",
+      "description": "Color hosts based on network bytes out per minute",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "_exists_",
@@ -113,7 +108,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_NETWORK_OUT = data(\"network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "template": "STORAGE_NETWORK_OUT = data(\"network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_NETWORK_OUT"
       },
       "coloring": {
@@ -131,13 +126,13 @@
     {
       "id": "gcp.api/request_count",
       "type": "metric",
-      "displayName": "Requests",
+      "displayName": "Requests / min",
       "metricSelectors": [
         "api/request_count"
       ],
-      "description": "Color hosts based on requests aper second",
+      "description": "Color hosts based on requests per minute",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "_exists_",
@@ -150,7 +145,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_REQUESTS = data(\"api/request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"bucket_name\"])",
+        "template": "STORAGE_REQUESTS = data(\"api/request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_REQUESTS"
       },
       "coloring": {

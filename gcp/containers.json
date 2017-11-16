@@ -1,0 +1,89 @@
+{
+  "id": "gcp containerengine",
+  "unreleasd": true,
+  "displayName": "Container Engine",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 20,
+  "type": "architectural",
+  "alertQuery": "_exists_:gcp_id",
+  "mtsQuery": "sf_metric:container/cpu/usage_time AND _exists_:gcp_id AND _exists_:module_id",
+  "discoveryQuery": ["_exists_:cluster_name"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "cluster_name",
+      "displayName": "Cluster",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "cluster_name",
+      "displayName": "Cluster",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "CONTAINERS = data(\"container/cpu/usage_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"cluster_name\", \"project_id\"])"
+    },
+    "groupingStructure": {
+      "key": "project_id",
+      "drawBoundary": true,
+      "children": [
+        {
+          "key": "cluster_name",
+          "drawBoundary": true
+        }
+      ]
+    },
+    "metrics": [
+      {
+        "name": "Clusters",
+        "varName": "CONTAINERS",
+        "valueLabel": " # Containers",
+        "idTemplate": "{{cluster_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      }
+    ]
+  }
+}

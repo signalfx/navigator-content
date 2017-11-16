@@ -1,0 +1,93 @@
+{
+  "id": "gcp appengine",
+  "unreleased": true,
+  "displayName": "App Engine",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 20,
+  "type": "architectural",
+  "alertQuery": "_exists_:module_id",
+  "mtsQuery": "sf_metric:http/server/response_count AND _exists_:gcp_id AND _exists_:module_id",
+  "discoveryQuery": ["service:appengine"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "module_id",
+      "displayName": "Module ID",
+      "format": "id"
+    },
+    {
+      "property": "version_id",
+      "displayName": "Version ID"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "module_id",
+      "displayName": "Module ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "APPENGINE_RESPONSES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"module_id\", \"version_id\",\"project_id\"])"
+    },
+    "groupingStructure": {
+      "key": "project_id",
+      "drawBoundary": true,
+      "children": [
+        {
+          "key": "module_id",
+          "drawBoundary": true
+        }
+      ]
+    },
+    "metrics": [
+      {
+        "name": "Versions",
+        "varName": "APPENGINE_RESPONSES",
+        "valueLabel": "Responses / min",
+        "idTemplate": "{{version_id}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      }
+    ]
+  }
+}

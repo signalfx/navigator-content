@@ -2,6 +2,7 @@
   "id": "gcp pubsub",
   "unreleased": true,
   "type": "architectural",
+  "alertQuery": "(_exists_:gcp_id)",
   "displayName": "Pub/Sub",
   "mtsQuery": "sf_metric:subscription/num_undelivered_messages OR sf_metric:topic/send_request_count",
   "category": "Google Cloud Platform",
@@ -37,7 +38,7 @@
     "job": {
       "resolution": 300000,
       "filters": [],
-      "template": "SUBSCRIPTION = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\"])\nTOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"topic_id\"])\n"
+      "template": "SUBSCRIPTION = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])\nTOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"topic_id\", \"project_id\"])\n"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
@@ -47,21 +48,35 @@
       {
         "name": "Subscriptions",
         "varName": "SUBSCRIPTION",
-        "valueLabel": "Backlog Size",
+        "valueLabel": "Unack. Messages",
         "idTemplate": "{{subscription_id}}",
         "coloring": {
           "method": "quantile",
-          "minValue": 0
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
         }
       },
       {
         "name": "Topics",
         "varName": "TOPIC",
-        "valueLabel": "Sent Requests",
+        "valueLabel": "Sent Requests / min",
         "idTemplate": "{{topic_id}}",
         "coloring": {
           "method": "quantile",
-          "minValue": 0
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
         }
       }
     ]
