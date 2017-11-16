@@ -1,0 +1,153 @@
+{
+  "id": "gcp architecture",
+  "unreleased": true,
+  "categoryPriority": 10,
+  "type": "architectural",
+  "displayName": "Architecture",
+  "alertQuery": "(_exists_:gcp_id)",
+  "mtsQuery": "sf_metric:instance/cpu/utilization",
+  "discoveryQuery":[""],
+  "category": "Google Cloud Platform",
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [],
+      "template": "COMPUTE = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_id\", \"project_id\"])\nAPPENGINE_INSTANCES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"module_id\", \"project_id\"])\nCONTAINER_CLUSTERS = data(\"container/cpu/usage_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"cluster_name\", \"project_id\"])\nSTORAGEBUCKETS = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])\nPUBSUB_SUB = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])\nPUBSUB_TOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"topic_id\", \"project_id\"])\nCLOUDFUNCTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)\n"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true
+    },
+    "metrics": [
+      {
+        "name": "Compute Engine",
+        "varName": "COMPUTE",
+        "valueLabel": "CPU Usage",
+        "idTemplate": "{{instance_name}}--{{project_id}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      {
+          "name": "App Engine",
+          "varName": "APPENGINE_INSTANCES",
+          "valueLabel": "Responses / min",
+          "idTemplate": "{{module_id}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      },
+      {
+          "name": "Container Engine",
+          "varName": "CONTAINER_CLUSTERS",
+          "valueLabel": "# Containers",
+          "idTemplate": "{{cluster_name}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      },
+      {
+          "name": "Cloud Storage",
+          "varName": "STORAGEBUCKETS",
+          "valueLabel": "Bytes Received / min",
+          "idTemplate": "{{bucket_name}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      },
+      {
+          "name": "Pub/Sub Subscriptions",
+          "varName": "PUBSUB_SUB",
+          "valueLabel": "Unack. Messages",
+          "idTemplate": "{{subscription_id}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      },
+      {
+          "name": "Pub/Sub Topics",
+          "varName": "PUBSUB_TOPIC",
+          "valueLabel": "Sent Requests / min",
+          "idTemplate": "{{topic_id}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      },
+      {
+          "name": "Cloud Functions",
+          "varName": "CLOUDFUNCTIONS",
+          "valueLabel": "Executions / min",
+          "idTemplate": "{{function_name}}--{{project_id}}",
+          "coloring": {
+            "method": "quantile",
+            "minValue": 0,
+            "range": [
+              "#bfd3e6",
+              "#9ebcda",
+              "#8c96c6",
+              "#8856a7",
+              "#810f7c"
+            ]
+          }
+      }
+    ]
+  }
+}
