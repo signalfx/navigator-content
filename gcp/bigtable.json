@@ -1,0 +1,85 @@
+{
+  "id": "gcp bigtable",
+  "unreleased": true,
+  "displayName": "Cloud Bigtable",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 10,
+  "type": "elemental",
+  "alertQuery": "_exists_:gcp_id",
+  "idTemplate": "{{cluster}}",
+  "idName": "Cloud Storage",
+  "mtsQuery": "sf_metric:cluster\\/cpu_load AND _exists_:gcp_id",
+  "systemDashboardPrefix": "Bigtable Overview",
+  "discoveryQuery": ["service:bigtable"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "cluster",
+      "displayName": "Cluster"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "cluster",
+      "displayName": "Cluster",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "gcp.cluster/cpu_load",
+      "type": "metric",
+      "displayName": "Cluster CPU Load",
+      "metricSelectors": [
+        "cluster/cpu_load"
+      ],
+      "description": "Color hosts based on percentage of cluster CPU being used: under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "project_id",
+            "type": "property"
+          }
+        ],
+        "template": "CLUSTER_CPU = data(\"cluster/cpu_load\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"]).scale(100)",
+        "varName": "CLUSTER_CPU"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}
