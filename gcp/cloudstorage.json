@@ -8,7 +8,7 @@
   "alertQuery": "_exists_:gcp_id",
   "idTemplate": "{{bucket_name}}",
   "idName": "Cloud Storage",
-  "mtsQuery": "sf_metric:network/received_bytes_count AND _exists_:gcp_id",
+  "mtsQuery": "sf_metric:network\\\\/received_bytes_count AND _exists_:gcp_id",
   "systemDashboardPrefix": "Cloud Storage Overview",
   "singleHostSystemDashboardName": "Cloud Storage Bucket",
   "discoveryQuery": ["service:storage"],
@@ -50,11 +50,11 @@
   ],
   "metrics": [
     {
-      "id": "gcp.network/received_bytes_count",
+      "id": "gcp.network\\\\/received_bytes_count",
       "type": "metric",
       "displayName": "Network Received Bytes",
       "metricSelectors": [
-        "network/received_bytes_count"
+        "network\\\\/received_bytes_count"
       ],
       "description": "Color hosts based on network bytes in per minute",
       "job": {
@@ -71,7 +71,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_NETWORK_IN = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
+        "template": "STORAGE_NETWORK_IN = data(\"network\\\\/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_NETWORK_IN"
       },
       "coloring": {
@@ -87,11 +87,11 @@
       }
     },
     {
-      "id": "gcp.network/sent_bytes_count",
+      "id": "gcp.network\\\\/sent_bytes_count",
       "type": "metric",
       "displayName": "Network Sent Bytes",
       "metricSelectors": [
-        "network/sent_bytes_count"
+        "network\\\\/sent_bytes_count"
       ],
       "description": "Color hosts based on network bytes out per minute",
       "job": {
@@ -108,7 +108,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_NETWORK_OUT = data(\"network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
+        "template": "STORAGE_NETWORK_OUT = data(\"network\\\\/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_NETWORK_OUT"
       },
       "coloring": {
@@ -124,11 +124,11 @@
       }
     },
     {
-      "id": "gcp.api/request_count",
+      "id": "gcp.api\\\\/request_count",
       "type": "metric",
       "displayName": "Requests / min",
       "metricSelectors": [
-        "api/request_count"
+        "api\\\\/request_count"
       ],
       "description": "Color hosts based on requests per minute",
       "job": {
@@ -145,7 +145,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_REQUESTS = data(\"api/request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
+        "template": "STORAGE_REQUESTS = data(\"api\\\\/request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])",
         "varName": "STORAGE_REQUESTS"
       },
       "coloring": {
