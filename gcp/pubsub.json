@@ -4,6 +4,7 @@
   "type": "architectural",
   "alertQuery": "(_exists_:gcp_id)",
   "displayName": "Cloud Pub/Sub",
+  "idName": "Cloud PubSub",
   "mtsQuery": "sf_metric:subscription\\/num_undelivered_messages OR sf_metric:topic\\/send_request_count",
   "category": "Google Cloud Platform",
   "systemDashboardPrefix": "Pub/Sub Overview",

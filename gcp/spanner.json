@@ -7,7 +7,7 @@
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
   "idTemplate": "{{instance_id}}",
-  "idName": "Cloud Storage",
+  "idName": "Cloud Spanner",
   "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id",
   "systemDashboardPrefix": "Spanner Overview",
   "discoveryQuery": ["service:spanner"],
@@ -69,7 +69,7 @@
           {
             "property": "monitored_resource",
             "propertyValue": "spanner_instance",
-            "type:": "property"
+            "type": "property"
           },
           {
             "property": "_exists_",
