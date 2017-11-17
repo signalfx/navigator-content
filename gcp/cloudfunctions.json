@@ -3,7 +3,7 @@
   "unreleased": true,
   "displayName": "Cloud Functions",
   "category": "Google Cloud Platform",
-  "categoryPriority": 10,
+  "categoryPriority": 30,
   "type": "list",
   "idTemplate": "{{function_name}}",
   "alertQuery": "_exists_:function_name",

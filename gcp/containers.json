@@ -3,7 +3,7 @@
   "unreleased": true,
   "displayName": "Container Engine",
   "category": "Google Cloud Platform",
-  "categoryPriority": 20,
+  "categoryPriority": 30,
   "type": "architectural",
   "alertQuery": "_exists_:gcp_id",
   "mtsQuery": "sf_metric:container\\/cpu\\/usage_time AND _exists_:gcp_id AND _exists_:module_id",
