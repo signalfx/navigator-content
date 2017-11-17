@@ -2,7 +2,7 @@
   "id": "gcp compute",
   "displayName": "Compute Engine",
   "category": "Google Cloud Platform",
-  "categoryPriority": 10,
+  "categoryPriority": 20,
   "type": "elemental",
   "alertQuery": "_exists_:instance_id",
   "idTemplate": "{{gcp_id}}",
