@@ -8,7 +8,7 @@
   "alertQuery": "_exists_:gcp_id",
   "idTemplate": "{{bucket_name}}",
   "idName": "Cloud Storage",
-  "mtsQuery": "sf_metric:network\\\\/received_bytes_count AND _exists_:gcp_id",
+  "mtsQuery": "sf_metric:network\\/received_bytes_count AND _exists_:gcp_id",
   "systemDashboardPrefix": "Cloud Storage Overview",
   "singleHostSystemDashboardName": "Cloud Storage Bucket",
   "discoveryQuery": ["service:storage"],
