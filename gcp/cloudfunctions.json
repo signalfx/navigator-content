@@ -8,7 +8,7 @@
   "idTemplate": "{{function_name}}",
   "alertQuery": "_exists_:function_name",
   "idName": "Function",
-  "mtsQuery": "(sf_metric:function/execution_count OR sf_metric:function/execution_times OR sf_metric:function/user_memory_bytes) AND _exists_:function_name",
+  "mtsQuery": "(sf_metric:function\\/execution_count OR sf_metric:function/execution_times OR sf_metric:function/user_memory_bytes) AND _exists_:function_name",
   "systemDashboardPrefix": "Cloud Functions Overview",
   "discoveryQuery": ["service:cloudfunctions"],
   "idProperties": [
