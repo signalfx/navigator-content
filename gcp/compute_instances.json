@@ -79,7 +79,7 @@
           {
             "property": "monitored_resource",
             "propertyValue": "gce_instance",
-            "type:": "property"
+            "type": "property"
           },
           {
             "property": "_exists_",

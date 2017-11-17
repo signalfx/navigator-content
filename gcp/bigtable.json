@@ -7,7 +7,7 @@
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
   "idTemplate": "{{cluster}}",
-  "idName": "Cloud Storage",
+  "idName": "Cloud Bigtable",
   "mtsQuery": "sf_metric:cluster\\/cpu_load AND _exists_:gcp_id",
   "systemDashboardPrefix": "Bigtable Overview",
   "discoveryQuery": ["service:bigtable"],
