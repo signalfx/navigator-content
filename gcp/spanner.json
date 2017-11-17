@@ -1,0 +1,90 @@
+{
+  "id": "gcp spanner",
+  "unreleased": true,
+  "displayName": "Cloud Spanner",
+  "category": "Google Cloud Platform",
+  "categoryPriority": 10,
+  "type": "elemental",
+  "alertQuery": "_exists_:gcp_id",
+  "idTemplate": "{{instance_id}}",
+  "idName": "Cloud Storage",
+  "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id",
+  "systemDashboardPrefix": "Spanner Overview",
+  "discoveryQuery": ["service:spanner"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "instance_id",
+      "displayName": "Spanner Instance"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "instance_id",
+      "displayName": "Spanner Instance",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "gcp.instance/cpu/utilization",
+      "type": "metric",
+      "displayName": "Spanner CPU Load",
+      "metricSelectors": [
+        "instance/cpu/utilization"
+      ],
+      "description": "Color hosts based on percentage of spanner CPU being used: under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "gcp_id",
+            "type": "property"
+          },
+          {
+            "property": "monitored_resource",
+            "propertyValue": "spanner_instance",
+            "type:": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "project_id",
+            "type": "property"
+          }
+        ],
+        "template": "SPANNER_CPU = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\", \"project_id\"]).scale(100)",
+        "varName": "SPANNER_CPU"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}
