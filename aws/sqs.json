@@ -73,14 +73,41 @@
   ],
   "metrics": [
     {
+      "id": "aws.sqs.currentqueuesize",
+      "type": "metric",
+      "displayName": "Current Queue Size",
+      "metricSelectors": [
+        "ApproximateNumberOfMessagesVisible"
+      ],
+      "description": "Number of in-flight, visible, delayed messages in queue",
+      "valueLabel": "Queue Size",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "APPROX_VISIBLE_MSGS = data(\"ApproximateNumberOfMessagesVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nAPPROX_NOT_VISIBLE_MSGS = data(\"ApproximateNumberOfMessagesNotVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nAPPROX_MESSAGES_DELAYED= data(\"ApproximateNumberOfMessagesDelayed\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nCURRENT_QUEUE_SIZE = (APPROX_VISIBLE_MSGS + APPROX_NOT_VISIBLE_MSGS + APPROX_MESSAGES_DELAYED)",
+        "varName": "CURRENT_QUEUE_SIZE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
       "id": "aws.sqs.msgsent",
       "type": "metric",
       "displayName": "Sent Messages",
       "metricSelectors": [
         "NumberOfMessagesSent"
       ],
-      "description": "Number of message sent",
-      "valueLabel": "Messages",
+      "description": "Number of messages added to the queue per minute",
+      "valueLabel": "Messages / min",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -106,13 +133,204 @@
       "metricSelectors": [
         "NumberOfMessagesReceived"
       ],
-      "description": "Number of message Received",
-      "valueLabel": "Messages",
+      "description": "Number of messages returned by calls to the ReceiveMessage API action per minute",
+      "valueLabel": "Messages / min",
       "job": {
         "resolution": 300000,
         "filters": [],
         "template": "NumberOfMessagesReceived = data(\"NumberOfMessagesReceived\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"sum\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).mean(by=[\"QueueName\"])",
         "varName": "NumberOfMessagesReceived"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.deleted_messages",
+      "type": "metric",
+      "displayName": "Deleted Messages",
+      "metricSelectors": [
+        "NumberOfMessagesDeleted"
+      ],
+      "description": "Number of messages deleted from the queue",
+      "valueLabel": "Deleted Messages / min",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "DELETED_MESSAGES = data(\"NumberOfMessagesDeleted\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"sum\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).mean(by=[\"QueueName\"])",
+        "varName": "DELETED_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.empty_receives",
+      "type": "metric",
+      "displayName": "Empty Receives",
+      "metricSelectors": [
+        "NumberOfEmptyReceives"
+      ],
+      "description": "Number of ReceiveMessage API calls that did not return a message per minute",
+      "valueLabel": "Empty Messages / min",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EMPTY_MESSAGES = data(\"NumberOfEmptyReceives\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"sum\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).mean(by=[\"QueueName\"])",
+        "varName": "EMPTY_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.sent_message_size",
+      "type": "metric",
+      "displayName": "Sent Message Size",
+      "metricSelectors": [
+        "SentMessageSize"
+      ],
+      "description": "The average size of messages added to a queue",
+      "valueLabel": "Avg. Message Size",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "AVG_MESSAGE_SIZE = data(\"SentMessageSize\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])",
+        "varName": "AVG_MESSAGE_SIZE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.delayed_messages",
+      "type": "metric",
+      "displayName": "Delayed Messages",
+      "metricSelectors": [
+        "ApproximateNumberOfMessagesDelayed"
+      ],
+      "description": "Number of messages in the queue that are delayed and not available for reading immediately",
+      "valueLabel": "Delayed Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "DELAYED_MESSAGES = data(\"ApproximateNumberOfMessagesDelayed\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])",
+        "varName": "DELAYED_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.inflight_messages",
+      "type": "metric",
+      "displayName": "In-Flight Messages",
+      "metricSelectors": [
+        "ApproximateNumberOfMessagesNotVisible"
+      ],
+      "description": "Number of messages sent to a client but have not yet been deleted or have not yet reached the end of their visibility window",
+      "valueLabel": "In-Flight Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "INFLIGHT_MESSAGES = data(\"ApproximateNumberOfMessagesNotVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])",
+        "varName": "INFLIGHT_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.visible_messages",
+      "type": "metric",
+      "displayName": "Visible Messages",
+      "metricSelectors": [
+        "ApproximateNumberOfMessagesVisible"
+      ],
+      "description": "Number of messages available for retrieval from the queue",
+      "valueLabel": "Visible Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "VISIBLE_MESSAGES = data(\"ApproximateNumberOfMessagesVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])",
+        "varName": "VISIBLE_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sqs.oldest_message_age",
+      "type": "metric",
+      "displayName": "Oldest Message Age",
+      "metricSelectors": [
+        "ApproximateAgeOfOldestMessage"
+      ],
+      "description": "Age of the oldest non-deleted message in the queue",
+      "valueLabel": "Oldest Message Age",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "OLDEST_MESSAGE_AGE = data(\"ApproximateAgeOfOldestMessage\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])",
+        "varName": "OLDEST_MESSAGE_AGE"
       },
       "coloring": {
         "method": "quantile",
