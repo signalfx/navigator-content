@@ -63,23 +63,275 @@
     {
       "id": "aws.elasticache.hitrate",
       "type": "metric",
-      "displayName": "Hit Rate",
+      "displayName": "Hit Ratio",
       "metricSelectors": [
         "CacheHits"
       ],
-      "description": "Hit rate",
-      "valueLabel": "Rate",
+      "description": "Cache Hits / (Cache Hits + Cache Misses). Under 80% is Red, 80-90% Yellow, above 90% is Green",
+      "valueLabel": "Hit Ratio",
       "valueFormat": "Percentage",
       "job": {
         "resolution": 300000,
         "filters": [],
-        "template": "CACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
-        "varName": "CACHE"
+        "template": "CACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_RATIO = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
+        "varName": "CACHE_RATIO"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100,
+        "range": [
+          "#ea1849", // 0 10 red
+          "#ea1849", //10 20 red
+          "#ea1849", //20 30 red
+          "#ea1849", //30 40 red
+          "#ea1849", //40 50 red
+          "#ea1849", //50 60 red
+          "#ea1849", //60 70 red
+          "#ea1849", //70 80 red
+          "#e2ed6a", //80 90 yellow
+          "#6bd37e" //90 100 green
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.currconnections",
+      "type": "metric",
+      "displayName": "Current Connections",
+      "metricSelectors": [
+        "CurrConnections"
+      ],
+      "description": "Number of client connections (max: 65000)",
+      "valueLabel": "Connections",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "CURRENT_CONNECTIONS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 65000
+      }
+    },
+    {
+      "id": "aws.elasticache.evictions",
+      "type": "metric",
+      "displayName": "Evictions",
+      "metricSelectors": [
+        "Evictions"
+      ],
+      "description": "Number of non-expired items evicted to allow space for new writes",
+      "valueLabel": "Evictions",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EVICTIONS = data(\"Evictions\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "EVICTIONS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.freeablememory",
+      "type": "metric",
+      "displayName": "Free Memory",
+      "metricSelectors": [
+        "FreeableMemory"
+      ],
+      "description": "Amount of free memory available on the host",
+      "valueLabel": "Free Memory",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "FREEABLE_MEMORY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.swapusage",
+      "type": "metric",
+      "displayName": "Swap Usage",
+      "metricSelectors": [
+        "SwapUsage"
+      ],
+      "description": "Amount of swap used on the host",
+      "valueLabel": "Swap Usage",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SWAP_USAGE = data(\"SwapUsage\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "SWAP_USAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.cpuutilization",
+      "type": "metric",
+      "displayName": "CPU Utilization",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "The percentage of CPU utilization",
+      "valueLabel": "CPU Utilization",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CPU_UTIL = data(\"CPUUtilization\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "CPU_UTIL"
       },
       "coloring": {
         "method": "quantile",
         "minValue": 0,
         "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.elasticache.cachehits",
+      "type": "metric",
+      "displayName": "Cache Hits",
+      "metricSelectors": [
+        "CacheHits"
+      ],
+      "description": "The number of successful key lookups",
+      "valueLabel": "Hits",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CACHE_HITS1 = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])",
+        "varName": "CACHE_HITS1"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.cachemisses",
+      "type": "metric",
+      "displayName": "Cache Misses",
+      "metricSelectors": [
+        "CacheMisses"
+      ],
+      "description": "The number of unsuccessful key lookups",
+      "valueLabel": "Misses",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CACHE_MISSES1 = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])",
+        "varName": "CACHE_MISSES1"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.networkin",
+      "type": "metric",
+      "displayName": "Network In",
+      "metricSelectors": [
+        "NetworkBytesIn"
+      ],
+      "description": "Number of bytes the host has read from the network",
+      "valueLabel": "Network In",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NETWORK_IN = data(\"NetworkBytesIn\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "NETWORK_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.elasticache.networkout",
+      "type": "metric",
+      "displayName": "Network Out",
+      "metricSelectors": [
+        "NetworkBytesOut"
+      ],
+      "description": "Number of bytes the host has written to the network",
+      "valueLabel": "Network Out",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NETWORK_OUT = data(\"NetworkBytesOut\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "NETWORK_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
       }
     }
   ]
