@@ -124,8 +124,8 @@
       "metricSelectors": [
         "ReadIOPS"
       ],
-      "description": "Number of connections to the database",
-      "valueLabel": "Connections",
+      "description": "Average Read IOPS per second",
+      "valueLabel": "ReadIOPs",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -151,8 +151,8 @@
       "metricSelectors": [
         "WriteIOPS"
       ],
-      "description": "Number of connections to the database",
-      "valueLabel": "Connections",
+      "description": "Average Write IOPS per second",
+      "valueLabel": "WriteOPs",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -232,8 +232,9 @@
       "metricSelectors": [
         "ReadThroughput"
       ],
-      "description": "Read throughput for the database",
-      "valueLabel": "Connections",
+      "description": "Number of bytes read from disk per second",
+      "valueLabel": "Avg. Read Throughput",
+      "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -259,13 +260,230 @@
       "metricSelectors": [
         "WriteThroughput"
       ],
-      "description": "Write Throughput for the database",
-      "valueLabel": "Connections",
+      "description": "Number of bytes written to disk per second",
+      "valueLabel": "Avg Write Throughput",
+      "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
         "filters": [],
         "template": "WriteThroughput = data(\"WriteThroughput\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
         "varName": "WriteThroughput"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.diskqueuedepth",
+      "type": "metric",
+      "displayName": "Disk Queue Depth",
+      "metricSelectors": [
+        "DiskQueueDepth"
+      ],
+      "description": "IOs (read/write requests) waiting to access the disk",
+      "valueLabel": "Disk Queue Depth",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "DiskQueueDepth = data(\"DiskQueueDepth\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "DiskQueueDepth"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.cpuutilization",
+      "type": "metric",
+      "displayName": "CPU Utilization",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "CPU Utilization: under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU Usage",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "RDS_CPU_UTILIZATION = data(\"CPUUtilization\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "RDS_CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.rds.freeablememory",
+      "type": "metric",
+      "displayName": "Free Memory",
+      "metricSelectors": [
+        "FreeableMemory"
+      ],
+      "description": "Available RAM in bytes",
+      "valueLabel": "Free Memory",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "FREEABLE_MEMORY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.freestoragespace",
+      "type": "metric",
+      "displayName": "Free Storage",
+      "metricSelectors": [
+        "FreeStorageSpace"
+      ],
+      "description": "Available Storage in bytes",
+      "valueLabel": "Free Storage",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "FREESTORAGESPACE = data(\"FreeStorageSpace\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "FREESTORAGESPACE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#810f7c",
+          "#8856a7",
+          "#8c96c6",
+          "#9ebcda",
+          "#bfd3e6"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.swapusage",
+      "type": "metric",
+      "displayName": "Swap Usage",
+      "metricSelectors": [
+        "SwapUsage"
+      ],
+      "description": "Used Swap Space in bytes",
+      "valueLabel": "Swap Space",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SWAP_USAGE = data(\"SwapUsage\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "SWAP_USAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.networkreceivethroughput",
+      "type": "metric",
+      "displayName": "Network Receive Throughput",
+      "metricSelectors": [
+        "NetworkReceiveThroughput"
+      ],
+      "description": "Incoming Network Traffic in bytes/second",
+      "valueLabel": "Incoming Traffic",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NETWORK_RECEIVE_THROUGHPUT = data(\"NetworkReceiveThroughput\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "NETWORK_RECEIVE_THROUGHPUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.networktransmitthroughput",
+      "type": "metric",
+      "displayName": "Network Transmit Throughput",
+      "metricSelectors": [
+        "NetworkTransmitThroughput"
+      ],
+      "description": "Outgoing Network Traffic in bytes/second",
+      "valueLabel": "Outgoing Traffic",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NETWORK_TRANSMIT_THROUGHPUT = data(\"NetworkTransmitThroughput\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "NETWORK_TRANSMIT_THROUGHPUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.rds.replicalag",
+      "type": "metric",
+      "displayName": "Replication Lag",
+      "metricSelectors": [
+        "ReplicaLag"
+      ],
+      "description": "Amount of time a Read Replica DB instance lags behind the source DB instance",
+      "valueLabel": "Replication Lag",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "REPLICATION_LAG = data(\"ReplicaLag\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])",
+        "varName": "REPLICATION_LAG"
       },
       "coloring": {
         "method": "quantile",
