@@ -79,6 +79,50 @@
   ],
   "metrics": [
     {
+      "id": "aws.cloudfront.totalerrorrate",
+      "type": "metric",
+      "displayName": "Total Error Rate",
+      "metricSelectors": [
+        "TotalErrorRate"
+      ],
+      "description": "Percentage of all requests for which the HTTP status code is 4xx or 5xx. Under 5% is Green, 5-20% Yellow, above 20% is Red",
+      "valueLabel": "Error %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "TOTAL_ERROR_RATE = data(\"TotalErrorRate\", filter=filter(\"namespace\", \"AWS/CloudFront\") and filter(\"stat\", \"mean\") and filter(\"DistributionId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DistributionId\"])",
+        "varName": "TOTAL_ERROR_RATE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100,
+        "range": [
+          "#6bd37e",
+          "#e2ed6a",
+          "#e2ed6a",
+          "#e2ed6a",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849"
+        ]
+      }
+    },
+    {
       "id": "aws.cloudfront.requests",
       "type": "metric",
       "displayName": "Requests",
