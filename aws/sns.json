@@ -61,6 +61,51 @@
   ],
   "metrics": [
     {
+      "id": "aws.sns.delivery_success_percent",
+      "type": "metric",
+      "displayName": "Delivery Success %",
+      "metricSelectors": [
+        "NumberOfNotificationsDelivered"
+      ],
+      "description": "Number of messages successfully delivered / Number of messages published. Under 80% is Red, 80-95% Yellow, above 95% is Green",
+      "valueLabel": "Success %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NOTIFICATIONS_DELIVERED1 = data(\"NumberOfNotificationsDelivered\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"])\nNOTIFICATIONS_FAILED1 = data(\"NumberOfNotificationsFailed\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"])\nDELIVERY_SUCCESS = ((NOTIFICATIONS_DELIVERED1 / (NOTIFICATIONS_DELIVERED1 + NOTIFICATIONS_FAILED1)) * 100)",
+        "varName": "DELIVERY_SUCCESS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100,
+        "range": [
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#e2ed6a",
+          "#e2ed6a",
+          "#e2ed6a",
+          "#6bd37e"
+        ]
+
+      }
+    },
+    {
       "id": "aws.sns.messagespublished",
       "type": "metric",
       "displayName": "Messages / Min",
@@ -74,6 +119,88 @@
         "filters": [],
         "template": "NumberOfMessagesPublished = data(\"NumberOfMessagesPublished\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"]).scale(60)",
         "varName": "NumberOfMessagesPublished"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sns.messagesize",
+      "type": "metric",
+      "displayName": "Publish Size",
+      "metricSelectors": [
+        "PublishSize"
+      ],
+      "description": "Size of messages published",
+      "valueLabel": "Messages",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "PUBLISH_SIZE = data(\"PublishSize\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"mean\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"TopicName\"])",
+        "varName": "PUBLISH_SIZE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sns.notifications_delivered",
+      "type": "metric",
+      "displayName": "Notifications Delivered",
+      "metricSelectors": [
+        "NumberOfNotificationsDelivered"
+      ],
+      "description": "Number of messages successfully delivered",
+      "valueLabel": "Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NOTIFICATIONS_DELIVERED = data(\"NumberOfNotificationsDelivered\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"])",
+        "varName": "NOTIFICATIONS_DELIVERED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.sns.notifications_failed",
+      "type": "metric",
+      "displayName": "Notifications Failed",
+      "metricSelectors": [
+        "NumberOfNotificationsFailed"
+      ],
+      "description": "Number of messages that Amazon SNS failed to deliver",
+      "valueLabel": "# Messages",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NOTIFICATIONS_FAILED = data(\"NumberOfNotificationsFailed\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"TopicName\"])",
+        "varName": "NOTIFICATIONS_FAILED"
       },
       "coloring": {
         "method": "quantile",
