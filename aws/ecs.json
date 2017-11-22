@@ -1,0 +1,206 @@
+{
+  "id": "aws-ecs",
+  "unreleased": true,
+  "displayName": "Elastic Container Service",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:ClusterName",
+  "requiredProperties": [
+    "ClusterName"
+  ],
+  "idTemplate": "{{ClusterName}}",
+  "idName": "Cluster",
+  "mtsQuery": "sf_metric:CPUReservation AND sf_key:ClusterName AND _exists_:ClusterName",
+  "systemDashboardPrefix": "ECS",
+  "discoveryQuery": ["sf_key:ClusterName"],
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.ecs.cpu_reservation",
+      "type": "metric",
+      "displayName": "CPU Reservation",
+      "metricSelectors": [
+        "CPUReservation"
+      ],
+      "description": "Percentage of CPU units that are reserved by running tasks in the cluster. Under 20% (green) to over 80% (red)",
+      "valueLabel": "% Reserved",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CPU_RESERVATION = data(\"CPUReservation\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"ClusterName\"])",
+        "varName": "CPU_RESERVATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.ecs.cpu_utilization",
+      "type": "metric",
+      "displayName": "CPU Utilization",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "Percentage of CPU units that are used in the cluster or service. Under 20% (green) to over 80% (red)",
+      "valueLabel": "CPU %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CPU_UTILIZATION = data(\"CPUUtilization\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and not filter(\"ServiceName\", \"*\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"ClusterName\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.ecs.memory_reservation",
+      "type": "metric",
+      "displayName": "Memory Reservation",
+      "metricSelectors": [
+        "MemoryReservation"
+      ],
+      "description": "Percentage of memory that is reserved by running tasks in the cluster. Under 20% (green) to over 80% (red)",
+      "valueLabel": "Memory Reserved %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MEMORY_RESERVED = data(\"MemoryReservation\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"ClusterName\"])",
+        "varName": "MEMORY_RESERVED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.ecs.memory_utilization",
+      "type": "metric",
+      "displayName": "Memory Utilization",
+      "metricSelectors": [
+        "MemoryReservation"
+      ],
+      "description": "Percentage of memory that is used in the cluster or service. Under 20% (green) to over 80% (red)",
+      "valueLabel": "Memory %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MEMORY_UTILIZATION = data(\"MemoryUtilization\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and not filter(\"ServiceName\", \"*\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"ClusterName\"])",
+        "varName": "MEMORY_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "aws.ecs.number_of_services",
+      "type": "metric",
+      "displayName": "# of Running Services",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "Number of running services on a cluster",
+      "valueLabel": "# Services",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NUM_SERVICES = data(\"CPUUtilization\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and filter(\"ServiceName\", \"*\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"ServiceName\"])",
+        "varName": "NUM_SERVICES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ecs.number_of_tasks",
+      "type": "metric",
+      "displayName": "# of Running Tasks",
+      "metricSelectors": [
+        "CPUUtilization"
+      ],
+      "description": "Number of running tasks on a cluster",
+      "valueLabel": "# Tasks",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NUM_TASKS = data(\"CPUUtilization\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"count\") and filter(\"ServiceName\", \"*\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60)",
+        "varName": "NUM_TASKS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}
