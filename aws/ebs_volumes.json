@@ -1,5 +1,5 @@
 {
-  "id": "ebs_volumes",
+  "id": "awsebs",
   "unreleased": true,
   "displayName": "EBS Volumes",
   "category": "AWS",

@@ -1,5 +1,5 @@
 {
-  "id": "aws-ecs",
+  "id": "awsecs",
   "unreleased": true,
   "displayName": "Elastic Container Service",
   "category": "AWS",
