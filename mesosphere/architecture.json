@@ -2,7 +2,7 @@
   "id": "mesos architecture",
   "unreleased": true,
   "type": "architectural",
-  "displayName": "Architecture",
+  "displayName": "Overview",
   "alertQuery": "(_exists_:mesos_cluster)",
   "mtsQuery": "sf_metric:gauge.task.state AND _exists_:mesos_cluster",
   "category": "Mesosphere",
@@ -11,17 +11,17 @@
   "discoveryQuery": ["sf_key:mesos_cluster"],
   "propertyColumns": [
     [
-        { 
-          "header": "Tags", 
-          "properties": ["sf_tags"] 
+        {
+          "header": "Tags",
+          "properties": ["sf_tags"]
         },
-        { 
-          "header": "Other", 
-          "properties": [] 
+        {
+          "header": "Other",
+          "properties": []
         },
-        { 
-          "header": "AWS", 
-          "properties": [] 
+        {
+          "header": "AWS",
+          "properties": []
         }
     ]
   ],

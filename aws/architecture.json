@@ -1,9 +1,9 @@
 {
   "id": "aws architecture",
-  "unreleased": true,
+  "unreleased": false,
   "categoryPriority": 10,
   "type": "architectural",
-  "displayName": "Architecture",
+  "displayName": "Overview",
   "alertQuery": "(_exists_:namespace)",
   "mtsQuery": "sf_metric:CPUUtilization",
   "category": "AWS",
@@ -41,7 +41,7 @@
     "job": {
       "resolution": 60000,
       "filters": [],
-      "template": "SQS = data(\"NumberOfMessagesSent\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/SQS\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"QueueName\"])\nRDS = data(\"DatabaseConnections\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])\nEC2 = data(\"CPUUtilization\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/EC2\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])\nSNS = data(\"NumberOfMessagesPublished\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"]).scale(60)\nCACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)\nCDN = data(\"Requests\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/CloudFront\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"DistributionId\"])\nAUTOSCALING = data(\"GroupTotalInstances\", filter=filter(\"namespace\", \"AWS/AutoScaling\") and filter(\"stat\", \"mean\") and filter(\"AutoScalingGroupName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"AutoScalingGroupName\"])\nELB = data(\"RequestCount\", filter=filter(\"namespace\", \"AWS/ELB\") and filter(\"stat\", \"sum\") and filter(\"AvailabilityZone\", \"*\") and filter(\"LoadBalancerName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"LoadBalancerName\"])"
+      "template": "APPROX_VISIBLE_MSGS = data(\"ApproximateNumberOfMessagesVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nAPPROX_NOT_VISIBLE_MSGS = data(\"ApproximateNumberOfMessagesNotVisible\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nAPPROX_MESSAGES_DELAYED= data(\"ApproximateNumberOfMessagesDelayed\", filter=filter(\"namespace\", \"AWS/SQS\") and filter(\"stat\", \"mean\") and filter(\"QueueName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"QueueName\"])\nCURRENT_QUEUE_SIZE = (APPROX_VISIBLE_MSGS + APPROX_NOT_VISIBLE_MSGS + APPROX_MESSAGES_DELAYED)\nRDS = data(\"DatabaseConnections\", filter=filter(\"namespace\", \"AWS/RDS\") and filter(\"stat\", \"mean\") and filter(\"DBInstanceIdentifier\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DBInstanceIdentifier\"])\nEC2 = data(\"CPUUtilization\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/EC2\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])\nNOTIFICATIONS_DELIVERED1 = data(\"NumberOfNotificationsDelivered\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"])\nNOTIFICATIONS_FAILED1 = data(\"NumberOfNotificationsFailed\", filter=filter(\"namespace\", \"AWS/SNS\") and filter(\"stat\", \"sum\") and filter(\"TopicName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TopicName\"])\nDELIVERY_SUCCESS = ((NOTIFICATIONS_DELIVERED1 / (NOTIFICATIONS_DELIVERED1 + NOTIFICATIONS_FAILED1)) * 100)\nELASTICACHE_CONNECTIONS = data(\"CurrConnections\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])\nCDN = data(\"TotalErrorRate\", filter=filter(\"namespace\", \"AWS/CloudFront\") and filter(\"stat\", \"mean\") and filter(\"DistributionId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"DistributionId\"])\nELB = data(\"RequestCount\", filter=filter(\"namespace\", \"AWS/ELB\") and filter(\"stat\", \"sum\") and filter(\"AvailabilityZone\", \"*\") and filter(\"LoadBalancerName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(60).sum(by=[\"LoadBalancerName\"])\nEBS_READOPS1 = data(\"VolumeReadOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)\nEBS_WRITEOPS1 = data(\"VolumeWriteOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)\nTOTAL_IOPS = (EBS_READOPS1 + EBS_WRITEOPS1)\nECS_CPU_RESERVATION = data(\"CPUReservation\", filter=filter(\"namespace\", \"AWS/ECS\") and filter(\"stat\", \"mean\") and filter(\"ClusterName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"ClusterName\"])\nTHROTTLED_REQUESTS = data(\"ThrottledRequests\", filter=filter(\"namespace\", \"AWS/DynamoDB\") and filter(\"stat\", \"sum\") and filter(\"TableName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"TableName\"]).scale(60)\ninvocations_from_cw = data(\"Invocations\", filter=filter(\"FunctionName\", \"*\") and filter(\"stat\", \"sum\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\ninvocations_from_wrapper = data(\"function.invocations\", filter=filter(\"lambda_arn\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"aws_function_name\", \"aws_function_version\", \"aws_region\", \"aws_account_id\"]).sum(over=\"{{{timeRange}}}\")\nINVOCATIONS = union(invocations_from_cw, invocations_from_wrapper)"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
@@ -60,8 +60,8 @@
     "metrics": [
       {
         "name": "SQS Queues",
-        "varName": "SQS",
-        "valueLabel": "Messages sent per min",
+        "varName": "CURRENT_QUEUE_SIZE",
+        "valueLabel": "Queue Size",
         "idTemplate": "sqs-{{QueueName}}",
         "coloring": {
           "method": "quantile",
@@ -76,10 +76,10 @@
         }
       },
       {
-        "name": "SNS Topics",
-        "varName": "SNS",
-        "valueLabel": "Messages Published",
-        "idTemplate": "sns-{{TopicName}}",
+        "name": "EBS Volumes",
+        "varName": "TOTAL_IOPS",
+        "valueLabel": "Total IOPs",
+        "idTemplate": "ebs-{{VolumeId}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -93,10 +93,10 @@
         }
       },
       {
-        "name": "AutoScaling Groups",
-        "varName": "AUTOSCALING",
-        "valueLabel": "Instances",
-        "idTemplate": "autoscaling-{{AutoScalingGroupName}}",
+        "name": "Lambda Functions",
+        "varName": "INVOCATIONS",
+        "valueLabel": "Invocations",
+        "idTemplate": "lambda-{{FunctionName}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -106,6 +106,67 @@
             "#8c96c6",
             "#8856a7",
             "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "DynamoDB",
+        "varName": "THROTTLED_REQUESTS",
+        "valueLabel": "Throttled Requests",
+        "idTemplate": "dynamoDB-{{TableName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "ECS Clusters",
+        "varName": "ECS_CPU_RESERVATION",
+        "valueLabel": "CPU % Reserved",
+        "idTemplate": "ebs-{{ClusterName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      {
+        "name": "SNS Topics",
+        "varName": "DELIVERY_SUCCESS",
+        "valueLabel": "Delivery Success %",
+        "idTemplate": "sns-{{TopicName}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100,
+          "range": [
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#e2ed6a",
+            "#e2ed6a",
+            "#e2ed6a",
+            "#6bd37e"
           ]
         }
       },
@@ -145,29 +206,44 @@
       },
       {
         "name": "ElastiCache Clusters",
-        "varName": "CACHE",
-        "valueLabel": "Hit rate",
+        "varName": "ELASTICACHE_CONNECTIONS",
+        "valueLabel": "Current Connections",
         "idTemplate": "cache-{{CacheClusterId}}",
         "coloring": {
           "method": "quantile",
-          "minValue": 0,
-          "maxValue": 100
+          "minValue": 0
         }
       },
       {
         "name": "CloudFront Distributions",
         "varName": "CDN",
-        "valueLabel": "Requests / min",
+        "valueLabel": "Total Error Rate",
         "idTemplate": "cdn-{{DistributionId}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
+          "maxValue": 100,
           "range": [
-            "#bfd3e6",
-            "#9ebcda",
-            "#8c96c6",
-            "#8856a7",
-            "#810f7c"
+            "#6bd37e",
+            "#e2ed6a",
+            "#e2ed6a",
+            "#e2ed6a",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849"
           ]
         }
       },
