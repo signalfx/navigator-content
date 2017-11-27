@@ -1,6 +1,5 @@
 {
   "id": "awsebs",
-  "unreleased": true,
   "displayName": "EBS Volumes",
   "category": "AWS",
   "categoryPriority": 100,

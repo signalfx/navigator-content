@@ -1,6 +1,5 @@
 {
   "id": "sqs queues",
-  "unreleased": true,
   "displayName": "SQS Queues",
   "category": "AWS",
   "categoryPriority": 100,

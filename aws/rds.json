@@ -1,6 +1,5 @@
 {
   "id": "rds databases",
-  "unreleased": true,
   "displayName": "RDS Databases",
   "category": "AWS",
   "categoryPriority": 100,

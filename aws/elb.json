@@ -1,6 +1,5 @@
 {
   "id": "elb",
-  "unreleased": true,
   "displayName": "ELB Load Balancers",
   "category": "AWS",
   "categoryPriority": 100,

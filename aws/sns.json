@@ -1,6 +1,5 @@
 {
   "id": "sns",
-  "unreleased": true,
   "displayName": "SNS Topics",
   "category": "AWS",
   "categoryPriority": 100,

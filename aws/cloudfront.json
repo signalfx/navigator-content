@@ -1,6 +1,5 @@
 {
   "id": "cloudfront",
-  "unreleased": true,
   "displayName": "CloudFront Distributions",
   "category": "AWS",
   "categoryPriority": 100,
