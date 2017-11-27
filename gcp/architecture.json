@@ -3,7 +3,7 @@
   "unreleased": true,
   "categoryPriority": 10,
   "type": "architectural",
-  "displayName": "Architecture",
+  "displayName": "Overview",
   "alertQuery": "(_exists_:gcp_id)",
   "mtsQuery": "sf_metric:instance\\/cpu\\/utilization",
   "discoveryQuery":[""],

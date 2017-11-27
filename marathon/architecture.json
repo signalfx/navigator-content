@@ -2,7 +2,7 @@
   "id": "marathon architecture",
   "unreleased": true,
   "type": "architectural",
-  "displayName": "Architecture",
+  "displayName": "Overview",
   "alertQuery": "(_exists_:mesos_cluster)",
   "mtsQuery": "sf_metric:gauge.marathon.app.tasks.unhealthy AND _exists_:mesos_task_name",
   "category": "Marathon",
