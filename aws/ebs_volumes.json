@@ -1,0 +1,310 @@
+{
+  "id": "awsebs",
+  "unreleased": true,
+  "displayName": "EBS Volumes",
+  "category": "AWS",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:VolumeId",
+  "requiredProperties": [
+    "VolumeId"
+  ],
+  "idTemplate": "{{VolumeId}}",
+  "idName": "Volume",
+  "mtsQuery": "sf_metric:VolumeWriteOps AND sf_key:VolumeId AND _exists_:VolumeId",
+  "systemDashboardPrefix": "EBS",
+  "discoveryQuery": ["sf_key:VolumeId"],
+  "propertyColumns": [
+    [
+      {
+        "header": "AWS",
+        "properties": []
+      }
+    ],
+    [
+      {
+        "header": "Tags",
+        "properties": [
+          "sf_tags"
+        ]
+      },
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "aws.ebs.totaliops",
+      "type": "metric",
+      "displayName": "Total IOPs",
+      "metricSelectors": [
+        "VolumeReadOps",
+        "VolumeWriteOps"
+      ],
+      "description": "Total number of I/O operations in a specified period of time",
+      "valueLabel": "Total Ops / min",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_READOPS1 = data(\"VolumeReadOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)\nEBS_WRITEOPS1 = data(\"VolumeWriteOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)\nTOTAL_IOPS = (EBS_READOPS1 + EBS_WRITEOPS1)",
+        "varName": "TOTAL_IOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.readbytes",
+      "type": "metric",
+      "displayName": "Read Bytes",
+      "metricSelectors": [
+        "VolumeReadBytes"
+      ],
+      "description": "Number of Bytes read in a specified period of time",
+      "valueLabel": "Bytes Read / min",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_READBYTES = data(\"VolumeReadBytes\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)",
+        "varName": "EBS_READBYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.writebytes",
+      "type": "metric",
+      "displayName": "Write Bytes",
+      "metricSelectors": [
+        "VolumeWriteBytes"
+      ],
+      "description": "Number of Bytes written in a specified period of time",
+      "valueLabel": "Bytes Written / min",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_WRITEBYTES = data(\"VolumeWriteBytes\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)",
+        "varName": "EBS_WRITEBYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.readops",
+      "type": "metric",
+      "displayName": "Read Ops",
+      "metricSelectors": [
+        "VolumeReadOps"
+      ],
+      "description": "Total number of Read operations in a specified period of time",
+      "valueLabel": "Read Ops / min",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_READOPS = data(\"VolumeReadOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)",
+        "varName": "EBS_READOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.writeops",
+      "type": "metric",
+      "displayName": "Write Ops",
+      "metricSelectors": [
+        "VolumeWriteOps"
+      ],
+      "description": "Total number of Write operations in a specified period of time",
+      "valueLabel": "Write Ops / min",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_WRITEOPS = data(\"VolumeWriteOps\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"sum\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(60)",
+        "varName": "EBS_WRITEOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.readtime",
+      "type": "metric",
+      "displayName": "Read Time",
+      "metricSelectors": [
+        "VolumeTotalReadTime"
+      ],
+      "description": "Total number of seconds spent by read operations that completed in a specified period of time",
+      "valueLabel": "Read Time (s)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_READTIME = data(\"VolumeTotalReadTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "varName": "EBS_READTIME"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.writetime",
+      "type": "metric",
+      "displayName": "Write Time",
+      "metricSelectors": [
+        "VolumeTotalWriteTime"
+      ],
+      "description": "Total number of seconds spent by write operations that completed in a specified period of time",
+      "valueLabel": "Write Time (s)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_WRITETIME = data(\"VolumeTotalWriteTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "varName": "EBS_WRITETIME"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.idletime",
+      "type": "metric",
+      "displayName": "Idle Time",
+      "metricSelectors": [
+        "VolumeIdleTime"
+      ],
+      "description": "Total number of seconds in a specified period of time when no read or write operations were submitted",
+      "valueLabel": "Idle Time (s)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_IDLETIME = data(\"VolumeIdleTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "varName": "EBS_IDLETIME"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.ebs.queuelength",
+      "type": "metric",
+      "displayName": "Queue Length",
+      "metricSelectors": [
+        "VolumeQueueLength"
+      ],
+      "description": "Number of read and write operation requests waiting to be completed in a specified period of time",
+      "valueLabel": "Queue Length",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "EBS_QUEUELENGTH = data(\"VolumeQueueLength\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "varName": "EBS_QUEUELENGTH"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

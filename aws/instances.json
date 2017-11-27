@@ -130,13 +130,50 @@
       }
     },
     {
+      "id": "aws.DiskIOPs",
+      "type": "metric",
+      "displayName": "DiskIOPs",
+      "metricSelectors": [
+        "DiskIOPs"
+      ],
+      "description": "Color Hosts based on Disk Operations per minute",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_WRITE_IOPS_A = data(\"DiskWriteOps\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_WRITE_IOPS = (DISK_WRITE_IOPS_A * 60)\nDISK_READ_IOPS_A = data(\"DiskReadOps\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_READ_IOPS = (DISK_READ_IOPS_A * 60)\nSUMOPS = (DISK_WRITE_IOPS + DISK_READ_IOPS)",
+        "varName": "SUMOPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
       "id": "aws.NetworkIn",
       "type": "metric",
       "displayName": "NetworkIn",
       "metricSelectors": [
         "NetworkIn"
       ],
-      "description": "Color hosts based on network bytes in per second",
+      "description": "Color hosts based on network bytes in per minute",
       "job": {
         "resolution": 300000,
         "filters": [
@@ -156,7 +193,14 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
@@ -166,7 +210,7 @@
       "metricSelectors": [
         "NetworkOut"
       ],
-      "description": "Color hosts based on network bytes out per second",
+      "description": "Color hosts based on network bytes out per minute",
       "job": {
         "resolution": 300000,
         "filters": [
@@ -186,67 +230,14 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
-      }
-    },
-    {
-      "id": "aws.DiskWriteBytes",
-      "type": "metric",
-      "displayName": "DiskWriteBytes",
-      "metricSelectors": [
-        "DiskWriteBytes"
-      ],
-      "description": "Color hosts based on bytes written to disk per second",
-      "job": {
-        "resolution": 300000,
-        "filters": [
-          {
-            "property": "_exists_",
-            "propertyValue": "InstanceId",
-            "type": "property"
-          },
-          {
-            "property": "stat",
-            "propertyValue": "sum",
-            "type": "property"
-          }
-        ],
-        "template": "DISK_WRITE_BYTES_A = data(\"DiskWriteBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_WRITE_BYTES = (DISK_WRITE_BYTES_A * 60)",
-        "varName": "DISK_WRITE_BYTES"
-      },
-      "coloring": {
-        "method": "quantile",
-        "minValue": 0
-      }
-    },
-    {
-      "id": "aws.DiskReadBytes",
-      "type": "metric",
-      "displayName": "DiskReadBytes",
-      "metricSelectors": [
-        "DiskReadBytes"
-      ],
-      "description": "Color hosts based on bytes read from disk per second",
-      "job": {
-        "resolution": 300000,
-        "filters": [
-          {
-            "property": "_exists_",
-            "propertyValue": "InstanceId",
-            "type": "property"
-          },
-          {
-            "property": "stat",
-            "propertyValue": "sum",
-            "type": "property"
-          }
-        ],
-        "template": "DISK_READ_BYTES_A = data(\"DiskReadBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_READ_BYTES = (DISK_READ_BYTES_A * 60)",
-        "varName": "DISK_READ_BYTES"
-      },
-      "coloring": {
-        "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
@@ -256,7 +247,7 @@
       "metricSelectors": [
         "DiskWriteOps"
       ],
-      "description": "Color hosts based on disk write operations per second",
+      "description": "Color hosts based on disk write operations per minute",
       "job": {
         "resolution": 300000,
         "filters": [
@@ -276,7 +267,14 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
@@ -286,7 +284,7 @@
       "metricSelectors": [
         "DiskReadOps"
       ],
-      "description": "Color hosts based on disk read operations per second",
+      "description": "Color hosts based on disk read operations per minute",
       "job": {
         "resolution": 300000,
         "filters": [
@@ -306,7 +304,88 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.DiskWriteBytes",
+      "type": "metric",
+      "displayName": "DiskWriteBytes",
+      "metricSelectors": [
+        "DiskWriteBytes"
+      ],
+      "description": "Color hosts based on bytes written to disk per minute",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_WRITE_BYTES_A = data(\"DiskWriteBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_WRITE_BYTES = (DISK_WRITE_BYTES_A * 60)",
+        "varName": "DISK_WRITE_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "aws.DiskReadBytes",
+      "type": "metric",
+      "displayName": "DiskReadBytes",
+      "metricSelectors": [
+        "DiskReadBytes"
+      ],
+      "description": "Color hosts based on bytes read from disk per minute",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "InstanceId",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_READ_BYTES_A = data(\"DiskReadBytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"InstanceId\"])\nDISK_READ_BYTES = (DISK_READ_BYTES_A * 60)",
+        "varName": "DISK_READ_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
@@ -330,9 +409,9 @@
             "propertyValue": "mean",
             "type": "property"
           }
-        ],
-        "template": "CPU_UTILIZATION = data(\"CPUUtilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])",
-        "varName": "CPU_UTILIZATION"
+      ],
+        "template": "CPU_UTILIZATION2 = data(\"CPUUtilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"InstanceId\"])",
+        "varName": "CPU_UTILIZATION2"
       },
       "coloring": {
         "method": "quantile",
