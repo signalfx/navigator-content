@@ -123,7 +123,6 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
-        "maxValue": 100
       }
     },
     {

@@ -325,7 +325,6 @@
       ],
       "description": "Age of the oldest non-deleted message in the queue",
       "valueLabel": "Oldest Message Age",
-      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],

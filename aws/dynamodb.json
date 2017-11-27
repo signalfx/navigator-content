@@ -67,8 +67,8 @@
       "metricSelectors": [
         "ThrottledRequests"
       ],
-      "description": "Requests to DynamoDB that exceed the provisioned throughput limits for table & it's GSI",
-      "valueLabel": "Throttled Requests",
+      "description": "Requests to DynamoDB that exceed the provisioned throughput limits for table & it's GSI per minute",
+      "valueLabel": "Throttled Requests / minute",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -274,7 +274,7 @@
         "OnlineIndexThrottleEvents"
       ],
       "description": "Number of write throttle events that occur when adding a new global secondary index to a table per minute",
-      "valueLabel": "events / minute",
+      "valueLabel": "Events / minute",
       "job": {
         "resolution": 300000,
         "filters": [],
