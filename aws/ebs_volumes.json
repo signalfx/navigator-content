@@ -205,12 +205,12 @@
       "metricSelectors": [
         "VolumeTotalReadTime"
       ],
-      "description": "Total number of seconds spent by read operations that completed in a specified period of time",
-      "valueLabel": "Read Time (s)",
+      "description": "Total number of milliseconds spent by read operations that completed in a specified period of time",
+      "valueLabel": "Read Time (ms)",
       "job": {
         "resolution": 300000,
         "filters": [],
-        "template": "EBS_READTIME = data(\"VolumeTotalReadTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "template": "EBS_READTIME = data(\"VolumeTotalReadTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(1000)",
         "varName": "EBS_READTIME"
       },
       "coloring": {
@@ -232,12 +232,12 @@
       "metricSelectors": [
         "VolumeTotalWriteTime"
       ],
-      "description": "Total number of seconds spent by write operations that completed in a specified period of time",
-      "valueLabel": "Write Time (s)",
+      "description": "Total number of milliseconds spent by write operations that completed in a specified period of time",
+      "valueLabel": "Write Time (ms)",
       "job": {
         "resolution": 300000,
         "filters": [],
-        "template": "EBS_WRITETIME = data(\"VolumeTotalWriteTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"])",
+        "template": "EBS_WRITETIME = data(\"VolumeTotalWriteTime\", filter=filter(\"namespace\", \"AWS/EBS\") and filter(\"stat\", \"mean\") and filter(\"VolumeId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"VolumeId\"]).scale(1000)",
         "varName": "EBS_WRITETIME"
       },
       "coloring": {

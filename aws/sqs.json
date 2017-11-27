@@ -42,8 +42,7 @@
     },
     {
       "property": "value",
-      "displayName": "Value",
-      "format": "Number"
+      "displayName": "Value"
     },
     {
       "property": "aws_engine",
@@ -81,6 +80,7 @@
       ],
       "description": "Number of in-flight, visible, delayed messages in queue",
       "valueLabel": "Queue Size",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -108,6 +108,7 @@
       ],
       "description": "Number of messages added to the queue per minute",
       "valueLabel": "Messages / min",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -130,6 +131,7 @@
       "id": "aws.sqs.msgrecv",
       "type": "metric",
       "displayName": "Received Messages",
+      "valueFormat": "Number",
       "metricSelectors": [
         "NumberOfMessagesReceived"
       ],
@@ -162,6 +164,7 @@
       ],
       "description": "Number of messages deleted from the queue",
       "valueLabel": "Deleted Messages / min",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -189,6 +192,7 @@
       ],
       "description": "Number of ReceiveMessage API calls that did not return a message per minute",
       "valueLabel": "Empty Messages / min",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -244,6 +248,7 @@
       ],
       "description": "Number of messages in the queue that are delayed and not available for reading immediately",
       "valueLabel": "Delayed Messages",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -271,6 +276,7 @@
       ],
       "description": "Number of messages sent to a client but have not yet been deleted or have not yet reached the end of their visibility window",
       "valueLabel": "In-Flight Messages",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
@@ -298,6 +304,7 @@
       ],
       "description": "Number of messages available for retrieval from the queue",
       "valueLabel": "Visible Messages",
+      "valueFormat": "Number",
       "job": {
         "resolution": 300000,
         "filters": [],
