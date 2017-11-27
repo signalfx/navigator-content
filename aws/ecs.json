@@ -1,6 +1,6 @@
 {
   "id": "awsecs",
-  "displayName": "Elastic Container Service",
+  "displayName": "ECS Clusters",
   "category": "AWS",
   "categoryPriority": 100,
   "type": "elemental",
