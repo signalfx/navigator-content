@@ -1,6 +1,5 @@
 {
   "id": "awsdynamodb",
-  "unreleased": true,
   "displayName": "DynamoDB",
   "category": "AWS",
   "categoryPriority": 100,

@@ -1,6 +1,5 @@
 {
   "id": "elasticache",
-  "unreleased": true,
   "displayName": "ElastiCache Clusters",
   "category": "AWS",
   "categoryPriority": 100,
@@ -61,6 +60,28 @@
   ],
   "metrics": [
     {
+      "id": "aws.elasticache.currconnections",
+      "type": "metric",
+      "displayName": "Current Connections",
+      "metricSelectors": [
+        "CurrConnections"
+      ],
+      "description": "Number of client connections (max: 65000)",
+      "valueLabel": "Connections",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "varName": "CURRENT_CONNECTIONS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 65000
+      }
+    },
+    {
       "id": "aws.elasticache.hitrate",
       "type": "metric",
       "displayName": "Hit Ratio",
@@ -92,28 +113,6 @@
           "#e2ed6a",
           "#6bd37e"
         ]
-      }
-    },
-    {
-      "id": "aws.elasticache.currconnections",
-      "type": "metric",
-      "displayName": "Current Connections",
-      "metricSelectors": [
-        "CurrConnections"
-      ],
-      "description": "Number of client connections (max: 65000)",
-      "valueLabel": "Connections",
-      "valueFormat": "Number",
-      "job": {
-        "resolution": 300000,
-        "filters": [],
-        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
-        "varName": "CURRENT_CONNECTIONS"
-      },
-      "coloring": {
-        "method": "quantile",
-        "minValue": 0,
-        "maxValue": 65000
       }
     },
     {
