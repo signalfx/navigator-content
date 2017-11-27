@@ -211,7 +211,14 @@
         "idTemplate": "cache-{{CacheClusterId}}",
         "coloring": {
           "method": "quantile",
-          "minValue": 0
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
         }
       },
       {
