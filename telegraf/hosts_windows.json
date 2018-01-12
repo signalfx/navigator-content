@@ -1,0 +1,281 @@
+{
+  "id": "telegraf hosts windows",
+  "unreleased": true,
+  "displayName": "Hosts (Telegraf - Windows)",
+  "category": "Hosts",
+  "type": "elemental",
+  "alertQuery": "_exists_:host AND agent:telegraf AND host_kernel_name:*windows*",
+  "requiredProperties": ["host"],
+  "idTemplate": "{{host}}",
+  "idName": "Host",
+  "mtsQuery": "sf_metric:win_cpu.Percent_Processor_Time AND _exists_:host AND host_kernel_name:*windows*",
+  "systemDashboardPrefix": "telegraf windows",
+  "discoveryQuery": ["sf_key:host"],
+  "propertyColumns": [
+    [{
+      "header": "Memory",
+      "properties": ["host_mem_total"]
+    }, {
+      "header": "Processor",
+      "properties": ["host_cpu_model", "host_cpu_cores", "host_logical_cpus", "host_physical_cpus"]
+    }, {
+      "header": "OS",
+      "properties": ["host_os_name", "host_os_version", "host_kernel_name"]
+    }],
+    [{
+      "header": "AWS",
+      "properties": []
+    }, {
+      "header": "Tags",
+      "properties": ["sf_tags"]
+    }, {
+      "header": "Other",
+      "properties": []
+    }]
+  ],
+  "listColumns": [{
+    "property": "id",
+    "displayName": "Host",
+    "format": "id"
+  }, {
+    "property": "value",
+    "displayName": "Value",
+    "format": "Number"
+  }, {
+    "property": "host_kernel_name",
+    "displayName": "OS"
+  }, {
+    "property": "host_mem_total",
+    "displayName": "Memory",
+    "format": "Kilobytes"
+  }, {
+    "property": "host_logical_cpus",
+    "displayName": "vCPU"
+  }],
+  "tooltipKeyList": [{
+    "property": "aws_tag_Name",
+    "displayName": "Name",
+    "isSummaryProperty": true
+  }, {
+    "property": "value",
+    "displayName": "Value",
+    "isSummaryProperty": true,
+    "format": "Number"
+  }, {
+    "property": "host_kernel_name",
+    "displayName": "OS"
+  }, {
+    "property": "host_mem_total",
+    "displayName": "Memory",
+    "format": "Kilobytes"
+  }, {
+    "property": "host_logical_cpus",
+    "displayName": "vCPU"
+  }],
+  "metrics": [
+    {
+      "id": "telegraf.windows.cpu.utilization",
+      "type": "metric",
+      "displayName": "CPU Utilization",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "win_cpu.Percent_Processor_Time"
+      ],
+      "description": "Color hosts based on percentage of CPU being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "instance",
+            "propertyValue": "_Total",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"win_cpu.Percent_Processor_Time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "telegraf.windows.memory.utilization",
+      "type": "metric",
+      "displayName": "Memory Utilization",
+      "valueLabel": "Memory Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "mem.used_percent"
+      ],
+      "description": "Color hosts based on percentage of available memory being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "host_kernel_name",
+            "propertyValue": "windows",
+            "type": "property"
+          }
+        ],
+        "template": "MEMORY_UTILIZATION = data(\"mem.used_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2, rollup=\"average\").mean(by=[\"host\"])",
+        "varName": "MEMORY_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "telegraf.windows.win_logical_disk.Percent_Free_Space",
+      "type": "metric",
+      "displayName": "Disk Utilization",
+      "valueLabel": "Disk Use",
+      "valueFormat": "Percentage",
+      "metricSelectors": [
+        "win_logical_disk.Percent_Free_Space"
+      ],
+      "description": "Color hosts based on percentage of available disk space being used: under 20% (green) to over 80% (red)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "instance",
+            "propertyValue": "_Total",
+            "type": "property"
+          }
+          ,{
+            "property": "host_kernel_name",
+            "propertyValue": "windows",
+            "type": "property"
+          }
+        ],
+        "template": "DISK_UTILIZATION = data(\"win_logical_disk.Percent_Free_Space\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])\nDISK_USE = (100 - DISK_UTILIZATION)",
+        "varName": "DISK_USE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "telegraf.windows.network_interface.bytes_total_sec",
+      "type": "metric",
+      "displayName": "Network Traffic",
+      "metricSelectors": [
+        "win_network_interface.Bytes_Total_persec"
+      ],
+      "description": "Color hosts by amount of network traffic in bytes per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "valueLabel": "Bytes/sec",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "host_kernel_name",
+            "propertyValue": "windows",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_TOTAL = data(\"win_network_interface.Bytes_Total_persec\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"host\"])",
+        "varName": "NETWORK_TOTAL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "telegraf.windows.paging_file.pct_usage",
+      "type": "metric",
+      "displayName": "Page File Utilization",
+      "metricSelectors": [
+        "win_paging_file.Percent_Usage"
+      ],
+      "valueLabel": "Page File",
+      "valueFormat": "Percentage",
+      "description": "Color hosts by page file utilization",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "instance",
+            "propertyValue": "_Total",
+            "type": "property"
+          },
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "host_kernel_name",
+            "propertyValue": "windows",
+            "type": "property"
+          }
+        ],
+        "template": "PAGING_FILE_UTIL = data(\"win_paging_file.Percent_Usage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "PAGING_FILE_UTIL"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0
+      }
+    },
+    {
+      "id": "___SF_ALERT_COLLECTD",
+      "type": "event",
+      "valueLabel": "Most severe alert",
+      "valueFormat": "AlertSeverity",
+      "displayName": "Most severe alert",
+      "metricSelectors": [],
+      "description": "Color hosts by the highest alert level they are currently reporting – critical, major, minor, warning, none",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "_exists_",
+            "propertyValue": "host",
+            "type": "property"
+          },
+          {
+            "property": "host_kernel_name",
+            "propertyValue": "windows",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTILIZATION = data(\"win_cpu.Percent_Processor_Time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\"])",
+        "varName": "CPU_UTILIZATION"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    }
+  ]
+}
