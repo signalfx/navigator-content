@@ -8,7 +8,7 @@
   "mtsQuery": "sf_metric:CPUUtilization",
   "category": "AWS",
   "systemDashboardPrefix": "AWS",
-  "discoveryQuery":["sf_key:namespace"],
+  "discoveryQuery":["_exists_:namespace"],
   "propertyColumns": [
     [
       {
