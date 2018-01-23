@@ -1,0 +1,146 @@
+{
+  "id": "gcp pubsub subscription",
+  "unreleased": true,
+  "type": "elemental",
+  "categoryPriority": 70,
+  "alertQuery": "(_exists_:gcp_id)",
+  "displayName": "Cloud Pub/Sub Subscriptions",
+  "idName": "pubsub_subscription",
+  "idTemplate": "{{subscription_id}}",
+  "mtsQuery": "sf_metric:subscription\\/num_undelivered_messages",
+  "category": "Google Cloud Platform",
+  "systemDashboardPrefix": "Pub/Sub Overview",
+  "singleHostSystemDashboardName": "Pub/Sub Subscription",
+  "requiredProperties": [
+    "subscription_id"
+  ],
+  "discoveryQuery":["service:pubsub"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Subscription",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Subscription ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID",
+      "isSummaryProperty": true
+    }
+  ],
+  "metrics": [
+    {
+      "id": "gcp.subscription/num_undelivered_messages",
+      "type": "metric",
+      "displayName": "Undelivered Messages",
+      "metricSelectors": [
+        "subscription/num_undelivered_messages"
+      ],
+      "description": "Color hosts based on number of undelivered messages",
+      "valueLabel": "# Messages",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "UNDELIVERED_MSGS = data(\"subscription/num_undelivered_messages\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])",
+        "varName": "UNDELIVERED_MSGS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.subscription/oldest_unacked_message_ages",
+      "type": "metric",
+      "displayName": "Oldest Unack. Message",
+      "metricSelectors": [
+        "subscription/oldest_unacked_message_age"
+      ],
+      "description": "Color hosts based on the age of the oldest unacknowledged message (s)",
+      "valueLabel": "Msg Age",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "OLDEST_MSG = data(\"subscription/oldest_unacked_message_age\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])",
+        "varName": "OLDEST_MSG"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.subscription/backlog_bytes",
+      "type": "metric",
+      "displayName": "Message Backlog Size (bytes)",
+      "metricSelectors": [
+        "subscription/backlog_bytes"
+      ],
+      "description": "Color hosts based on the total byte size of the unacknowledged messages in a subscription",
+      "valueLabel": "Backlog Size",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "OLDEST_MSG = data(\"subscription/backlog_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])",
+        "varName": "OLDEST_MSG"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

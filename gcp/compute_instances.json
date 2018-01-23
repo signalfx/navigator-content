@@ -4,13 +4,16 @@
   "category": "Google Cloud Platform",
   "categoryPriority": 20,
   "type": "elemental",
-  "alertQuery": "_exists_:instance_id",
-  "idTemplate": "{{gcp_id}}",
-  "idName": "Instance",
-  "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id",
+  "alertQuery": "_exists_:instance_name",
+  "requiredProperties": [
+    "instance_name"
+  ],
+  "idTemplate": "{{instance_name}}",
+  "idName": "Compute Engine",
+  "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id and service:compute",
   "systemDashboardPrefix": "Compute Engine Instances",
   "singleHostSystemDashboardName": "Compute Engine Instance",
-  "discoveryQuery": ["service:compute"],
+  "discoveryQuery": ["service:compute", "_exists:gcp_id"],
   "propertyColumns": [
     [
       {
@@ -22,7 +25,7 @@
   "listColumns": [
     {
       "property": "id",
-      "displayName": "Instance ID",
+      "displayName": "Instance Name",
       "format": "id"
     },
     {
@@ -31,8 +34,8 @@
       "format": "Number"
     },
     {
-      "property": "instance_name",
-      "displayName": "Instance Name"
+      "property": "instance_id",
+      "displayName": "Instance ID"
     },
     {
       "property": "project_id",
@@ -87,7 +90,7 @@
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_id\"])",
+        "template": "CPU_UTILIZATION = data(\"instance/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_name\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
@@ -113,7 +116,7 @@
             "type": "property"
           }
         ],
-        "template": "NETWORK_IN = data(\"instance/network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "NETWORK_IN = data(\"instance/network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "NETWORK_IN"
       },
       "coloring": {
@@ -138,7 +141,7 @@
             "type": "property"
           }
         ],
-        "template": "NETWORK_OUT = data(\"instance/network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "NETWORK_OUT = data(\"instance/network/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "NETWORK_OUT"
       },
       "coloring": {
@@ -168,7 +171,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_BYTES = data(\"instance/disk/write_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "DISK_WRITE_BYTES = data(\"instance/disk/write_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "DISK_WRITE_BYTES"
       },
       "coloring": {
@@ -193,7 +196,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_READ_BYTES = data(\"instance/disk/read_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "DISK_READ_BYTES = data(\"instance/disk/read_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "DISK_READ_BYTES"
       },
       "coloring": {
@@ -218,7 +221,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_OPS = data(\"instance/disk/write_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "DISK_WRITE_OPS = data(\"instance/disk/write_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "DISK_WRITE_OPS"
       },
       "coloring": {
@@ -243,7 +246,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_READ_OPS = data(\"instance/disk/read_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\"])",
+        "template": "DISK_READ_OPS = data(\"instance/disk/read_ops_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_name\"])",
         "varName": "DISK_READ_OPS"
       },
       "coloring": {

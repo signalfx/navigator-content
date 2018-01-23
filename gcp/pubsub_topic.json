@@ -1,0 +1,146 @@
+{
+  "id": "gcp pubsub topic",
+  "unreleased": true,
+  "type": "elemental",
+  "categoryPriority": 80,
+  "alertQuery": "(_exists_:gcp_id)",
+  "displayName": "Cloud Pub/Sub Topics",
+  "idName": "pubsub_topic",
+  "idTemplate": "{{topic_id}}",
+  "mtsQuery": "sf_metric:topic\\/send_request_count",
+  "category": "Google Cloud Platform",
+  "systemDashboardPrefix": "Pub/Sub Overview",
+  "singleHostSystemDashboardName": "Pub/Sub Topic",
+  "requiredProperties": [
+    "topic_id"
+  ],
+  "discoveryQuery":["service:pubsub"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Topic",
+      "format": "id"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "Topic ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    },
+    {
+      "property": "project_id",
+      "displayName": "Project ID",
+      "isSummaryProperty": true
+    }
+  ],
+  "metrics": [
+    {
+      "id": "gcp.topic/send_request_count",
+      "type": "metric",
+      "displayName": "# Publish Requests",
+      "metricSelectors": [
+        "topic/send_request_count"
+      ],
+      "description": "Color hosts based on number of publish requests",
+      "valueLabel": "# Requests",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SEND_REQ = data(\"topic/send_request_count\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"topic_id\", \"project_id\"])",
+        "varName": "SEND_REQ"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.topic/send_message_operation_count",
+      "type": "metric",
+      "displayName": "# Publish Msg Ops",
+      "metricSelectors": [
+        "topic/send_message_operation_count"
+      ],
+      "description": "Color hosts based on the number of publish message operations",
+      "valueLabel": "# Ops",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NUM_OPS = data(\"topic/send_message_operation_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"topic_id\", \"project_id\"])",
+        "varName": "NUM_OPS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.topic/message_sizes",
+      "type": "metric",
+      "displayName": "Average Msg Size",
+      "metricSelectors": [
+        "topic/message_sizes"
+      ],
+      "description": "Color hosts based on the average publish message size (bytes)",
+      "valueLabel": "Message Size",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MSG_SIZE = data(\"topic/message_sizes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"topic_id\", \"project_id\"])",
+        "varName": "MSG_SIZE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

@@ -3,9 +3,12 @@
   "unreleased": true,
   "displayName": "Cloud Storage",
   "category": "Google Cloud Platform",
-  "categoryPriority": 30,
+  "categoryPriority": 90,
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
+  "requiredProperties": [
+    "bucket_name"
+  ],
   "idTemplate": "{{bucket_name}}",
   "idName": "Cloud Storage",
   "mtsQuery": "sf_metric:network\\/received_bytes_count AND _exists_:gcp_id",
@@ -22,7 +25,7 @@
   ],
   "listColumns": [
     {
-      "property": "bucket_name",
+      "property": "id",
       "displayName": "Bucket"
     },
     {

@@ -4,9 +4,14 @@
   "displayName": "App Engine",
   "category": "Google Cloud Platform",
   "categoryPriority": 30,
-  "type": "architectural",
+  "type": "elemental",
   "alertQuery": "_exists_:module_id",
-  "mtsQuery": "sf_metric:http\\/server\\/response_count AND _exists_:gcp_id AND _exists_:module_id",
+  "idName": "AppEngine",
+  "idTemplate": "{{version_id}}",
+  "requiredProperties": [
+    "version_id"
+  ],
+  "mtsQuery": "sf_metric:http\\/server\\/response_count AND _exists_:gcp_id AND _exists_:version_id",
   "discoveryQuery": ["service:appengine"],
   "propertyColumns": [
     [
@@ -18,13 +23,12 @@
   ],
   "listColumns": [
     {
-      "property": "module_id",
-      "displayName": "Module ID",
-      "format": "id"
+      "property": "id",
+      "displayName": "Version ID"
     },
     {
-      "property": "version_id",
-      "displayName": "Version ID"
+      "property": "module_id",
+      "displayName": "Module ID"
     },
     {
       "property": "value",
@@ -54,40 +58,146 @@
       "format": "Number"
     }
   ],
-  "map": {
-    "job": {
-      "resolution": 60000,
-      "filters": [],
-      "template": "APPENGINE_RESPONSES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"module_id\", \"version_id\",\"project_id\"])"
-    },
-    "groupingStructure": {
-      "key": "project_id",
-      "drawBoundary": true,
-      "children": [
-        {
-          "key": "module_id",
-          "drawBoundary": true
-        }
-      ]
-    },
-    "metrics": [
-      {
-        "name": "Versions",
-        "varName": "APPENGINE_RESPONSES",
-        "valueLabel": "Responses / min",
-        "idTemplate": "{{version_id}}",
-        "coloring": {
-          "method": "quantile",
-          "minValue": 0,
-          "range": [
-            "#bfd3e6",
-            "#9ebcda",
-            "#8c96c6",
-            "#8856a7",
-            "#810f7c"
-          ]
-        }
+  "metrics": [
+    {
+      "id": "gcp.http/server/response_count",
+      "type": "metric",
+      "displayName": "HTTP Responses / min",
+      "metricSelectors": [
+        "http/server/response_count"
+      ],
+      "description": "Color hosts based on HTTP responses per minute",
+      "valueLabel": "CPU Use",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "HTTP_RESPONSES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"module_id\", \"version_id\",\"project_id\"])",
+        "varName": "HTTP_RESPONSES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
-    ]
-  }
+    },
+    {
+      "id": "gcp.http/server/response_latencies",
+      "type": "metric",
+      "displayName": "HTTP Response Latency",
+      "metricSelectors": [
+        "http/server/response_latencies"
+      ],
+      "description": "Color hosts based on response latency (ms)",
+      "valueLabel": "Response Latency (ms)",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "RESPONSE_LATENCY = data(\"http/server/response_latencies\"{{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"module_id\", \"version_id\",\"project_id\"])",
+        "varName": "RESPONSE_LATENCY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.system/network/received_bytes_count",
+      "type": "metric",
+      "displayName": "Bytes Received",
+      "metricSelectors": [
+        "system/network/received_bytes_count"
+      ],
+      "description": "Color hosts based on number of bytes received",
+      "valueLabel": "Bytes In",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "BYTES_IN = data(\"system/network/received_bytes_count\"{{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"module_id\", \"version_id\",\"project_id\"])",
+        "varName": "BYTES_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.system/network/sent_bytes_count",
+      "type": "metric",
+      "displayName": "Bytes Sent",
+      "metricSelectors": [
+        "system/network/sent_bytes_count"
+      ],
+      "description": "Color hosts based on number of bytes sent",
+      "valueLabel": "Bytes In",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "BYTES_OUT = data(\"system/network/sent_bytes_count\"{{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"module_id\", \"version_id\",\"project_id\"])",
+        "varName": "BYTES_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.system/memory/usage",
+      "type": "metric",
+      "displayName": "Memory Usage",
+      "metricSelectors": [
+        "system/memory/usage"
+      ],
+      "description": "Color hosts based on memory used by running instances",
+      "valueLabel": "Memory Usage",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MEMORY_USAGE = data(\"system/memory/usage\"{{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"module_id\", \"version_id\",\"project_id\"])",
+        "varName": "MEMORY_USAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
 }
