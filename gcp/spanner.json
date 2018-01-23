@@ -6,10 +6,14 @@
   "categoryPriority": 30,
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
+  "requiredProperties": [
+    "instance_id"
+  ],
   "idTemplate": "{{instance_id}}",
   "idName": "Cloud Spanner",
-  "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id",
+  "mtsQuery": "sf_metric:instance\\/cpu\\/utilization AND _exists_:gcp_id AND service:spanner",
   "systemDashboardPrefix": "Spanner Overview",
+  "singleHostSystemDashboardName": "Spanner Instance",
   "discoveryQuery": ["service:spanner"],
   "propertyColumns": [
     [
@@ -21,7 +25,7 @@
   ],
   "listColumns": [
     {
-      "property": "instance_id",
+      "property": "id",
       "displayName": "Spanner Instance"
     },
     {
@@ -62,18 +66,8 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "_exists_",
-            "propertyValue": "gcp_id",
-            "type": "property"
-          },
-          {
             "property": "monitored_resource",
             "propertyValue": "spanner_instance",
-            "type": "property"
-          },
-          {
-            "property": "_exists_",
-            "propertyValue": "project_id",
             "type": "property"
           }
         ],
@@ -84,6 +78,74 @@
         "method": "quantile",
         "minValue": 0,
         "maxValue": 100
+      }
+    },
+    {
+      "id": "gcp.api/sent_bytes_count",
+      "type": "metric",
+      "displayName": "API Sent Bytes",
+      "metricSelectors": [
+        "api/sent_bytes_count"
+      ],
+      "description": "Color hosts based on number of bytes sent",
+      "valueLabel": "Sent Bytes",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "monitored_resource",
+            "propertyValue": "spanner_instance",
+            "type": "property"
+          }
+        ],
+        "template": "SENT_BYTES = data(\"api/sent_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\", \"project_id\"])",
+        "varName": "SENT_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.api/sent_bytes_count",
+      "type": "metric",
+      "displayName": "API Received Bytes",
+      "metricSelectors": [
+        "api/received_bytes_count"
+      ],
+      "description": "Color hosts based on number of bytes received",
+      "valueLabel": "Received Bytes",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "monitored_resource",
+            "propertyValue": "spanner_instance",
+            "type": "property"
+          }
+        ],
+        "template": "RECEIVED_BYTES = data(\"api/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\", \"project_id\"])",
+        "varName": "RECEIVED_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     }
   ]

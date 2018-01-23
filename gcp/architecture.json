@@ -28,7 +28,7 @@
     "job": {
       "resolution": 60000,
       "filters": [],
-      "template": "COMPUTE = data(\"instance/cpu/utilization\", filter=filter(\"monitored_resource\", \"gce_instance\"){{#filter}} and filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_id\", \"project_id\"])\nAPPENGINE_INSTANCES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"module_id\", \"project_id\"])\nCONTAINER_CLUSTERS = data(\"container/cpu/usage_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"cluster_name\", \"project_id\"])\nSTORAGEBUCKETS = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])\nPUBSUB_SUB = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])\nPUBSUB_TOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"topic_id\", \"project_id\"])\nCLOUDFUNCTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)\nSPANNER_CPU = data(\"instance/cpu/utilization\", filter=filter(\"monitored_resource\", \"spanner_instance\"){{#filter}} and filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\", \"project_id\"]).scale(100)\nCLUSTER_CPU = data(\"cluster/cpu_load\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"]).scale(100)"
+      "template": "COMPUTE = data(\"instance/cpu/utilization\", filter=filter(\"monitored_resource\", \"gce_instance\"){{#filter}} and filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).scale(100).mean(by=[\"instance_name\", \"project_id\"])\nAPPENGINE_INSTANCES = data(\"http/server/response_count\"{{#filter}} and {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).sum(by=[\"version_id\", \"module_id\", \"project_id\"])\nCONTAINER_CLUSTERS = data(\"container/memory/bytes_used\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster_name\", \"project_id\"])\nSTORAGEBUCKETS = data(\"network/received_bytes_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"bucket_name\", \"project_id\"])\nPUBSUB_SUB = data(\"subscription/num_undelivered_messages\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"subscription_id\", \"project_id\"])\nPUBSUB_TOPIC = data(\"topic/send_request_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"topic_id\", \"project_id\"])\nCLOUDFUNCTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"function_name\", \"project_id\"])\nSPANNER_CPU = data(\"instance/cpu/utilization\", filter=filter(\"monitored_resource\", \"spanner_instance\"){{#filter}} and filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"instance_id\", \"project_id\"]).scale(100)\nCLUSTER_CPU = data(\"cluster/cpu_load\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"]).scale(100)"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
@@ -39,6 +39,7 @@
         "name": "Compute Engine",
         "varName": "COMPUTE",
         "valueLabel": "CPU Usage",
+        "valueFormat": "Percentage",
         "idTemplate": "{{instance_name}}--{{project_id}}",
         "coloring": {
           "method": "quantile",
@@ -50,6 +51,7 @@
         "name": "Spanner",
         "varName": "SPANNER_CPU",
         "valueLabel": "CPU Usage",
+        "valueFormat": "Percentage",
         "idTemplate": "{{instance_id}}--{{project_id}}",
         "coloring": {
           "method": "quantile",
@@ -61,6 +63,7 @@
         "name": "Bigtable",
         "varName": "CLUSTER_CPU",
         "valueLabel": "CPU Usage",
+        "valueFormat": "Percentage",
         "idTemplate": "{{cluster}}--{{project_id}}",
         "coloring": {
           "method": "quantile",
@@ -72,7 +75,7 @@
           "name": "App Engine",
           "varName": "APPENGINE_INSTANCES",
           "valueLabel": "Responses / min",
-          "idTemplate": "{{module_id}}--{{project_id}}",
+          "idTemplate": "{{version_id}}--{{project_id}}",
           "coloring": {
             "method": "quantile",
             "minValue": 0,
@@ -88,7 +91,8 @@
       {
           "name": "Container Engine",
           "varName": "CONTAINER_CLUSTERS",
-          "valueLabel": "# Containers",
+          "valueLabel": "Memory Usage",
+          "valueFormat": "Bytes",
           "idTemplate": "{{cluster_name}}--{{project_id}}",
           "coloring": {
             "method": "quantile",
@@ -106,6 +110,7 @@
           "name": "Cloud Storage",
           "varName": "STORAGEBUCKETS",
           "valueLabel": "Bytes Received / min",
+          "valueFormat": "Bytes",
           "idTemplate": "{{bucket_name}}--{{project_id}}",
           "coloring": {
             "method": "quantile",

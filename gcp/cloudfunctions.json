@@ -3,14 +3,15 @@
   "unreleased": true,
   "displayName": "Cloud Functions",
   "category": "Google Cloud Platform",
-  "categoryPriority": 30,
+  "categoryPriority": 60,
   "type": "list",
   "idTemplate": "{{function_name}}",
   "alertQuery": "_exists_:function_name",
   "idName": "Function",
   "mtsQuery": "(sf_metric:function\\/execution_count OR sf_metric:function\\/execution_times OR sf_metric:function\\/user_memory_bytes) AND _exists_:function_name",
-  "systemDashboardPrefix": "Cloud Functions Overview",
+  "systemDashboardPrefix": "Cloud Function",
   "discoveryQuery": ["service:cloudfunctions"],
+  "alwaysGroupBy": "function_name",
   "idProperties": [
     {
       "id": "function_name",
@@ -27,7 +28,7 @@
   ],
   "listColumns": [
     {
-      "property": "function_name",
+      "property": "id",
       "displayName": "Function"
     },
     {
@@ -59,16 +60,11 @@
         "filters": [
           {
             "property": "_exists_",
-            "propertyValue": "function_name",
-            "type": "property"
-          },
-          {
-            "property": "_exists_",
             "propertyValue": "gcp_id",
             "type": "property"
           }
         ],
-        "template": "EXECUTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"function_name\"])",
+        "template": "EXECUTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)",
         "varName": "EXECUTIONS"
       }
     },

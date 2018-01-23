@@ -3,9 +3,15 @@
   "unreleased": true,
   "displayName": "Container Engine",
   "category": "Google Cloud Platform",
-  "categoryPriority": 30,
-  "type": "architectural",
+  "categoryPriority": 40,
+  "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
+  "systemDashboardPrefix": "Container Engine",
+  "idName": "ContainerEngine",
+  "idTemplate": "{{cluster_name}}",
+  "requiredProperties": [
+    "cluster_name"
+  ],
   "mtsQuery": "sf_metric:container\\/cpu\\/usage_time AND _exists_:gcp_id AND _exists_:module_id",
   "discoveryQuery": ["_exists_:cluster_name"],
   "propertyColumns": [
@@ -18,7 +24,7 @@
   ],
   "listColumns": [
     {
-      "property": "cluster_name",
+      "property": "id",
       "displayName": "Cluster",
       "format": "id"
     },
@@ -26,6 +32,10 @@
       "property": "value",
       "displayName": "Value",
       "format": "Number"
+    },
+    {
+      "property": "module_id",
+      "displayName": "Module ID"
     },
     {
       "property": "project_id",
@@ -50,40 +60,112 @@
       "format": "Number"
     }
   ],
-  "map": {
-    "job": {
-      "resolution": 60000,
-      "filters": [],
-      "template": "CONTAINERS = data(\"container/cpu/usage_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"cluster_name\", \"project_id\"])"
-    },
-    "groupingStructure": {
-      "key": "project_id",
-      "drawBoundary": true,
-      "children": [
-        {
-          "key": "cluster_name",
-          "drawBoundary": true
-        }
-      ]
-    },
-    "metrics": [
-      {
-        "name": "Clusters",
-        "varName": "CONTAINERS",
-        "valueLabel": " # Containers",
-        "idTemplate": "{{cluster_name}}",
-        "coloring": {
-          "method": "quantile",
-          "minValue": 0,
-          "range": [
-            "#bfd3e6",
-            "#9ebcda",
-            "#8c96c6",
-            "#8856a7",
-            "#810f7c"
-          ]
-        }
+  "metrics": [
+    {
+      "id": "gcp.container/memory/bytes_used",
+      "type": "metric",
+      "displayName": "Memory Usage",
+      "metricSelectors": [
+        "container/memory/bytes_used"
+      ],
+      "description": "Color hosts based on cluster memory usage",
+      "valueLabel": "Memory Used",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "MEMORY_USAGE = data(\"container/memory/bytes_used\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster_name\", \"project_id\"])",
+        "varName": "MEMORY_USAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
-    ]
-  }
+    },
+    {
+      "id": "gcp.container/cpu/usage_time",
+      "type": "metric",
+      "displayName": "Num Containers",
+      "metricSelectors": [
+        "container/cpu/usage_time"
+      ],
+      "description": "Color hosts based on HTTP responses per minute",
+      "valueLabel": "# Containers",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "NUM_CONTAINERS = data(\"container/cpu/usage_time\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).count(by=[\"cluster_name\", \"project_id\"])",
+        "varName": "NUM_CONTAINERS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.container/cpu/utilization",
+      "type": "metric",
+      "displayName": "Avg. Container CPU Usage",
+      "metricSelectors": [
+        "container/cpu/utilization"
+      ],
+      "description": "Color hosts based on the average CPU usage per container for the cluster",
+      "valueLabel": "CPU %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "CLUSTER_CPU = data(\"container/cpu/utilization\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"cluster_name\", \"project_id\"])",
+        "varName": "CLUSTER_CPU"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "gcp.container/disk/bytes_used",
+      "type": "metric",
+      "displayName": "Cluster Disk Usage",
+      "metricSelectors": [
+        "container/disk/bytes_used"
+      ],
+      "description": "Color hosts based on cluster disk usage",
+      "valueLabel": "Disk Used",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "DISK_USAGE = data(\"container/disk/bytes_used\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster_name\", \"project_id\"])",
+        "varName": "DISK_USAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
 }

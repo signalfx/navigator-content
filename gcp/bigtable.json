@@ -3,13 +3,17 @@
   "unreleased": true,
   "displayName": "Cloud Bigtable",
   "category": "Google Cloud Platform",
-  "categoryPriority": 30,
+  "categoryPriority": 50,
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
+  "requiredProperties": [
+    "cluster"
+  ],
   "idTemplate": "{{cluster}}",
   "idName": "Cloud Bigtable",
   "mtsQuery": "sf_metric:cluster\\/cpu_load AND _exists_:gcp_id",
   "systemDashboardPrefix": "Bigtable Overview",
+  "singleHostSystemDashboardName": "Bigtable Cluster",
   "discoveryQuery": ["service:bigtable"],
   "propertyColumns": [
     [
@@ -60,18 +64,7 @@
       "valueFormat": "Percentage",
       "job": {
         "resolution": 60000,
-        "filters": [
-          {
-            "property": "_exists_",
-            "propertyValue": "gcp_id",
-            "type": "property"
-          },
-          {
-            "property": "_exists_",
-            "propertyValue": "project_id",
-            "type": "property"
-          }
-        ],
+        "filters": [],
         "template": "CLUSTER_CPU = data(\"cluster/cpu_load\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"]).scale(100)",
         "varName": "CLUSTER_CPU"
       },
@@ -79,6 +72,90 @@
         "method": "quantile",
         "minValue": 0,
         "maxValue": 100
+      }
+    },
+    {
+      "id": "gcp.disk/bytes_used",
+      "type": "metric",
+      "displayName": "Cluster Disk Used",
+      "metricSelectors": [
+        "disk/bytes_used"
+      ],
+      "description": "Color hosts based on disk space used by the cluster",
+      "valueLabel": "Disk Used",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [],
+        "template": "DISK_USED = data(\"disk/bytes_used\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"]).scale(100)",
+        "varName": "DISK_USED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.server/latencies",
+      "type": "metric",
+      "displayName": "Avg Server Latency",
+      "metricSelectors": [
+        "server/latencies"
+      ],
+      "description": "Color hosts based on average server latency (ms)",
+      "valueLabel": "Avg Server Latency (ms)",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [],
+        "template": "SERVER_LATENCY = data(\"server/latencies\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"])",
+        "varName": "SERVER_LATENCY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "gcp.server/error_count",
+      "type": "metric",
+      "displayName": "Server Error Count",
+      "metricSelectors": [
+        "server/error_count"
+      ],
+      "description": "Color hosts based on number of server errors",
+      "valueLabel": "Error Count",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [],
+        "template": "SERVER_ERRORS = data(\"server/error_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"cluster\", \"project_id\"])",
+        "varName": "SERVER_ERRORS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     }
   ]
