@@ -1,6 +1,6 @@
 {
   "id": "gcp storage",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Cloud Storage",
   "category": "Google Cloud Platform",
   "categoryPriority": 90,

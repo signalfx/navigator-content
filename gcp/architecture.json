@@ -1,6 +1,6 @@
 {
   "id": "gcp architecture",
-  "unreleased": true,
+  "unreleased": false,
   "categoryPriority": 10,
   "type": "architectural",
   "displayName": "Overview",

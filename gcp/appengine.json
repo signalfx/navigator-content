@@ -1,6 +1,6 @@
 {
   "id": "gcp appengine",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "App Engine",
   "category": "Google Cloud Platform",
   "categoryPriority": 30,

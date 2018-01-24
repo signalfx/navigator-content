@@ -1,6 +1,6 @@
 {
   "id": "gcp containerengine",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Container Engine",
   "category": "Google Cloud Platform",
   "categoryPriority": 40,

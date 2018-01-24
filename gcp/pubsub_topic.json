@@ -1,6 +1,6 @@
 {
   "id": "gcp pubsub topic",
-  "unreleased": true,
+  "unreleased": false,
   "type": "elemental",
   "categoryPriority": 80,
   "alertQuery": "(_exists_:gcp_id)",
