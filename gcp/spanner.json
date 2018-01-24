@@ -3,7 +3,7 @@
   "unreleased": true,
   "displayName": "Cloud Spanner",
   "category": "Google Cloud Platform",
-  "categoryPriority": 30,
+  "categoryPriority": 90,
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
   "requiredProperties": [

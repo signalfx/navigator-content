@@ -3,7 +3,7 @@
   "unreleased": true,
   "displayName": "Cloud Storage",
   "category": "Google Cloud Platform",
-  "categoryPriority": 90,
+  "categoryPriority": 100,
   "type": "elemental",
   "alertQuery": "_exists_:gcp_id",
   "requiredProperties": [

@@ -10,7 +10,7 @@
   "idName": "Function",
   "mtsQuery": "(sf_metric:function\\/execution_count OR sf_metric:function\\/execution_times OR sf_metric:function\\/user_memory_bytes) AND _exists_:function_name",
   "systemDashboardPrefix": "Cloud Function",
-  "discoveryQuery": ["service:cloudfunctions"],
+  "discoveryQuery": ["sf_key:function_name", "service:cloudfunctions"],
   "alwaysGroupBy": "function_name",
   "idProperties": [
     {
@@ -33,21 +33,21 @@
     },
     {
       "metric": "function/execution_count",
-      "displayName": "Executions/min",
+      "displayName": "Executions",
       "format": "Number",
       "aggregate": "sum"
     },
     {
       "metric": "function/execution_times",
-      "displayName": "Avg. Execution Time (ms)",
+      "displayName": "Execution Time (avg ms)",
       "format": "Number",
       "aggregate": "mean"
     },
     {
       "metric": "function/user_memory_bytes",
-      "displayName": "Avg. Memory Used",
-      "format": "Number",
-      "aggregate": "mean"
+      "displayName": "Memory Used",
+      "format": "Bytes",
+      "aggregate": "sum"
     }
   ],
   "metrics": [
@@ -56,7 +56,7 @@
       "type": "metric",
       "displayName": "function/execution_count",
       "job": {
-        "resolution": 60000,
+        "resolution": 300000,
         "filters": [
           {
             "property": "_exists_",
@@ -64,7 +64,7 @@
             "type": "property"
           }
         ],
-        "template": "EXECUTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)",
+        "template": "EXECUTIONS = data(\"function/execution_count\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(over=\"{{{timeRange}}}\")",
         "varName": "EXECUTIONS"
       }
     },
@@ -81,7 +81,7 @@
             "type": "property"
           }
         ],
-        "template": "EXEC_TIMES = data(\"function/execution_times\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).scale(0.000001)",
+        "template": "EXEC_TIMES = data(\"function/execution_times\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1).scale(0.000001).mean(over=\"{{{timeRange}}}\")",
         "varName": "EXEC_TIMES"
       }
     },
@@ -98,7 +98,7 @@
             "type": "property"
           }
         ],
-        "template": "MEM_USED = data(\"function/user_memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"null\", maxExtrapolations=-1)",
+        "template": "MEM_USED = data(\"function/user_memory_bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(over=\"{{{timeRange}}}\")",
         "varName": "MEM_USED"
       }
     }
