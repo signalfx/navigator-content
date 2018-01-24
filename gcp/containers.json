@@ -12,7 +12,7 @@
   "requiredProperties": [
     "cluster_name"
   ],
-  "mtsQuery": "sf_metric:container\\/cpu\\/usage_time AND _exists_:gcp_id AND _exists_:module_id",
+  "mtsQuery": "sf_metric:container\\/cpu\\/usage_time AND _exists_:gcp_id ",
   "discoveryQuery": ["_exists_:cluster_name"],
   "propertyColumns": [
     [
@@ -32,10 +32,6 @@
       "property": "value",
       "displayName": "Value",
       "format": "Number"
-    },
-    {
-      "property": "module_id",
-      "displayName": "Module ID"
     },
     {
       "property": "project_id",
