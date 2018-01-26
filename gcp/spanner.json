@@ -1,6 +1,6 @@
 {
   "id": "gcp spanner",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Cloud Spanner",
   "category": "Google Cloud Platform",
   "categoryPriority": 90,

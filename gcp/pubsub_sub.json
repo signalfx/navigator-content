@@ -1,6 +1,6 @@
 {
   "id": "gcp pubsub subscription",
-  "unreleased": true,
+  "unreleased": false,
   "type": "elemental",
   "categoryPriority": 70,
   "alertQuery": "(_exists_:gcp_id)",

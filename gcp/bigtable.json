@@ -1,6 +1,6 @@
 {
   "id": "gcp bigtable",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Cloud Bigtable",
   "category": "Google Cloud Platform",
   "categoryPriority": 50,

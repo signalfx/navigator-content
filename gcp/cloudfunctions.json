@@ -1,6 +1,6 @@
 {
   "id": "gcp cloudfunctions",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Cloud Functions",
   "category": "Google Cloud Platform",
   "categoryPriority": 60,
