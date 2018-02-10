@@ -68,7 +68,7 @@
     "job": {
       "resolution": 60000,
       "filters": [],
-      "template": "NODES = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and filter(\"kubernetes_role\", \"worker\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])\nMASTERS = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and filter(\"kubernetes_role\", \"master\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])"
+      "template": "NODES = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and (not filter(\"kubernetes_role\", \"master\") and not filter(\"sf_tags\", \"node-role_kubernetes_io_master\")){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])\nMASTERS = data(\"cpu.utilization\", filter=filter(\"kubernetes_cluster\", \"*\") and (filter(\"kubernetes_role\", \"master\") or filter(\"sf_tags\", \"node-role_kubernetes_io_master\")){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"host\", \"kubernetes_cluster\"])"
     },
     "groupingStructure": {
       "key": "kubernetes_cluster",
