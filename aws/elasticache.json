@@ -1,17 +1,18 @@
 {
   "id": "elasticache",
-  "displayName": "ElastiCache Clusters",
+  "displayName": "ElastiCache Nodes",
   "category": "AWS",
   "categoryPriority": 100,
   "type": "elemental",
   "alertQuery": "_exists_:CacheClusterId",
   "requiredProperties": [
-    "CacheClusterId"
+    "CacheNodeId"
   ],
-  "idTemplate": "{{CacheClusterId}} - {{aws_region}}",
+  "idTemplate": "{{aws_region}} | {{CacheClusterId}} | {{CacheNodeId}}",
   "idName": "Cluster",
-  "mtsQuery": "sf_key:CacheClusterId AND _exists_:CacheClusterId",
+  "mtsQuery": "sf_key:CacheNodeId AND _exists_:CacheNodeId",
   "systemDashboardPrefix": "ElastiCache",
+  "singleHostSystemDashboardName": "ElastiCache Node",
   "discoveryQuery": ["namespace:AWS/ElastiCache"],
   "propertyColumns": [
     [
@@ -40,14 +41,24 @@
       "format": "id"
     },
     {
+      "property": "CacheNodeId",
+      "displayName": "Node Id",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "CacheClusterId",
+      "displayName": "Cluster Id",
+      "isSummaryProperty": true
+    },
+    {
       "property": "aws_cache_cluster_name",
-      "displayName": "aws_cache_cluster_name",
-      "format": "id"
+      "displayName": "Cluster Name",
+      "isSummaryProperty": true
     },
     {
       "property": "aws_region",
-      "displayName": "aws_region",
-      "format": "id"
+      "displayName": "Region",
+      "isSummaryProperty": true
     },
     {
       "property": "value",
@@ -57,18 +68,23 @@
   ],
   "tooltipKeyList": [
     {
+      "property": "CacheNodeId",
+      "displayName": "Node Id",
+      "isSummaryProperty": true
+    },
+    {
       "property": "CacheClusterId",
-      "displayName": "CacheClusterId",
+      "displayName": "Cluster Id",
       "isSummaryProperty": true
     },
     {
       "property": "aws_cache_cluster_name",
-      "displayName": "aws_cache_cluster_name",
+      "displayName": "Cluster Name",
       "isSummaryProperty": true
     },
     {
       "property": "aws_region",
-      "displayName": "aws_region",
+      "displayName": "Region",
       "isSummaryProperty": true
     },
     {
@@ -103,12 +119,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\"))).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CURRENT_CONNECTIONS"
       },
       "coloring": {
@@ -141,12 +157,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "CACHE_HITS = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])\nCACHE_MISSES = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])\nCACHE_RATIO = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
+        "template": "CACHE_HITS = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=4).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=4).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])\nCACHE_RATIO = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
         "varName": "CACHE_RATIO"
       },
       "coloring": {
@@ -191,12 +207,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "EVICTIONS = data(\"Evictions\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "EVICTIONS = data(\"Evictions\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "EVICTIONS"
       },
       "coloring": {
@@ -235,12 +251,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "FREEABLE_MEMORY"
       },
       "coloring": {
@@ -279,12 +295,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "SWAP_USAGE = data(\"SwapUsage\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "SWAP_USAGE = data(\"SwapUsage\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "SWAP_USAGE"
       },
       "coloring": {
@@ -323,12 +339,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "CPU_UTIL = data(\"CPUUtilization\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "CPU_UTIL = data(\"CPUUtilization\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CPU_UTIL"
       },
       "coloring": {
@@ -361,12 +377,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "CACHE_HITS1 = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "CACHE_HITS1 = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CACHE_HITS1"
       },
       "coloring": {
@@ -405,12 +421,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "CACHE_MISSES1 = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "CACHE_MISSES1 = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CACHE_MISSES1"
       },
       "coloring": {
@@ -449,12 +465,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "NETWORK_IN = data(\"NetworkBytesIn\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "NETWORK_IN = data(\"NetworkBytesIn\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "NETWORK_IN"
       },
       "coloring": {
@@ -493,12 +509,12 @@
             "type": "property"
           },
           {
-            "property": "CacheClusterId",
+            "property": "CacheNodeId",
             "propertyValue": "*",
             "type": "property"
           }
         ],
-        "template": "NETWORK_OUT = data(\"NetworkBytesOut\", filter={{#filter}}{{{filter}}}{{/filter}} and (not filter(\"CacheNodeId\", \"*\")), extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\", \"aws_region\", \"aws_cache_cluster_name\"])",
+        "template": "NETWORK_OUT = data(\"NetworkBytesOut\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "NETWORK_OUT"
       },
       "coloring": {
