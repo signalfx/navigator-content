@@ -1,0 +1,94 @@
+{
+  "id": "azure architecture",
+  "unreleased": false,
+  "categoryPriority": 10,
+  "type": "architectural",
+  "displayName": "Overview",
+  "alertQuery": "(_exists_:namespace)",
+  "mtsQuery": "sf_metric:CPU Percentage OR sf_metric:dtu_consumption_percent",
+  "category": "Azure",
+  "systemDashboardPrefix": "Azure",
+  "discoveryQuery":["_exists_:resource_type"],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "map": {
+    "job": {
+      "resolution": 60000,
+      "filters": [
+        {
+          "property": "primary_aggregation_type",
+          "propertyValue": "true",
+          "type": "property"
+        }
+      ],
+      "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\", filter=filter(\"resource_type\", \"Microsoft.Sql/servers/databases\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nVM_CPU = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_HITS = data(\"cachehits\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_MISSES = data(\"cachemisses\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_HIT_PERCENT=((CACHE_HITS + 1) / ((CACHE_HITS+1) + CACHE_MISSES) * 100)"
+    },
+    "groupingStructure": {
+      "key": "sf_streamLabel",
+      "drawBoundary": true,
+      "memberSettings": []
+    },
+    "metrics": [
+      {
+        "name": "Virtual Machines",
+        "varName": "VM_CPU",
+        "valueLabel": "CPU %",
+        "idTemplate": "azure-{{resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      {
+        "name": "Redis Caches",
+        "varName": "CACHE_HIT_PERCENT",
+        "valueLabel": "Hit %",
+        "idTemplate": "azure-{{resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100,
+          "range": [
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#ea1849",
+            "#e2ed6a",
+            "#6bd37e"
+          ]
+        }
+      },
+      {
+        "name": "Sql Databases",
+        "varName": "DTU_PERCENTAGE",
+        "valueLabel": "DTU %",
+        "valueFormat": "Percentage",
+        "idTemplate": "azure-{{resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    ]
+  }
+}
