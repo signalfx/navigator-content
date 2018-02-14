@@ -1,18 +1,19 @@
 {
   "id": "elasticache",
-  "displayName": "ElastiCache Clusters",
+  "displayName": "ElastiCache Nodes",
   "category": "AWS",
   "categoryPriority": 100,
   "type": "elemental",
   "alertQuery": "_exists_:CacheClusterId",
   "requiredProperties": [
-    "CacheClusterId"
+    "CacheNodeId"
   ],
-  "idTemplate": "{{CacheClusterId}}",
+  "idTemplate": "{{aws_region}} | {{CacheClusterId}} | {{CacheNodeId}}",
   "idName": "Cluster",
-  "mtsQuery": "sf_metric:CacheHits AND sf_key:CacheClusterId AND _exists_:CacheClusterId",
-  "systemDashboardPrefix": "ELB",
-  "discoveryQuery": ["sf_key:CacheClusterId"],
+  "mtsQuery": "sf_key:CacheNodeId AND _exists_:CacheNodeId",
+  "systemDashboardPrefix": "ElastiCache",
+  "singleHostSystemDashboardName": "ElastiCache Node",
+  "discoveryQuery": ["namespace:AWS/ElastiCache"],
   "propertyColumns": [
     [
       {
@@ -40,6 +41,26 @@
       "format": "id"
     },
     {
+      "property": "CacheNodeId",
+      "displayName": "Node Id",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "CacheClusterId",
+      "displayName": "Cluster Id",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_cache_cluster_name",
+      "displayName": "Cluster Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_region",
+      "displayName": "Region",
+      "isSummaryProperty": true
+    },
+    {
       "property": "value",
       "displayName": "Value",
       "format": "Number"
@@ -47,8 +68,23 @@
   ],
   "tooltipKeyList": [
     {
-      "property": "id",
-      "displayName": "ID",
+      "property": "CacheNodeId",
+      "displayName": "Node Id",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "CacheClusterId",
+      "displayName": "Cluster Id",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_cache_cluster_name",
+      "displayName": "Cluster Name",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "aws_region",
+      "displayName": "Region",
       "isSummaryProperty": true
     },
     {
@@ -71,8 +107,24 @@
       "valueFormat": "Number",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "CURRENT_CONNECTIONS = data(\"CurrConnections\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CURRENT_CONNECTIONS"
       },
       "coloring": {
@@ -93,8 +145,24 @@
       "valueFormat": "Percentage",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "CACHE_HITS = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])\nCACHE_RATIO = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "CACHE_HITS = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=4).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])\nCACHE_MISSES = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=4).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])\nCACHE_RATIO = (CACHE_HITS / (CACHE_HITS + CACHE_MISSES) * 100)",
         "varName": "CACHE_RATIO"
       },
       "coloring": {
@@ -127,8 +195,24 @@
       "valueFormat": "Number",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "EVICTIONS = data(\"Evictions\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "EVICTIONS = data(\"Evictions\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "EVICTIONS"
       },
       "coloring": {
@@ -146,7 +230,7 @@
     {
       "id": "aws.elasticache.freeablememory",
       "type": "metric",
-      "displayName": "Free Memory",
+      "displayName": "Freeable Memory",
       "metricSelectors": [
         "FreeableMemory"
       ],
@@ -155,8 +239,24 @@
       "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "FREEABLE_MEMORY = data(\"FreeableMemory\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "FREEABLE_MEMORY"
       },
       "coloring": {
@@ -183,8 +283,24 @@
       "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "SWAP_USAGE = data(\"SwapUsage\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "SWAP_USAGE = data(\"SwapUsage\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "SWAP_USAGE"
       },
       "coloring": {
@@ -211,8 +327,24 @@
       "valueFormat": "Percentage",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "CPU_UTIL = data(\"CPUUtilization\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "CPU_UTIL = data(\"CPUUtilization\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CPU_UTIL"
       },
       "coloring": {
@@ -233,8 +365,24 @@
       "valueFormat": "Number",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "CACHE_HITS1 = data(\"*Hits\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "CACHE_HITS1 = data(\"*Hits\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CACHE_HITS1"
       },
       "coloring": {
@@ -261,8 +409,24 @@
       "valueFormat": "Number",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "CACHE_MISSES1 = data(\"*Misses\", filter=filter(\"stat\", \"sum\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "sum",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "CACHE_MISSES1 = data(\"*Misses\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "CACHE_MISSES1"
       },
       "coloring": {
@@ -289,8 +453,24 @@
       "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "NETWORK_IN = data(\"NetworkBytesIn\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_IN = data(\"NetworkBytesIn\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "NETWORK_IN"
       },
       "coloring": {
@@ -317,8 +497,24 @@
       "valueFormat": "Bytes",
       "job": {
         "resolution": 300000,
-        "filters": [],
-        "template": "NETWORK_OUT = data(\"NetworkBytesOut\", filter=filter(\"stat\", \"mean\") and filter(\"namespace\", \"AWS/ElastiCache\") and filter(\"CacheClusterId\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"CacheClusterId\"])",
+        "filters": [
+          {
+            "property": "namespace",
+            "propertyValue": "AWS/ElastiCache",
+            "type": "property"
+          },
+          {
+            "property": "stat",
+            "propertyValue": "mean",
+            "type": "property"
+          },
+          {
+            "property": "CacheNodeId",
+            "propertyValue": "*",
+            "type": "property"
+          }
+        ],
+        "template": "NETWORK_OUT = data(\"NetworkBytesOut\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"aws_region\", \"CacheNodeId\", \"CacheClusterId\"])",
         "varName": "NETWORK_OUT"
       },
       "coloring": {
