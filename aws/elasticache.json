@@ -42,23 +42,19 @@
     },
     {
       "property": "CacheNodeId",
-      "displayName": "Node Id",
-      "isSummaryProperty": true
+      "displayName": "Node Id"
     },
     {
       "property": "CacheClusterId",
-      "displayName": "Cluster Id",
-      "isSummaryProperty": true
+      "displayName": "Cluster Id"
     },
     {
       "property": "aws_cache_cluster_name",
-      "displayName": "Cluster Name",
-      "isSummaryProperty": true
+      "displayName": "Cluster Name"
     },
     {
       "property": "aws_region",
-      "displayName": "Region",
-      "isSummaryProperty": true
+      "displayName": "Region"
     },
     {
       "property": "value",
