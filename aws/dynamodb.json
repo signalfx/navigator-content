@@ -60,6 +60,33 @@
   ],
   "metrics": [
     {
+      "id": "aws.dynamodb.successful_request_latency",
+      "type": "metric",
+      "displayName": "Successful Request Latency",
+      "metricSelectors": [
+        "SuccessfulRequestLatency"
+      ],
+      "description": "Response time of successful requests of table & it's GSI",
+      "valueLabel": "Latency (ms)",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "SUCCESS_REQ_LATENCY = data(\"SuccessfulRequestLatency\", filter=filter(\"namespace\", \"AWS/DynamoDB\") and filter(\"stat\", \"mean\") and filter(\"TableName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"TableName\"])",
+        "varName": "SUCCESS_REQ_LATENCY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
       "id": "aws.dynamodb.throttledrequests",
       "type": "metric",
       "displayName": "Throttled Requests",
@@ -182,33 +209,6 @@
         "method": "quantile",
         "minValue": 0,
         "maxValue": 100
-      }
-    },
-    {
-      "id": "aws.dynamodb.successful_request_latency",
-      "type": "metric",
-      "displayName": "Successful Request Latency",
-      "metricSelectors": [
-        "SuccessfulRequestLatency"
-      ],
-      "description": "Response time of successful requests of table & it's GSI",
-      "valueLabel": "Latency (ms)",
-      "job": {
-        "resolution": 300000,
-        "filters": [],
-        "template": "SUCCESS_REQ_LATENCY = data(\"SuccessfulRequestLatency\", filter=filter(\"namespace\", \"AWS/DynamoDB\") and filter(\"stat\", \"mean\") and filter(\"TableName\", \"*\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"TableName\"])",
-        "varName": "SUCCESS_REQ_LATENCY"
-      },
-      "coloring": {
-        "method": "quantile",
-        "minValue": 0,
-        "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
-        ]
       }
     },
     {
