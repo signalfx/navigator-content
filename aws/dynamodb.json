@@ -10,7 +10,7 @@
   ],
   "idTemplate": "{{TableName}}",
   "idName": "Table",
-  "mtsQuery": "sf_metric:ThrottledRequests AND sf_key:TableName AND _exists_:TableName",
+  "mtsQuery": "sf_metric:SuccessfulRequestLatency AND sf_key:TableName AND _exists_:TableName",
   "systemDashboardPrefix": "AWS DynamoDB",
   "discoveryQuery": ["sf_key:TableName"],
   "propertyColumns": [
