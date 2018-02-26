@@ -1,5 +1,6 @@
 {
   "id": "azurestorage",
+  "unreleased": true,
   "displayName": "Storage Accounts",
   "category": "Azure",
   "categoryPriority": 30,
