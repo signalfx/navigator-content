@@ -1,0 +1,298 @@
+{
+  "id": "azurerediscaches",
+  "unreleased": true,
+  "displayName": "Redis Cache",
+  "category": "Azure",
+  "categoryPriority": 90,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_redis",
+  "mtsQuery": "resource_type:Microsoft.Cache\\/Redis",
+  "systemDashboardPrefix": "Azure Redis Cache Overview",
+  "singleHostSystemDashboardName": "Azure Redis Cache",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Cache/Redis"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "azure_resource_name",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.redis.cachehitrate",
+      "type": "metric",
+      "displayName": "Cache Hit Rate",
+      "metricSelectors": [
+        "cachehits",
+        "cachemisses"
+      ],
+      "description": "Cache Hits / (Cache Hits + Cache Misses). Under 80% is Red, 80-90% Yellow, above 90% is Green",
+      "valueLabel": "Hit %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "CACHE_HITS = data(\"cachehits\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nCACHE_MISSES = data(\"cachemisses\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nCACHE_RATIO = ( CACHE_HITS / ((CACHE_HITS) + CACHE_MISSES) * 100)",
+        "varName": "CACHE_RATIO"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100,
+        "range": [
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#ea1849",
+          "#e2ed6a",
+          "#6bd37e"
+        ]
+      }
+    },
+    {
+      "id": "azure.redis.memoryfrag",
+      "type": "metric",
+      "displayName": "Memory Fragmentation Ratio",
+      "metricSelectors": [
+        "usedmemory",
+        "usedmemoryRss"
+      ],
+      "description": "(usedmemoryRss / usedmemory) Color hosts by memory the OS has allocated vs memory allocated by Redis",
+      "valueLabel": "Ratio",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "USED_MEM = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nUSED_MEM_RSS = data(\"usedmemoryRss\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nMEMORY_FRAG = (USED_MEM_RSS) / (USED_MEM)",
+        "varName": "MEMORY_FRAG"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.redis.usedmemory",
+      "type": "metric",
+      "displayName": "Used Memory",
+      "metricSelectors": [
+        "usedmemory"
+      ],
+      "description": "Color hosts by amount of memory used by an instance",
+      "valueLabel": "Used Memory",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "USED_MEMORY = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "USED_MEMORY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.redis.totalcommands",
+      "type": "metric",
+      "displayName": "Total Commands",
+      "metricSelectors": [
+        "totalcommandsprocessed"
+      ],
+      "description": "Color hosts by total number of commands executed",
+      "valueLabel": "Commands",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "TOTAL_CMDS = data(\"totalcommandsprocessed\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "TOTAL_CMDS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.redis.evictedkeys",
+      "type": "metric",
+      "displayName": "Evicted Keys",
+      "metricSelectors": [
+        "evictedkeys"
+      ],
+      "description": "Color hosts by number of evicted keys",
+      "valueLabel": "Keys",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "EVICTED_KEYS = data(\"evictedkeys\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "EVICTED_KEYS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.redis.connections",
+      "type": "metric",
+      "displayName": "Connected Clients",
+      "metricSelectors": [
+        "connectedclients"
+      ],
+      "description": "Color hosts by number connected clients",
+      "valueLabel": "Connections",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Cache/Redis",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "CONNS = data(\"connectedclients\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "CONNS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

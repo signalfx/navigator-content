@@ -1,0 +1,239 @@
+{
+  "id": "azuresqldatabases",
+  "unreleased": true,
+  "displayName": "SQL Databases",
+  "category": "Azure",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{{azure_resource_name}}}",
+  "idName": "sql_database",
+  "mtsQuery": "resource_type:Microsoft.Sql/servers/databases",
+  "systemDashboardPrefix": "Azure Sql Databases",
+  "singleHostSystemDashboardName": "Azure Sql Database",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Sql/servers/databases"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.sqldb.dtu_consumption",
+      "type": "metric",
+      "displayName": "DTU Consumption %",
+      "metricSelectors": [
+        "dtu_consumption_percent"
+      ],
+      "description": "Color hosts by DTU percentage, a blended metric of overall database performance",
+      "valueLabel": "DTU %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Sql/servers/databases",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
+            "type": "property"
+          }
+        ],
+        "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
+        "varName": "DTU_PERCENTAGE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "azure.sqldb.connection_failed",
+      "type": "metric",
+      "displayName": "Failed Connections",
+      "metricSelectors": [
+        "connection_failed"
+      ],
+      "description": "Color hosts by number of failed connections",
+      "valueLabel": "failed conns",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Sql/servers/databases",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
+            "type": "property"
+          }
+        ],
+        "template": "FAILED_CONNS = data(\"connection_failed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
+        "varName": "FAILED_CONNS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.sqldb.data_io_percentage",
+      "type": "metric",
+      "displayName": "Data IO %",
+      "metricSelectors": [
+        "physical_data_read_percent"
+      ],
+      "description": "Color hosts by data IO percentage",
+      "valueLabel": "data IO %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Sql/servers/databases",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
+            "type": "property"
+          }
+        ],
+        "template": "DATA_IO = data(\"physical_data_read_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
+        "varName": "DATA_IO"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "azure.sqldb.storage_percent",
+      "type": "metric",
+      "displayName": "Storage Percent",
+      "metricSelectors": [
+        "storage_percent"
+      ],
+      "description": "Color hosts by storage percentage",
+      "valueLabel": "storage %",
+      "valueFormat": "Percentage",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Sql/servers/databases",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
+            "type": "property"
+          }
+        ],
+        "template": "STORAGE_PERCENT = data(\"storage_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
+        "varName": "STORAGE_PERCENT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "maxValue": 100
+      }
+    },
+    {
+      "id": "azure.sqldb.storage",
+      "type": "metric",
+      "displayName": "Total DB Size",
+      "metricSelectors": [
+        "storage"
+      ],
+      "description": "Color hosts by total size of database",
+      "valueLabel": "size",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Sql/servers/databases",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
+            "type": "property"
+          }
+        ],
+        "template": "DB_SIZE = data(\"storage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
+        "varName": "DB_SIZE"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

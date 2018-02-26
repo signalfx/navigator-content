@@ -1,0 +1,138 @@
+{
+  "id": "azurestorage",
+  "unreleased": true,
+  "displayName": "Storage Accounts",
+  "category": "Azure",
+  "categoryPriority": 30,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_storage_accounts",
+  "mtsQuery": "resource_type:Microsoft.Storage\\/storageAccounts",
+  "systemDashboardPrefix": "Azure Storage Accounts",
+  "singleHostSystemDashboardName": "Azure Storage Account",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Storage/storageAccounts"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "azure_resource_name",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.storage.ingress",
+      "type": "metric",
+      "displayName": "Ingress Traffic",
+      "metricSelectors": [
+        "Ingress"
+      ],
+      "description": "Color hosts by amount of Ingress (bytes) traffic",
+      "valueLabel": "Ingress",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Storage/storageAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "INGRESS_TRAFFIC = data(\"Ingress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "INGRESS_TRAFFIC"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.storage.egress",
+      "type": "metric",
+      "displayName": "Egress Traffic",
+      "metricSelectors": [
+        "Egress"
+      ],
+      "description": "Color hosts by amount of Egress (bytes) traffic",
+      "valueLabel": "Egress",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Storage/storageAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "EGRESS_TRAFFIC = data(\"Egress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "EGRESS_TRAFFIC"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}
