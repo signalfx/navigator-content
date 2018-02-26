@@ -1,18 +1,21 @@
 {
-  "id": "azure compute",
+  "id": "azurevirtualmachines",
   "displayName": "Virtual Machines",
   "category": "Azure",
   "categoryPriority": 20,
   "type": "elemental",
-  "alertQuery": "_exists_:resource_id",
+  "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [
-    "resource_name"
+    "azure_resource_name"
   ],
-  "idTemplate": "{{resource_name}}",
-  "idName": "AzureCompute",
-  "mtsQuery": "sf_metric:\"Percentage CPU\" AND aggregation_type:average AND resource_type:Microsoft.Compute/virtualMachines",
-  "systemDashboardPrefix": "Virtual Machine",
-  "discoveryQuery": ["sf_key:resource_id" ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_compute",
+  "mtsQuery": "resource_type:Microsoft.Compute\\/virtualMachines",
+  "systemDashboardPrefix": "Azure Virtual Machine",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Compute/virtualMachines",
+    "resource_type:Microsoft.ClassicCompute/virtualMachines"
+  ],
   "propertyColumns": [
     [
       {
@@ -23,7 +26,7 @@
   ],
   "listColumns": [
     {
-      "property": "id",
+      "property": "azure_resource_name",
       "displayName": "Instance Name"
     },
     {
@@ -32,17 +35,17 @@
       "format": "Number"
     },
     {
-      "property": "resource_group_id",
-      "displayName": "Group ID"
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
     },
     {
-      "property": "region",
+      "property": "azure_region",
       "displayName": "Region"
     }
   ],
   "tooltipKeyList": [
     {
-      "property": "resource_name",
+      "property": "azure_resource_name",
       "displayName": "Name",
       "isSummaryProperty": true
     },
@@ -65,20 +68,15 @@
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
-          {
-            "property": "resource_type",
-            "propertyValue": "Microsoft.Compute/virtualMachines",
-            "type": "property"
-          },
           {
             "property": "aggregation_type",
             "propertyValue": "average",
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"Percentage CPU\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "CPU_UTILIZATION = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
@@ -98,7 +96,7 @@
       "valueLabel": "Bytes In",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -106,7 +104,7 @@
             "type": "property"
           }
         ],
-        "template": "NETWORK_IN = data(\"Network In\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "NETWORK_IN = data(\"Network In\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "NETWORK_IN"
       },
       "coloring": {
@@ -132,7 +130,7 @@
       "valueLabel": "Bytes Out",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -140,7 +138,7 @@
             "type": "property"
           }
         ],
-        "template": "NETWORK_OUT = data(\"Network Out\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "NETWORK_OUT = data(\"Network Out\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "NETWORK_OUT"
       },
       "coloring": {
@@ -166,15 +164,20 @@
       "valueLabel": "Bytes Written",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Compute/virtualMachines",
+            "type": "property"
+          },
           {
             "property": "aggregation_type",
             "propertyValue": "total",
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_WRITE_BYTES"
       },
       "coloring": {
@@ -200,15 +203,20 @@
       "valueLabel": "Bytes Read",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Compute/virtualMachines",
+            "type": "property"
+          },
           {
             "property": "aggregation_type",
             "propertyValue": "total",
             "type": "property"
           }
         ],
-        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_READ_BYTES"
       },
       "coloring": {
@@ -234,7 +242,7 @@
       "valueLabel": "Write Ops",
       "valueFormat": "Number",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -242,7 +250,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_OPS = data(\"Disk Write Operations/Sec\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "DISK_WRITE_OPS = data(\"Disk Write Operations/Sec\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_WRITE_OPS"
       },
       "coloring": {
@@ -268,7 +276,7 @@
       "valueLabel": "Read Ops",
       "valueFormat": "Number",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -276,7 +284,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_READ_OPS = data(\"Disk Read Operations/Sec\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "DISK_READ_OPS = data(\"Disk Read Operations/Sec\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_READ_OPS"
       },
       "coloring": {
@@ -302,15 +310,20 @@
       "valueLabel": "Credits",
       "valueFormat": "Number",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Compute/virtualMachines",
+            "type": "property"
+          },
           {
             "property": "aggregation_type",
             "propertyValue": "average",
             "type": "property"
           }
         ],
-        "template": "CREDITS_REMAINING = data(\"CPU Credits Remaining\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "CREDITS_REMAINING = data(\"CPU Credits Remaining\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CREDITS_REMAINING"
       },
       "coloring": {
@@ -336,15 +349,20 @@
       "valueLabel": "Credits",
       "valueFormat": "Number",
       "job": {
-        "resolution": 3600000,
+        "resolution": 300000,
         "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Compute/virtualMachines",
+            "type": "property"
+          },
           {
             "property": "aggregation_type",
             "propertyValue": "average",
             "type": "property"
           }
         ],
-        "template": "CREDITS_CONSUMED = data(\"CPU Credits Consumed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2)",
+        "template": "CREDITS_CONSUMED = data(\"CPU Credits Consumed\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CREDITS_CONSUMED"
       },
       "coloring": {

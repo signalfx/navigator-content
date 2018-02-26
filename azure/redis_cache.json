@@ -1,18 +1,22 @@
 {
-  "id": "azure redis cache",
+  "id": "azurerediscaches",
+  "unreleased": true,
   "displayName": "Redis Cache",
   "category": "Azure",
   "categoryPriority": 90,
   "type": "elemental",
-  "alertQuery": "sf_metric:cachehits",
+  "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [
-    "resource_name"
+    "azure_resource_name"
   ],
-  "idTemplate": "{{resource_name}}",
+  "idTemplate": "{{azure_resource_name}}",
   "idName": "azure_redis",
-  "mtsQuery": "resource_type:Microsoft.Cache/Redis AND _exists_:resource_id AND sf_metric:cachehits",
-  "systemDashboardPrefix": "Redis Cache",
-  "discoveryQuery": [ "resource_type:Microsoft.Cache/Redis" ],
+  "mtsQuery": "resource_type:Microsoft.Cache\\/Redis",
+  "systemDashboardPrefix": "Azure Redis Cache Overview",
+  "singleHostSystemDashboardName": "Azure Redis Cache",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Cache/Redis"
+  ],
   "propertyColumns": [
     [
       {
@@ -23,7 +27,7 @@
   ],
   "listColumns": [
     {
-      "property": "id",
+      "property": "azure_resource_name",
       "displayName": "Resource Name"
     },
     {
@@ -32,11 +36,11 @@
       "format": "Number"
     },
     {
-      "property": "resource_group_id",
-      "displayName": "Group ID"
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
     },
     {
-      "property": "region",
+      "property": "azure_region",
       "displayName": "Region"
     }
   ],
@@ -78,7 +82,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "CACHE_HITS = data(\"cachehits\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)\nCACHE_MISSES = data(\"cachemisses\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)\nCACHE_RATIO = ((CACHE_HITS + 1) / ((CACHE_HITS+1) + CACHE_MISSES) * 100)",
+        "template": "CACHE_HITS = data(\"cachehits\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nCACHE_MISSES = data(\"cachemisses\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nCACHE_RATIO = ( CACHE_HITS / ((CACHE_HITS) + CACHE_MISSES) * 100)",
         "varName": "CACHE_RATIO"
       },
       "coloring": {
@@ -123,7 +127,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "USED_MEM = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)\nUSED_MEM_RSS = data(\"usedmemoryRss\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)\nMEMORY_FRAG = (USED_MEM_RSS + 1) / (USED_MEM + 1)",
+        "template": "USED_MEM = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nUSED_MEM_RSS = data(\"usedmemoryRss\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nMEMORY_FRAG = (USED_MEM_RSS) / (USED_MEM)",
         "varName": "MEMORY_FRAG"
       },
       "coloring": {
@@ -161,7 +165,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "USED_MEMORY = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)",
+        "template": "USED_MEMORY = data(\"usedmemory\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "USED_MEMORY"
       },
       "coloring": {
@@ -199,7 +203,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "TOTAL_CMDS = data(\"totalcommandsprocessed\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1)",
+        "template": "TOTAL_CMDS = data(\"totalcommandsprocessed\"{{#filter}}, {{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "TOTAL_CMDS"
       },
       "coloring": {
@@ -237,7 +241,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "EVICTED_KEYS = data(\"evictedkeys\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)",
+        "template": "EVICTED_KEYS = data(\"evictedkeys\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "EVICTED_KEYS"
       },
       "coloring": {
@@ -275,7 +279,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "CONNS = data(\"connectedclients\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1)",
+        "template": "CONNS = data(\"connectedclients\"{{#filter}}, {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CONNS"
       },
       "coloring": {

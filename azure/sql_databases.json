@@ -1,18 +1,22 @@
 {
-  "id": "azure sql databases",
-  "displayName": "Azure Sql Databases",
+  "id": "azuresqldatabases",
+  "unreleased": true,
+  "displayName": "SQL Databases",
   "category": "Azure",
   "categoryPriority": 100,
   "type": "elemental",
-  "alertQuery": "sf_metric:dtu_consumption_percent",
+  "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [
-    "resource_name"
+    "azure_resource_name"
   ],
-  "idTemplate": "{{resource_name}}",
+  "idTemplate": "{{{azure_resource_name}}}",
   "idName": "sql_database",
-  "mtsQuery": "sf_metric:dtu_consumption_percent AND resource_type:Microsoft.Sql/servers/databases",
-  "systemDashboardPrefix": "Azure Sql Database",
-  "discoveryQuery": [ "resource_type:Microsoft.Sql/servers/databases AND sf_key:resource_id" ],
+  "mtsQuery": "resource_type:Microsoft.Sql/servers/databases",
+  "systemDashboardPrefix": "Azure Sql Databases",
+  "singleHostSystemDashboardName": "Azure Sql Database",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Sql/servers/databases"
+  ],
   "propertyColumns": [
     [
       {
@@ -32,11 +36,11 @@
       "format": "Number"
     },
     {
-      "property": "resource_group_id",
-      "displayName": "Group ID"
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
     },
     {
-      "property": "region",
+      "property": "azure_region",
       "displayName": "Region"
     }
   ],
@@ -78,7 +82,7 @@
             "type": "property"
           }
         ],
-        "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
         "varName": "DTU_PERCENTAGE"
       },
       "coloring": {
@@ -111,7 +115,7 @@
             "type": "property"
           }
         ],
-        "template": "FAILED_CONNS = data(\"connection_failed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "FAILED_CONNS = data(\"connection_failed\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
         "varName": "FAILED_CONNS"
       },
       "coloring": {
@@ -150,7 +154,7 @@
             "type": "property"
           }
         ],
-        "template": "DATA_IO = data(\"physical_data_read_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "DATA_IO = data(\"physical_data_read_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
         "varName": "DATA_IO"
       },
       "coloring": {
@@ -183,7 +187,7 @@
             "type": "property"
           }
         ],
-        "template": "STORAGE_PERCENT = data(\"storage_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "STORAGE_PERCENT = data(\"storage_percent\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
         "varName": "STORAGE_PERCENT"
       },
       "coloring": {
@@ -216,7 +220,7 @@
             "type": "property"
           }
         ],
-        "template": "DB_SIZE = data(\"storage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)",
+        "template": "DB_SIZE = data(\"storage\"{{#filter}}, filter={{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])",
         "varName": "DB_SIZE"
       },
       "coloring": {

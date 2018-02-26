@@ -1,14 +1,15 @@
 {
-  "id": "azure architecture",
-  "unreleased": false,
+  "id": "azure",
+  "unreleased": true,
   "categoryPriority": 10,
   "type": "architectural",
   "displayName": "Overview",
-  "alertQuery": "(_exists_:namespace)",
-  "mtsQuery": "sf_metric:CPU Percentage OR sf_metric:dtu_consumption_percent",
+  "alertQuery": "(_exists_:resource_type)",
+  "mtsQuery": "sf_metric:CPU Percentage OR sf_metric:dtu_consumption_percent OR sf_metric:cachehits",
   "category": "Azure",
-  "systemDashboardPrefix": "Azure",
-  "discoveryQuery":["_exists_:resource_type"],
+  "discoveryQuery": [
+    "_exists_:resource_type"
+  ],
   "propertyColumns": [
     [
       {
@@ -27,7 +28,7 @@
   ],
   "map": {
     "job": {
-      "resolution": 60000,
+      "resolution": 300000,
       "filters": [
         {
           "property": "primary_aggregation_type",
@@ -35,7 +36,7 @@
           "type": "property"
         }
       ],
-      "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\", filter=filter(\"resource_type\", \"Microsoft.Sql/servers/databases\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nVM_CPU = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_HITS = data(\"cachehits\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_MISSES = data(\"cachemisses\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5)\nCACHE_HIT_PERCENT=((CACHE_HITS + 1) / ((CACHE_HITS+1) + CACHE_MISSES) * 100)"
+      "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\", filter=filter(\"resource_type\", \"Microsoft.Sql/servers/databases\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nVM_CPU = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HITS = data(\"cachehits\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_MISSES = data(\"cachemisses\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HIT_PERCENT=((CACHE_HITS) / ((CACHE_HITS) + CACHE_MISSES) * 100)\nINGRESS_TRAFFIC = data(\"Ingress\", filter=filter(\"resource_type\", \"Microsoft.Storage/storageAccounts\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"azure_resource_name\"])"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
@@ -47,7 +48,8 @@
         "name": "Virtual Machines",
         "varName": "VM_CPU",
         "valueLabel": "CPU %",
-        "idTemplate": "azure-{{resource_name}}",
+        "valueFormat": "Percentage",
+        "idTemplate": "azure-{{azure_resource_name}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -55,10 +57,29 @@
         }
       },
       {
+        "name": "Storage Accounts",
+        "varName": "INGRESS_TRAFFIC",
+        "valueLabel": "Ingress",
+        "valueFormat": "Bytes",
+        "idTemplate": "azure-{{azure_resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
         "name": "Redis Caches",
         "varName": "CACHE_HIT_PERCENT",
         "valueLabel": "Hit %",
-        "idTemplate": "azure-{{resource_name}}",
+        "valueFormat": "Percentage",
+        "idTemplate": "azure-{{azure_resource_name}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
@@ -78,11 +99,11 @@
         }
       },
       {
-        "name": "Sql Databases",
+        "name": "SQL Databases",
         "varName": "DTU_PERCENTAGE",
         "valueLabel": "DTU %",
         "valueFormat": "Percentage",
-        "idTemplate": "azure-{{resource_name}}",
+        "idTemplate": "azure-{{{azure_resource_name}}}",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
