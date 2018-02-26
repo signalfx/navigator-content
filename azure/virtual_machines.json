@@ -1,5 +1,6 @@
 {
   "id": "azurevirtualmachines",
+  "unreleased": true,
   "displayName": "Virtual Machines",
   "category": "Azure",
   "categoryPriority": 20,
