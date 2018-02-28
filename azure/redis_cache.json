@@ -70,7 +70,7 @@
       "valueLabel": "Hit %",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -115,7 +115,7 @@
       "valueLabel": "Ratio",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -153,7 +153,7 @@
       "valueLabel": "Used Memory",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -191,7 +191,7 @@
       "valueLabel": "Commands",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -229,7 +229,7 @@
       "valueLabel": "Keys",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -267,7 +267,7 @@
       "valueLabel": "Connections",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",

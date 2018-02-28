@@ -69,7 +69,7 @@
       "valueLabel": "DTU %",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -102,7 +102,7 @@
       "valueLabel": "failed conns",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -141,7 +141,7 @@
       "valueLabel": "data IO %",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -174,7 +174,7 @@
       "valueLabel": "storage %",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -207,7 +207,7 @@
       "valueLabel": "size",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",

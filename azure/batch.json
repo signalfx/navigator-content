@@ -1,0 +1,289 @@
+{
+  "id": "azurebatch",
+  "unreleased": true,
+  "displayName": "Batch",
+  "category": "Azure",
+  "categoryPriority": 50,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_batch_service",
+  "mtsQuery": "resource_type:Microsoft.Batch\\/batchAccounts",
+  "systemDashboardPrefix": "Azure Batch",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Batch/batchAccounts"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "azure_resource_name",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.batch.taskscompleted",
+      "type": "metric",
+      "displayName": "Tasks Completed",
+      "metricSelectors": [
+        "TaskCompleteEvent"
+      ],
+      "description": "Color hosts by number of tasks completed in past 5 minutes",
+      "valueLabel": "Tasks Completed",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "TASKS_COMPLETED = data(\"TaskCompleteEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "TASKS_COMPLETED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.batch.tasksstarted",
+      "type": "metric",
+      "displayName": "Tasks Started",
+      "metricSelectors": [
+        "TaskStartEvent"
+      ],
+      "description": "Color hosts by number of tasks started in past 5 minutes",
+      "valueLabel": "Tasks Started",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "TASKS_STARTED = data(\"TaskStartEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "TASKS_STARTED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.batch.tasksfailed",
+      "type": "metric",
+      "displayName": "Tasks Failed",
+      "metricSelectors": [
+        "TaskFailEvent"
+      ],
+      "description": "Color hosts by number of tasks failed in past 5 minutes",
+      "valueLabel": "Tasks Failed",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 300000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "TASKS_FAILED = data(\"TaskFailEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "TASKS_FAILED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.batch.offlinenodes",
+      "type": "metric",
+      "displayName": "Offline Nodes",
+      "metricSelectors": [
+        "OfflineNodeCount"
+      ],
+      "description": "Color hosts by number of offline nodes",
+      "valueLabel": "Offline Nodes",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "OFFLINE_NODES = data(\"OfflineNodeCount\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "OFFLINE_NODES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.batch.runningnodes",
+      "type": "metric",
+      "displayName": "Active Nodes",
+      "metricSelectors": [
+        "RunningNodeCount"
+      ],
+      "description": "Color hosts by number of nodes running tasks",
+      "valueLabel": "Active Nodes",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "RUNNING_NODES = data(\"RunningNodeCount\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "RUNNING_NODES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.batch.idlenodes",
+      "type": "metric",
+      "displayName": "Idle Nodes",
+      "metricSelectors": [
+        "IdleNodeCount"
+      ],
+      "description": "Color hosts by number of idle nodes",
+      "valueLabel": "Idle Nodes",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Batch/batchAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "IDLE_NODES = data(\"IdleNodeCount\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "IDLE_NODES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

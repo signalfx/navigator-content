@@ -69,7 +69,7 @@
       "valueLabel": "CPU Use",
       "valueFormat": "Percentage",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -97,7 +97,7 @@
       "valueLabel": "Bytes In",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -131,7 +131,7 @@
       "valueLabel": "Bytes Out",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -165,7 +165,7 @@
       "valueLabel": "Bytes Written",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -204,7 +204,7 @@
       "valueLabel": "Bytes Read",
       "valueFormat": "Bytes",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -243,7 +243,7 @@
       "valueLabel": "Write Ops",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -277,7 +277,7 @@
       "valueLabel": "Read Ops",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "aggregation_type",
@@ -311,7 +311,7 @@
       "valueLabel": "Credits",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
@@ -350,7 +350,7 @@
       "valueLabel": "Credits",
       "valueFormat": "Number",
       "job": {
-        "resolution": 300000,
+        "resolution": 60000,
         "filters": [
           {
             "property": "resource_type",
