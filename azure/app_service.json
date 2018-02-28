@@ -1,0 +1,403 @@
+{
+  "id": "azureappservice",
+  "unreleased": true,
+  "displayName": "App Services",
+  "category": "Azure",
+  "categoryPriority": 40,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_app_service",
+  "mtsQuery": "resource_type:Microsoft.Web\\/sites",
+  "systemDashboardPrefix": "Azure App Service",
+  "discoveryQuery": [
+    "resource_type:Microsoft.Web/sites"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "azure_resource_name",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.appservice.avgresponsetime",
+      "type": "metric",
+      "displayName": "Average Response Time (s)",
+      "metricSelectors": [
+        "AverageResponseTime"
+      ],
+      "description": "Color hosts by average response time (s)",
+      "valueLabel": "Response Time (s)",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "AVG_RESPONSE_TIME = data(\"AverageResponseTime\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "AVG_RESPONSE_TIME"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.requests",
+      "type": "metric",
+      "displayName": "Requests",
+      "metricSelectors": [
+        "Requests"
+      ],
+      "description": "Color hosts by requests made per application",
+      "valueLabel": "Requests",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "REQUESTS = data(\"Requests\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "REQUESTS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.cputime",
+      "type": "metric",
+      "displayName": "CPU Time (s)",
+      "metricSelectors": [
+        "CpuTime"
+      ],
+      "description": "Color hosts by amount of CPU in seconds consumed by th app",
+      "valueLabel": "CPU Time (s)",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "CPU_TIME = data(\"CpuTime\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "CPU_TIME"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.connections",
+      "type": "metric",
+      "displayName": "Connections",
+      "metricSelectors": [
+        "Requests"
+      ],
+      "description": "Color hosts by number of application connections",
+      "valueLabel": "Connections",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "CONNS = data(\"AppConnections\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "CONNS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.bytesreceieved",
+      "type": "metric",
+      "displayName": "Bytes Received",
+      "metricSelectors": [
+        "BytesReceived"
+      ],
+      "description": "Color hosts by number of bytes received",
+      "valueLabel": "Bytes In",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "BYTES_IN = data(\"BytesReceived\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "BYTES_IN"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.bytessent",
+      "type": "metric",
+      "displayName": "Bytes Sent",
+      "metricSelectors": [
+        "BytesSent"
+      ],
+      "description": "Color hosts by number of bytes sent",
+      "valueLabel": "Bytes Out",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "BYTES_OUT = data(\"BytesSent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "BYTES_OUT"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.http2xx",
+      "type": "metric",
+      "displayName": "HTTP 2xx Responses",
+      "metricSelectors": [
+        "BytesSent"
+      ],
+      "description": "Color hosts by number of http 2xx responses",
+      "valueLabel": "2xx Responses",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "HTTP2XX = data(\"Http2xx\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "HTTP2XX"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.http4xx",
+      "type": "metric",
+      "displayName": "HTTP 4xx Responses",
+      "metricSelectors": [
+        "BytesSent"
+      ],
+      "description": "Color hosts by number of http 4xx responses",
+      "valueLabel": "4xx Responses",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "HTTP4XX = data(\"Http4xx\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "HTTP4XX"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.appservice.http5xx",
+      "type": "metric",
+      "displayName": "HTTP 5xx Responses",
+      "metricSelectors": [
+        "BytesSent"
+      ],
+      "description": "Color hosts by number of http 5xx responses",
+      "valueLabel": "5xx Responses",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Web/sites",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "HTTP5XX = data(\"Http5xx\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "HTTP5XX"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

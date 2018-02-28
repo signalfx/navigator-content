@@ -1,0 +1,441 @@
+{
+  "id": "azureeventhubs",
+  "unreleased": true,
+  "displayName": "Event Hubs",
+  "category": "Azure",
+  "categoryPriority": 60,
+  "type": "elemental",
+  "alertQuery": "_exists_:azure_resource_id",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "azure_event_hubs",
+  "mtsQuery": "resource_type:Microsoft.EventHub\\/namespaces",
+  "systemDashboardPrefix": "Azure Event Hub",
+  "discoveryQuery": [
+    "resource_type:Microsoft.EventHub/namespaces"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "azure_resource_name",
+      "displayName": "Resource Name"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Group"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "azure.eventhub.incoming_requests",
+      "type": "metric",
+      "displayName": "Incoming Requests",
+      "metricSelectors": [
+        "IncomingRequests"
+      ],
+      "description": "Color hosts by number of incoming requests in past minute",
+      "valueLabel": "Incoming Reqs",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "INCOMING_REQS = data(\"IncomingRequests\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "INCOMING_REQS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.incoming_bytes",
+      "type": "metric",
+      "displayName": "Bytes Received",
+      "metricSelectors": [
+        "IncomingBytes"
+      ],
+      "description": "Color hosts by number of incoming bytes in past minute",
+      "valueLabel": "Bytes Received",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "INCOMING_BYTES = data(\"IncomingBytes\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "INCOMING_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.outgoing_bytes",
+      "type": "metric",
+      "displayName": "Bytes Sent",
+      "metricSelectors": [
+        "OutgoingBytes"
+      ],
+      "description": "Color hosts by number of outgoing bytes in past minute",
+      "valueLabel": "Bytes Sent",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "OUTGOING_BYTES = data(\"OutgoingBytes\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "OUTGOING_BYTES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.incoming_messages",
+      "type": "metric",
+      "displayName": "Incoming Messages",
+      "metricSelectors": [
+        "IncomingMessages"
+      ],
+      "description": "Color hosts by number of incoming messages in past minute",
+      "valueLabel": "Incoming Messages",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "INCOMING_MESSAGES = data(\"IncomingMessages\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "INCOMING_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.outgoing_messages",
+      "type": "metric",
+      "displayName": "Outgoing Messages",
+      "metricSelectors": [
+        "OutgoingMessages"
+      ],
+      "description": "Color hosts by number of outgoing messages in past minute",
+      "valueLabel": "Outgoing Messages",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "OUTGOING_MESSAGES = data(\"OutgoingMessages\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "OUTGOING_MESSAGES"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.throttled_requests",
+      "type": "metric",
+      "displayName": "Throttled Requests",
+      "metricSelectors": [
+        "ThrottledRequests"
+      ],
+      "description": "Color hosts by number of throttled requests in past minute",
+      "valueLabel": "Throttled Requests",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "THROTTLED_REQUESTS = data(\"ThrottledRequests\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "THROTTLED_REQUESTS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.quota_exceeded_reqs",
+      "type": "metric",
+      "displayName": "Quota Exceeded Requests",
+      "metricSelectors": [
+        "QuotaExceededErrors"
+      ],
+      "description": "Color hosts by number of requests that exceeded the available quota in past minute",
+      "valueLabel": "Quota Exceeded Reqs",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "QUOTA_EXCEEDED = data(\"QuotaExceededErrors\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "QUOTA_EXCEEDED"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.server_errors",
+      "type": "metric",
+      "displayName": "Server Errors",
+      "metricSelectors": [
+        "ServerErrors"
+      ],
+      "description": "Color hosts by number of server errors in past minute",
+      "valueLabel": "Server Errors",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "SERVER_ERRORS = data(\"ServerErrors\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "SERVER_ERRORS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.user_errors",
+      "type": "metric",
+      "displayName": "User Errors",
+      "metricSelectors": [
+        "UserErrors"
+      ],
+      "description": "Color hosts by number of user errors in past minute",
+      "valueLabel": "User Errors",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "USER_ERRORS = data(\"UserErrors\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "USER_ERRORS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.eventhub.open_connections",
+      "type": "metric",
+      "displayName": "Open Connections",
+      "metricSelectors": [
+        "ConnectionsOpened"
+      ],
+      "description": "Color hosts by number connections opened in past minute",
+      "valueLabel": "Connections",
+      "valueFormat": "Number",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.EventHub/namespaces",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "OPEN_CONNS = data(\"ConnectionsOpened\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "OPEN_CONNS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}

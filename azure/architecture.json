@@ -28,7 +28,7 @@
   ],
   "map": {
     "job": {
-      "resolution": 300000,
+      "resolution": 60000,
       "filters": [
         {
           "property": "primary_aggregation_type",
@@ -36,7 +36,7 @@
           "type": "property"
         }
       ],
-      "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\", filter=filter(\"resource_type\", \"Microsoft.Sql/servers/databases\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nVM_CPU = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HITS = data(\"cachehits\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_MISSES = data(\"cachemisses\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HIT_PERCENT=((CACHE_HITS) / ((CACHE_HITS) + CACHE_MISSES) * 100)\nINGRESS_TRAFFIC = data(\"Ingress\", filter=filter(\"resource_type\", \"Microsoft.Storage/storageAccounts\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"azure_resource_name\"])"
+      "template": "DTU_PERCENTAGE = data(\"dtu_consumption_percent\", filter=filter(\"resource_type\", \"Microsoft.Sql/servers/databases\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nVM_CPU = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HITS = data(\"cachehits\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_MISSES = data(\"cachemisses\", filter=filter(\"resource_type\", \"Microsoft.Cache/Redis\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"last_value\", maxExtrapolations=5).mean(by=[\"azure_resource_name\"])\nCACHE_HIT_PERCENT=((CACHE_HITS) / ((CACHE_HITS) + CACHE_MISSES) * 100)\nINGRESS_TRAFFIC = data(\"Ingress\", filter=filter(\"resource_type\", \"Microsoft.Storage/storageAccounts\"){{#filter}} and {{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).sum(by=[\"azure_resource_name\"])\nAPP_AVG_RESPONSE_TIME = data(\"AverageResponseTime\", filter=filter(\"resource_type\", \"Microsoft.Web/sites\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nEH_INCOMING_REQS = data(\"IncomingRequests\", filter=filter(\"resource_type\", \"Microsoft.EventHub/namespaces\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nLOGIC_BILLABLE_EXECS = data(\"TotalBillableExecutions\", filter=filter(\"resource_type\", \"Microsoft.Logic/workflows\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])\nBATCH_TASKS_COMPLETED = data(\"TaskCompleteEvent\", filter=filter(\"resource_type\", \"Microsoft.Batch/batchAccounts\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])"
     },
     "groupingStructure": {
       "key": "sf_streamLabel",
@@ -61,6 +61,78 @@
         "varName": "INGRESS_TRAFFIC",
         "valueLabel": "Ingress",
         "valueFormat": "Bytes",
+        "idTemplate": "azure-{{azure_resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "App Services",
+        "varName": "APP_AVG_RESPONSE_TIME",
+        "valueLabel": "Avg Response Time (s)",
+        "valueFormat": "Number",
+        "idTemplate": "azure-{{azure_resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "Batch",
+        "varName": "BATCH_TASKS_COMPLETED",
+        "valueLabel": "Tasks Completed",
+        "valueFormat": "Number",
+        "idTemplate": "azure-{{azure_resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "Logic Apps",
+        "varName": "LOGIC_BILLABLE_EXECS",
+        "valueLabel": "Billable Executions",
+        "valueFormat": "Number",
+        "idTemplate": "azure-{{azure_resource_name}}",
+        "coloring": {
+          "method": "quantile",
+          "minValue": 0,
+          "range": [
+            "#bfd3e6",
+            "#9ebcda",
+            "#8c96c6",
+            "#8856a7",
+            "#810f7c"
+          ]
+        }
+      },
+      {
+        "name": "Event Hubs",
+        "varName": "EH_INCOMING_REQS",
+        "valueLabel": "Incoming Requests",
+        "valueFormat": "Number",
         "idTemplate": "azure-{{azure_resource_name}}",
         "coloring": {
           "method": "quantile",
