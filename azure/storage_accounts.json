@@ -1,7 +1,7 @@
 {
   "id": "azurestorage",
   "unreleased": true,
-  "displayName": "Storage",
+  "displayName": "Storage Accounts",
   "category": "Azure",
   "categoryPriority": 30,
   "type": "elemental",
@@ -27,7 +27,7 @@
   ],
   "listColumns": [
     {
-      "property": "azure_resource_name",
+      "property": "id",
       "displayName": "Resource Name"
     },
     {
@@ -81,7 +81,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "INGRESS_TRAFFIC = data(\"Ingress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "INGRESS_TRAFFIC = data(\"Ingress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "INGRESS_TRAFFIC"
       },
       "coloring": {
@@ -119,8 +119,119 @@
             "propertyValue": "true"
           }
         ],
-        "template": "EGRESS_TRAFFIC = data(\"Egress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"latest\", extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "EGRESS_TRAFFIC = data(\"Egress\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "EGRESS_TRAFFIC"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.storage.success_latency",
+      "type": "metric",
+      "displayName": "Sucecssful Latency(ms)",
+      "metricSelectors": [
+        "Egress"
+      ],
+      "description": "Color hosts by amount of average latency (ms) of successful requests. This does not include network latency.",
+      "valueLabel": "Latency (ms)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Storage/storageAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "SUCCESS_LATENCY = data(\"SuccessServerLatency\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "SUCCESS_LATENCY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.storage.e2elatency",
+      "type": "metric",
+      "displayName": "Sucecssful E2E Latency(ms)",
+      "metricSelectors": [
+        "Egress"
+      ],
+      "description": "Color hosts by amount of average end-to-end latency (ms) of successful requests",
+      "valueLabel": "Latency (ms)",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Storage/storageAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "SUCCESS_E2ELATENCY = data(\"SuccessE2ELatency\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "SUCCESS_E2ELATENCY"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "azure.storage.transactions",
+      "type": "metric",
+      "displayName": "Transactions",
+      "metricSelectors": [
+        "Egress"
+      ],
+      "description": "Color hosts by total number of transactions in the past minute",
+      "valueLabel": "Transactions",
+      "job": {
+        "resolution": 60000,
+        "filters": [
+          {
+            "property": "resource_type",
+            "propertyValue": "Microsoft.Storage/storageAccounts",
+            "type": "property"
+          },
+          {
+            "property": "primary_aggregation_type",
+            "propertyValue": "true"
+          }
+        ],
+        "template": "TRANSACTIONS = data(\"Transactions\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "varName": "TRANSACTIONS"
       },
       "coloring": {
         "method": "quantile",
