@@ -86,20 +86,23 @@
         "varName": "CACHE_RATIO"
       },
       "coloring": {
-        "method": "quantile",
-        "minValue": 0,
-        "maxValue": 100,
-        "range": [
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#ea1849",
-          "#e2ed6a",
-          "#6bd37e"
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 90,
+            "color": "#6bd37e"
+          },
+          {
+            "lowerLimit": 80,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 0,
+            "color": "#ea1849"
+          },
+          {
+            "color": "#ea1849"
+          }
         ]
       }
     },
@@ -131,18 +134,31 @@
         "varName": "MEMORY_FRAG"
       },
       "coloring": {
-        "method": "quantile",
-        "minValue": 0,
-        "maxValue": 2,
-        "range": [
-          "#ea1849",
-          "#ea1849",
-          "#e2ed6a",
-          "#6bd37e",
-          "#6bd37e",
-          "#e2ed6a",
-          "#ea1849",
-          "#ea1849"
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 1.45,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 1.15,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 0.85,
+            "color": "#6bd37e"
+          },
+          {
+            "lowerLimit": 0.55,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 0.00,
+            "color": "#ea1849"
+          },
+          {
+            "color": "#ea1849"
+          }
         ]
       }
     },

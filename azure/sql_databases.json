@@ -86,9 +86,28 @@
         "varName": "DTU_PERCENTAGE"
       },
       "coloring": {
-        "method": "quantile",
-        "minValue": 0,
-        "maxValue": 100
+        "method": "threshold",
+        "limits": [
+          {
+            "lowerLimit": 80,
+            "color": "#ea1849"
+          },
+          {
+            "lowerLimit": 60,
+            "color": "#eac24b"
+          },
+          {
+            "lowerLimit": 40,
+            "color": "#e2ed6a"
+          },
+          {
+            "lowerLimit": 20,
+            "color": "#acef7f"
+          },
+          {
+            "color": "#6bd37e"
+          }
+        ]
       }
     },
     {
@@ -133,7 +152,7 @@
     {
       "id": "azure.sqldb.data_io_percentage",
       "type": "metric",
-      "displayName": "Data IO %",
+      "displayName": "Data I/O %",
       "metricSelectors": [
         "physical_data_read_percent"
       ],
@@ -166,7 +185,7 @@
     {
       "id": "azure.sqldb.storage_percent",
       "type": "metric",
-      "displayName": "Storage Percent",
+      "displayName": "Storage %",
       "metricSelectors": [
         "storage_percent"
       ],
