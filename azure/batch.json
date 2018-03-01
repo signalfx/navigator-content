@@ -80,7 +80,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "TASKS_COMPLETED = data(\"TaskCompleteEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "TASKS_COMPLETED = data(\"TaskCompleteEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "TASKS_COMPLETED"
       },
       "coloring": {
@@ -118,7 +118,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "TASKS_STARTED = data(\"TaskStartEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "TASKS_STARTED = data(\"TaskStartEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "TASKS_STARTED"
       },
       "coloring": {
@@ -156,7 +156,7 @@
             "propertyValue": "true"
           }
         ],
-        "template": "TASKS_FAILED = data(\"TaskFailEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "TASKS_FAILED = data(\"TaskFailEvent\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"zero\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "TASKS_FAILED"
       },
       "coloring": {
