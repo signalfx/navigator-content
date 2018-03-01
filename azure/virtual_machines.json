@@ -27,7 +27,7 @@
   ],
   "listColumns": [
     {
-      "property": "azure_resource_name",
+      "property": "id",
       "displayName": "Instance Name"
     },
     {
@@ -159,7 +159,8 @@
       "type": "metric",
       "displayName": "Disk Write Bytes",
       "metricSelectors": [
-        "Disk Write Bytes"
+        "Disk Write Bytes",
+        "Disk Write Bytes/Sec"
       ],
       "description": "Color hosts based on bytes written to disk per second",
       "valueLabel": "Bytes Written",
@@ -168,17 +169,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "resource_type",
-            "propertyValue": "Microsoft.Compute/virtualMachines",
-            "type": "property"
-          },
-          {
-            "property": "aggregation_type",
-            "propertyValue": "total",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes*\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_WRITE_BYTES"
       },
       "coloring": {
@@ -198,7 +194,8 @@
       "type": "metric",
       "displayName": "Disk Read Bytes",
       "metricSelectors": [
-        "Disk Read Bytes"
+        "Disk Read Bytes",
+        "Disk Read Bytes/Sec"
       ],
       "description": "Color hosts based on bytes read from disk per second",
       "valueLabel": "Bytes Read",
@@ -207,17 +204,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "resource_type",
-            "propertyValue": "Microsoft.Compute/virtualMachines",
-            "type": "property"
-          },
-          {
-            "property": "aggregation_type",
-            "propertyValue": "total",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes*\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_READ_BYTES"
       },
       "coloring": {
@@ -241,7 +233,6 @@
       ],
       "description": "Color hosts based on disk write operations per second",
       "valueLabel": "Write Ops",
-      "valueFormat": "Number",
       "job": {
         "resolution": 60000,
         "filters": [
@@ -275,7 +266,6 @@
       ],
       "description": "Color hosts based on disk read operations per second",
       "valueLabel": "Read Ops",
-      "valueFormat": "Number",
       "job": {
         "resolution": 60000,
         "filters": [

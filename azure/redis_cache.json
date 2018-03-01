@@ -12,7 +12,7 @@
   "idTemplate": "{{azure_resource_name}}",
   "idName": "azure_redis",
   "mtsQuery": "resource_type:Microsoft.Cache\\/Redis",
-  "systemDashboardPrefix": "Azure Redis Cache Overview",
+  "systemDashboardPrefix": "Azure Redis Caches",
   "singleHostSystemDashboardName": "Azure Redis Cache",
   "discoveryQuery": [
     "resource_type:Microsoft.Cache/Redis"
@@ -27,7 +27,7 @@
   ],
   "listColumns": [
     {
-      "property": "azure_resource_name",
+      "property": "id",
       "displayName": "Resource Name"
     },
     {
@@ -111,7 +111,7 @@
         "usedmemory",
         "usedmemoryRss"
       ],
-      "description": "(usedmemoryRss / usedmemory) Color hosts by memory the OS has allocated vs memory allocated by Redis",
+      "description": "(usedmemoryRss / usedmemory) Color hosts by memory the OS has allocated vs memory allocated by Redis. A value of ~1 is ideal.",
       "valueLabel": "Ratio",
       "valueFormat": "Number",
       "job": {
@@ -133,12 +133,16 @@
       "coloring": {
         "method": "quantile",
         "minValue": 0,
+        "maxValue": 2,
         "range": [
-          "#bfd3e6",
-          "#9ebcda",
-          "#8c96c6",
-          "#8856a7",
-          "#810f7c"
+          "#ea1849",
+          "#ea1849",
+          "#e2ed6a",
+          "#6bd37e",
+          "#6bd37e",
+          "#e2ed6a",
+          "#ea1849",
+          "#ea1849"
         ]
       }
     },

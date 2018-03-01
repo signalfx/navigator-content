@@ -1,7 +1,7 @@
 {
   "id": "azurebatch",
   "unreleased": true,
-  "displayName": "Batch",
+  "displayName": "Batch Accounts",
   "category": "Azure",
   "categoryPriority": 50,
   "type": "elemental",
@@ -26,7 +26,7 @@
   ],
   "listColumns": [
     {
-      "property": "azure_resource_name",
+      "property": "id",
       "displayName": "Resource Name"
     },
     {
