@@ -1,9 +1,9 @@
 {
   "id": "azurestorage",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Storage Accounts",
   "category": "Azure",
-  "categoryPriority": 30,
+  "categoryPriority": 80,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [

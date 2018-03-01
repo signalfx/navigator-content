@@ -1,9 +1,9 @@
 {
   "id": "azureappservice",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "App Services",
   "category": "Azure",
-  "categoryPriority": 40,
+  "categoryPriority": 30,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [

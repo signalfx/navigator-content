@@ -1,9 +1,9 @@
 {
   "id": "azurebatch",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Batch Accounts",
   "category": "Azure",
-  "categoryPriority": 50,
+  "categoryPriority": 40,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [
