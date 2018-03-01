@@ -153,20 +153,23 @@
         "valueFormat": "Percentage",
         "idTemplate": "azure-{{azure_resource_name}}",
         "coloring": {
-          "method": "quantile",
-          "minValue": 0,
-          "maxValue": 100,
-          "range": [
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#ea1849",
-            "#e2ed6a",
-            "#6bd37e"
+          "method": "threshold",
+          "limits": [
+            {
+              "lowerLimit": 90,
+              "color": "#6bd37e"
+            },
+            {
+              "lowerLimit": 80,
+              "color": "#e2ed6a"
+            },
+            {
+              "lowerLimit": 0,
+              "color": "#ea1849"
+            },
+            {
+              "color": "#ea1849"
+            }
           ]
         }
       },
@@ -177,9 +180,28 @@
         "valueFormat": "Percentage",
         "idTemplate": "azure-{{{azure_resource_name}}}",
         "coloring": {
-          "method": "quantile",
-          "minValue": 0,
-          "maxValue": 100
+          "method": "threshold",
+          "limits": [
+            {
+              "lowerLimit": 80,
+              "color": "#ea1849"
+            },
+            {
+              "lowerLimit": 60,
+              "color": "#eac24b"
+            },
+            {
+              "lowerLimit": 40,
+              "color": "#e2ed6a"
+            },
+            {
+              "lowerLimit": 20,
+              "color": "#acef7f"
+            },
+            {
+              "color": "#6bd37e"
+            }
+          ]
         }
       }
     ]
