@@ -1,9 +1,9 @@
 {
   "id": "azuresqldatabases",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "SQL Databases",
   "category": "Azure",
-  "categoryPriority": 100,
+  "categoryPriority": 70,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [

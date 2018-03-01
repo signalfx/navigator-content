@@ -1,9 +1,9 @@
 {
   "id": "azurelogicapps",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Logic Apps",
   "category": "Azure",
-  "categoryPriority": 70,
+  "categoryPriority": 50,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [

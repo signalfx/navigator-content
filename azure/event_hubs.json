@@ -1,9 +1,9 @@
 {
   "id": "azureeventhubs",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Event Hubs",
   "category": "Azure",
-  "categoryPriority": 60,
+  "categoryPriority": 50,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [

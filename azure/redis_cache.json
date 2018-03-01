@@ -1,9 +1,9 @@
 {
   "id": "azurerediscaches",
-  "unreleased": true,
+  "unreleased": false,
   "displayName": "Redis Cache",
   "category": "Azure",
-  "categoryPriority": 90,
+  "categoryPriority": 60,
   "type": "elemental",
   "alertQuery": "_exists_:azure_resource_id",
   "requiredProperties": [
