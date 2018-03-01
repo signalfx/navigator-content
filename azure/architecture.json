@@ -93,7 +93,7 @@
         }
       },
       {
-        "name": "Batch",
+        "name": "Batch Accounts",
         "varName": "BATCH_TASKS_COMPLETED",
         "valueLabel": "Tasks Completed",
         "valueFormat": "Number",
