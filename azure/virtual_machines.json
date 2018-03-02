@@ -72,12 +72,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "aggregation_type",
-            "propertyValue": "average",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "CPU_UTILIZATION = data(\"Percentage CPU\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "CPU_UTILIZATION = data(\"Percentage CPU\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CPU_UTILIZATION"
       },
       "coloring": {
@@ -100,12 +100,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "aggregation_type",
-            "propertyValue": "total",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "NETWORK_IN = data(\"Network In\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "NETWORK_IN = data(\"Network In\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "NETWORK_IN"
       },
       "coloring": {
@@ -134,12 +134,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "aggregation_type",
-            "propertyValue": "total",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "NETWORK_OUT = data(\"Network Out\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "NETWORK_OUT = data(\"Network Out\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "NETWORK_OUT"
       },
       "coloring": {
@@ -174,7 +174,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes*\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_WRITE_BYTES = data(\"Disk Write Bytes*\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_WRITE_BYTES"
       },
       "coloring": {
@@ -209,7 +209,7 @@
             "type": "property"
           }
         ],
-        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes*\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_READ_BYTES = data(\"Disk Read Bytes*\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_READ_BYTES"
       },
       "coloring": {
@@ -237,12 +237,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "aggregation_type",
-            "propertyValue": "average",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "DISK_WRITE_OPS = data(\"Disk Write Operations/Sec\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_WRITE_OPS = data(\"Disk Write Operations/Sec\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_WRITE_OPS"
       },
       "coloring": {
@@ -270,12 +270,12 @@
         "resolution": 60000,
         "filters": [
           {
-            "property": "aggregation_type",
-            "propertyValue": "total",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "DISK_READ_OPS = data(\"Disk Read Operations/Sec\", filter=filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\") and {{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "DISK_READ_OPS = data(\"Disk Read Operations/Sec\", filter=(filter(\"resource_type\", \"Microsoft.Compute/virtualMachines\") or filter(\"resource_type\", \"Microsoft.ClassicCompute/virtualMachines\")) and {{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "DISK_READ_OPS"
       },
       "coloring": {
@@ -309,12 +309,12 @@
             "type": "property"
           },
           {
-            "property": "aggregation_type",
-            "propertyValue": "average",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "CREDITS_REMAINING = data(\"CPU Credits Remaining\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "CREDITS_REMAINING = data(\"CPU Credits Remaining\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"null\", rollup=\"average\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CREDITS_REMAINING"
       },
       "coloring": {
@@ -348,12 +348,12 @@
             "type": "property"
           },
           {
-            "property": "aggregation_type",
-            "propertyValue": "average",
+            "property": "primary_aggregation_type",
+            "propertyValue": "true",
             "type": "property"
           }
         ],
-        "template": "CREDITS_CONSUMED = data(\"CPU Credits Consumed\", filter={{#filter}}{{{filter}}}{{/filter}}, extrapolation=\"last_value\", maxExtrapolations=2).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
+        "template": "CREDITS_CONSUMED = data(\"CPU Credits Consumed\", filter={{#filter}}{{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_resource_group_name\", \"azure_region\"])",
         "varName": "CREDITS_CONSUMED"
       },
       "coloring": {
