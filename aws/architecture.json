@@ -65,7 +65,7 @@
         "name": "SQS Queues",
         "varName": "CURRENT_QUEUE_SIZE",
         "valueLabel": "Queue Size",
-        "idTemplate": "{{QueueName}} {{aws_region}}",
+        "idTemplate": "{{QueueName}} ({{aws_region}})",
         "coloring": {
           "method": "quantile",
           "minValue": 0,
