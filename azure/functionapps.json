@@ -1,0 +1,232 @@
+{
+  "id": "azurefunctions",
+  "unreleased": true,
+  "displayName": "Azure Function Apps",
+  "category": "Azure",
+  "categoryPriority": 100,
+  "type": "elemental",
+  "requiredProperties": [
+    "azure_resource_name"
+  ],
+  "idTemplate": "{{azure_resource_name}}",
+  "idName": "FunctionApps",
+  "mtsQuery": "(sf_metric:FunctionExecutionCount OR sf_metric:FunctionExecutionUnits) AND is_Azure_Function:true",
+  "alertQuery": "_exists_:azure_resource_name",
+  "systemDashboardPrefix": "(Azure) Function App",
+  "discoveryQuery": [
+    "is_Azure_Function:true"
+  ],
+  "propertyColumns": [
+    [
+      {
+        "header": "Other",
+        "properties": []
+      }
+    ]
+  ],
+  "listColumns": [
+    {
+      "property": "id",
+      "displayName": "Function App"
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "format": "Number"
+    },
+    {
+      "property": "azure_resource_group_name",
+      "displayName": "Resource Group"
+    },
+    {
+      "property": "azure_subscription_display_name",
+      "displayName": "Subscription"
+    },
+    {
+      "property": "azure_region",
+      "displayName": "Region"
+    }
+  ],
+  "tooltipKeyList": [
+    {
+      "property": "id",
+      "displayName": "ID",
+      "isSummaryProperty": true
+    },
+    {
+      "property": "value",
+      "displayName": "Value",
+      "isSummaryProperty": true,
+      "format": "Number"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "InvocationsAz",
+      "type": "metric",
+      "displayName": "Invocations",
+      "metricSelectors": [
+        "FunctionExecutionCount",
+        "MemoryWorkingSet",
+        "Http5xx"
+      ],
+      "description": "Color hosts by number of invocations over past minute",
+      "valueLabel": "Invocations",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "invocations_from_az = data(\"FunctionExecutionCount\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_region\"])",
+        "varName": "invocations_from_az"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "DurationAz",
+      "type": "metric",
+      "displayName": "Compute Duration",
+      "metricSelectors": [
+        "FunctionExecutionUnits"
+      ],
+      "description": "Color hosts by average compute duration (GB Seconds) over past minute",
+      "valueLabel": "Compute Duration",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "duration_from_az = data(\"FunctionExecutionUnits\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_region\"])\nDUR_GBS = (duration_from_az / 1024000)",
+        "varName": "DUR_GBS"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "MemoryAz",
+      "type": "metric",
+      "displayName": "Memory Used",
+      "metricSelectors": [
+        "MemoryWorkingSet"
+      ],
+      "description": "Color hosts by average memory used by Function App over past minute",
+      "valueLabel": "Memory Used",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "memory_from_az = data(\"MemoryWorkingSet\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"average\", extrapolation=\"null\", maxExtrapolations=-1).mean(by=[\"azure_resource_name\", \"azure_region\"])",
+        "varName": "memory_from_az"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "ErrorsAz",
+      "type": "metric",
+      "displayName": "Http 5xx Errors",
+      "metricSelectors": [
+        "Http5xx"
+      ],
+      "description": "Color hosts by total number of Http 5xx errors in the past minute",
+      "valueLabel": "Errors",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "errors_from_az = data(\"Http5xx\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_region\"])",
+        "varName": "errors_from_az"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "BytesReceivedAz",
+      "type": "metric",
+      "displayName": "Bytes Received",
+      "metricSelectors": [
+        "BytesReceived"
+      ],
+      "description": "Color hosts by total number of bytes received in the past minute",
+      "valueLabel": "Bytes Received",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "bytes_received_az = data(\"BytesReceived\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_region\"])",
+        "varName": "bytes_received_az"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    },
+    {
+      "id": "BytesSentAz",
+      "type": "metric",
+      "displayName": "Bytes Sent",
+      "metricSelectors": [
+        "BytesSent"
+      ],
+      "description": "Color hosts by total number of bytes sent in the past minute",
+      "valueLabel": "Bytes Sent",
+      "valueFormat": "Bytes",
+      "job": {
+        "resolution": 300000,
+        "filters": [],
+        "template": "bytes_sent_az = data(\"BytesSent\", filter=filter(\"is_Azure_Function\", \"true\") and filter(\"primary_aggregation_type\", \"true\"){{#filter}} and {{{filter}}}{{/filter}}, rollup=\"sum\", extrapolation=\"null\", maxExtrapolations=-1).sum(by=[\"azure_resource_name\", \"azure_region\"])",
+        "varName": "bytes_sent_az"
+      },
+      "coloring": {
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
+      }
+    }
+  ]
+}
