@@ -11,7 +11,7 @@
   ],
   "idTemplate": "{{azure_resource_name}}",
   "idName": "azure_app_service",
-  "mtsQuery": "resource_type:Microsoft.Web\\/sites",
+  "mtsQuery": "resource_type:Microsoft.Web\\/sites AND is_Azure_Function:false",
   "systemDashboardPrefix": "Azure App Service",
   "discoveryQuery": [
     "resource_type:Microsoft.Web/sites"

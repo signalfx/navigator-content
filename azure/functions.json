@@ -1,6 +1,5 @@
 {
   "id": "azurefunctionssignalfx",
-  "unreleased": true,
   "displayName": "Azure Functions (SignalFx Wrapper)",
   "category": "Azure",
   "categoryPriority": 100,
