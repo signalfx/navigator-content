@@ -5,7 +5,7 @@
   "type": "architectural",
   "displayName": "Overview",
   "alertQuery": "(_exists_:resource_type)",
-  "mtsQuery": "resource_type:Microsoft.Web\\/sites OR resource_type:Microsoft.Batch\\/batchAccounts OR resource_type:Microsoft.EventHub\\/namespaces OR resource_type:Microsoft.Logic\\/workflows OR resource_type:Microsoft.Cache\\/Redis OR resource_type:Microsoft.Sql/servers/databases OR resource_type:Microsoft.Storage\\/storageAccounts OR resource_type:Microsoft.Compute\\/virtualMachines",
+  "mtsQuery": "resource_type:Microsoft.Web\\/sites OR resource_type:Microsoft.Batch\\/batchAccounts OR resource_type:Microsoft.EventHub\\/namespaces OR resource_type:Microsoft.Logic\\/workflows OR resource_type:Microsoft.Cache\\/Redis OR resource_type:Microsoft.Sql\\/servers\\/databases OR resource_type:Microsoft.Storage\\/storageAccounts OR resource_type:Microsoft.Compute\\/virtualMachines",
   "category": "Azure",
   "discoveryQuery": [
     "_exists_:resource_type"
