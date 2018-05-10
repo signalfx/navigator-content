@@ -1,6 +1,5 @@
 {
   "id": "azurefunctions",
-  "unreleased": true,
   "displayName": "Azure Function Apps",
   "category": "Azure",
   "categoryPriority": 100,
