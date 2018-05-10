@@ -11,7 +11,7 @@
   ],
   "idTemplate": "{{{azure_resource_name}}}",
   "idName": "sql_database",
-  "mtsQuery": "resource_type:Microsoft.Sql/servers/databases",
+  "mtsQuery": "resource_type:Microsoft.Sql\\/servers\\/databases",
   "systemDashboardPrefix": "Azure Sql Databases",
   "singleHostSystemDashboardName": "Azure Sql Database",
   "discoveryQuery": [
