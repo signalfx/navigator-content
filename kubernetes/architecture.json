@@ -4,7 +4,7 @@
   "type": "architectural",
   "displayName": "Overview",
   "alertQuery": "_exists_:kubernetes_cluster",
-  "mtsQuery": "(sf_metric:cpu.utilization OR sf_metric:container_cpu_utilization) AND _exists_:kubernetes_cluster",
+  "mtsQuery": "sf_metric:cpu.utilization AND _exists_:kubernetes_cluster",
   "category": "Kubernetes",
   "categoryPriority": 10,
   "systemDashboardName": "K8s Clusters",
