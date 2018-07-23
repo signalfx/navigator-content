@@ -11,10 +11,10 @@
   ],
   "idTemplate": "{{host}} ({{kubernetes_cluster}})",
   "idName": "Node",
-  "mtsQuery": "_exists_:kubernetes_cluster",
-  "singleHostSystemDashboardName": "K8s Node",
+  "mtsQuery": "_exists_:kubernetes_cluster and _exists_:host",
+  "systemDashboardPrefix": "K8s Node",
   "discoveryQuery": [
-    "sf_key:kubernetes_cluster"
+    "sf_key:host"
   ],
   "propertyColumns": [
     [
@@ -177,7 +177,7 @@
       "metricSelectors": [
         "network.total"
       ],
-      "description": "Color hosts by relative amount of network traffic in bits per second: lowest 20% of traffic (green) to highest 20% of traffic (red)",
+      "description": "Color hosts by relative amount of network traffic in bits per second",
       "job": {
         "resolution": 60000,
         "filters": [
@@ -197,7 +197,14 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {

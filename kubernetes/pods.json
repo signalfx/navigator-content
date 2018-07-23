@@ -15,9 +15,9 @@
   "idTemplate": "{{kubernetes_pod_name}} ({{kubernetes_pod_uid}})",
   "idName": "Pod",
   "mtsQuery": "_exists_:kubernetes_pod_name AND _exists_:kubernetes_cluster",
-  "singleHostSystemDashboardName": "K8s Pod",
+  "systemDashboardPrefix": "K8s Pod",
   "discoveryQuery": [
-    "_exists_:kubernetes_pod_name"
+    "sf_key:kubernetes_pod_name"
   ],
   "propertyColumns": [
     [
@@ -199,7 +199,15 @@
         "varName": "DISK_CONTAINER_USED"
       },
       "coloring": {
-        "method": "quantile"
+        "method": "quantile",
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
@@ -240,7 +248,14 @@
       },
       "coloring": {
         "method": "quantile",
-        "minValue": 0
+        "minValue": 0,
+        "range": [
+          "#bfd3e6",
+          "#9ebcda",
+          "#8c96c6",
+          "#8856a7",
+          "#810f7c"
+        ]
       }
     },
     {
